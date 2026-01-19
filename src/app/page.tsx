@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import SplashGate from "@/components/SplashGate";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
+import MobilePlaque from "@/components/MobilePlaque";
 import ProcessSection from "@/components/ProcessSection";
 import IngredientsGrid from "@/components/IngredientsGrid";
 import IntakeForm from "@/components/IntakeForm";
@@ -12,30 +11,23 @@ import FloatingLeaves from "@/components/FloatingLeaves";
 import ParallaxPlaque from "@/components/ParallaxPlaque";
 import MacroMintParallax from "@/components/MacroMintParallax";
 import PlaquesCarousel from "@/components/PlaquesCarousel";
+import LoadingScreen from "@/components/LoadingScreen";
+import { PerformanceProvider, usePerformance } from "@/lib/PerformanceContext";
 
-export default function Home() {
-  const [showGate, setShowGate] = useState(true);
-
-  // Prevent scroll when gate is open
-  useEffect(() => {
-    if (showGate) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
-  }, [showGate]);
+function HomeContent() {
+  const { isLoaded, isMobile } = usePerformance();
 
   return (
     <main className="min-h-screen relative selection:bg-merit-sage selection:text-white">
-      {/* Splash Gate Overlay */}
-      <SplashGate onEnter={() => setShowGate(false)} />
+      {/* Loading Screen */}
+      <LoadingScreen />
 
-      {/* Main Site Content */}
-      {!showGate && (
+      {/* Main Site Content - shown after loading */}
+      {isLoaded && (
         <div className="animate-in fade-in duration-1000">
           <Navbar />
 
-          {/* Floating Elements Layer */}
+          {/* Floating Elements Layer (desktop only for MacroMintParallax) */}
           <MacroMintParallax />
           <FloatingLeaves />
           <ParallaxPlaque />
@@ -43,6 +35,8 @@ export default function Home() {
           {/* Hero Section - Base layer (z-index: 1) */}
           <div className="relative" style={{ zIndex: 1 }}>
             <Hero />
+            {/* Mobile plaque shown inline after hero content */}
+            {isMobile && <MobilePlaque />}
           </div>
 
           {/* Content Sections - Slide OVER Hero (z-index: 10+) */}
@@ -55,11 +49,14 @@ export default function Home() {
           </div>
         </div>
       )}
-
-      {/* Background when gate is open */}
-      {showGate && (
-        <div className="fixed inset-0 z-0 bg-merit-cream" />
-      )}
     </main>
+  );
+}
+
+export default function Home() {
+  return (
+    <PerformanceProvider>
+      <HomeContent />
+    </PerformanceProvider>
   );
 }

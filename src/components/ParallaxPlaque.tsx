@@ -5,6 +5,7 @@ import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { usePerformance } from "@/lib/PerformanceContext";
 
 // Register ScrollTrigger
 if (typeof window !== "undefined") {
@@ -14,8 +15,9 @@ if (typeof window !== "undefined") {
 export default function ParallaxPlaque() {
     const plaqueRef = useRef<HTMLDivElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
+    const { isMobile, isLowPower, prefersReducedMotion } = usePerformance();
 
-    // Mouse tracking for dynamic shadow
+    // Mouse tracking for dynamic shadow (desktop only)
     const mouseX = useMotionValue(0);
     const mouseY = useMotionValue(0);
 
@@ -29,20 +31,21 @@ export default function ParallaxPlaque() {
     const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-3, 3]), springConfig);
 
     useEffect(() => {
-        // Mouse move handler
+        // Skip mouse tracking and GSAP on mobile or reduced motion
+        if (isMobile || prefersReducedMotion) return;
+
         const handleMouseMove = (e: MouseEvent) => {
             mouseX.set(e.clientX / window.innerWidth - 0.5);
             mouseY.set(e.clientY / window.innerHeight - 0.5);
         };
         window.addEventListener("mousemove", handleMouseMove);
 
-        // GSAP ScrollTrigger
+        // GSAP ScrollTrigger for desktop
         const ctx = gsap.context(() => {
             if (!containerRef.current) return;
 
-            // Parallax Float Up Effect
             gsap.to(containerRef.current, {
-                y: -100, // Moves up slightly as you scroll down
+                y: -100,
                 ease: "none",
                 scrollTrigger: {
                     trigger: "#hero-section",
@@ -52,7 +55,6 @@ export default function ParallaxPlaque() {
                 },
             });
 
-            // Fade out ONLY when leaving hero completely
             gsap.to(containerRef.current, {
                 opacity: 0,
                 scrollTrigger: {
@@ -68,8 +70,12 @@ export default function ParallaxPlaque() {
             window.removeEventListener("mousemove", handleMouseMove);
             ctx.revert();
         };
-    }, [mouseX, mouseY]);
+    }, [mouseX, mouseY, isMobile, prefersReducedMotion]);
 
+    // Mobile: return null (handled by MobilePlaque component in page layout)
+    if (isMobile) return null;
+
+    // Desktop: full 3D experience
     return (
         <div
             ref={containerRef}
@@ -77,10 +83,10 @@ export default function ParallaxPlaque() {
         >
             <motion.div
                 ref={plaqueRef}
-                className="relative"
+                className="relative will-change-transform"
                 style={{
-                    rotateX,
-                    rotateY,
+                    rotateX: prefersReducedMotion ? 0 : rotateX,
+                    rotateY: prefersReducedMotion ? 0 : rotateY,
                     transformStyle: "preserve-3d",
                     perspective: 1200,
                 }}
@@ -92,39 +98,39 @@ export default function ParallaxPlaque() {
                 <div
                     className="relative"
                     style={{
-                        transform: "perspective(1200px) rotateY(-12deg) rotateX(5deg)",
+                        transform: isLowPower ? "none" : "perspective(1200px) rotateY(-12deg) rotateX(5deg)",
                         transformStyle: "preserve-3d",
                     }}
                 >
-                    {/* Dynamic Multi-Layer Shadow */}
-                    <motion.div
-                        className="absolute inset-0 -z-10"
-                        style={{
-                            x: shadowX,
-                            y: shadowY,
-                        }}
-                    >
-                        {/* Primary warm shadow */}
-                        <div
-                            className="absolute inset-4 rounded-xl"
+                    {/* Dynamic Multi-Layer Shadow (desktop only, not low-power) */}
+                    {!isLowPower && (
+                        <motion.div
+                            className="absolute inset-0 -z-10"
                             style={{
-                                background: "radial-gradient(ellipse at center, rgba(74, 55, 40, 0.5) 0%, transparent 70%)",
-                                filter: "blur(35px)",
-                                transform: "translateZ(-30px) translateY(30px) scale(0.95)",
+                                x: shadowX,
+                                y: shadowY,
                             }}
-                        />
-                        {/* Secondary ambient shadow */}
-                        <div
-                            className="absolute inset-8 rounded-xl"
-                            style={{
-                                background: "radial-gradient(ellipse at center, rgba(45, 52, 54, 0.3) 0%, transparent 60%)",
-                                filter: "blur(50px)",
-                                transform: "translateZ(-50px) translateY(50px) scale(0.9)",
-                            }}
-                        />
-                    </motion.div>
+                        >
+                            <div
+                                className="absolute inset-4 rounded-xl"
+                                style={{
+                                    background: "radial-gradient(ellipse at center, rgba(74, 55, 40, 0.5) 0%, transparent 70%)",
+                                    filter: "blur(35px)",
+                                    transform: "translateZ(-30px) translateY(30px) scale(0.95)",
+                                }}
+                            />
+                            <div
+                                className="absolute inset-8 rounded-xl"
+                                style={{
+                                    background: "radial-gradient(ellipse at center, rgba(45, 52, 54, 0.3) 0%, transparent 60%)",
+                                    filter: "blur(50px)",
+                                    transform: "translateZ(-50px) translateY(50px) scale(0.9)",
+                                }}
+                            />
+                        </motion.div>
+                    )}
 
-                    {/* Main Plaque Image - Enlarged */}
+                    {/* Main Plaque Image */}
                     <div
                         className="relative"
                         style={{

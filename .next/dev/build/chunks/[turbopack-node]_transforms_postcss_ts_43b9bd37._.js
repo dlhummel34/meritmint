@@ -3,7 +3,8 @@ module.exports = [
 
 __turbopack_context__.v((parentImport) => {
     return Promise.all([
-  "chunks/[root-of-the-server]__a3133d2a._.js"
+  "chunks/183a6_333790af._.js",
+  "chunks/[root-of-the-server]__bcad3543._.js"
 ].map((chunk) => __turbopack_context__.l(chunk))).then(() => {
         return parentImport("[turbopack-node]/transforms/postcss.ts { CONFIG => \"[project]/OneDrive/Documents/MeritMInt/postcss.config.mjs [postcss] (ecmascript)\" } [postcss] (ecmascript)");
     });

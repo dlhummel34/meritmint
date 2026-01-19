@@ -3,7 +3,8 @@
 import { useRef, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import OrganicWaveTransition from "./OrganicWaveTransition";
+
+
 
 // All plaque images
 const plaques = [
@@ -121,9 +122,6 @@ export default function PlaquesCarousel() {
             {/* Gradient fades on edges - matching the paper background */}
             <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-merit-paper to-transparent pointer-events-none z-10" />
             <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-merit-paper to-transparent pointer-events-none z-10" />
-
-            {/* Organic wavy transition to next section */}
-            <OrganicWaveTransition position="bottom" />
         </section>
     );
 }

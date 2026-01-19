@@ -41,15 +41,7 @@ export default function ProcessSection() {
     const leafY2 = useTransform(scrollYProgress, [0, 1], [0, -150]);
 
     return (
-        <section ref={containerRef} id="process" className="relative py-40 bg-merit-paper overflow-hidden">
-
-            {/* Ambient glow connection from transition - clean continuation */}
-            <div
-                className="absolute top-0 left-0 w-full h-32 pointer-events-none"
-                style={{
-                    background: 'linear-gradient(to bottom, rgba(197, 160, 89, 0.04) 0%, transparent 100%)',
-                }}
-            />
+        <section ref={containerRef} id="process" className="relative py-24 md:py-40 bg-merit-paper overflow-hidden">
 
             {/* Floating Accent Leaves */}
             <motion.div style={{ y: leafY1 }} className="absolute top-1/4 left-[10%] opacity-25 rotate-12">

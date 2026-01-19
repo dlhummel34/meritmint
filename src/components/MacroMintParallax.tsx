@@ -3,28 +3,81 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import { useRef } from "react";
+import { usePerformance } from "@/lib/PerformanceContext";
 
 export default function MacroMintParallax() {
     const containerRef = useRef(null);
     const { scrollYProgress } = useScroll();
+    const { isMobile, isLowPower, prefersReducedMotion } = usePerformance();
 
-    // Foreground leaves: faster parallax (1.5x), heavy blur
-    const foregroundY1 = useTransform(scrollYProgress, [0, 1], [0, -400]);
-    const foregroundY2 = useTransform(scrollYProgress, [0, 1], [0, -350]);
-    const foregroundY3 = useTransform(scrollYProgress, [0, 1], [0, -450]);
+    // Disable entirely on reduced motion preference
+    if (prefersReducedMotion) return null;
+
+    // Reduced parallax multiplier for mobile/low-power
+    const parallaxMultiplier = isMobile || isLowPower ? 0.3 : 1;
+
+    // Foreground leaves: faster parallax
+    const foregroundY1 = useTransform(scrollYProgress, [0, 1], [0, -400 * parallaxMultiplier]);
+    const foregroundY2 = useTransform(scrollYProgress, [0, 1], [0, -350 * parallaxMultiplier]);
 
     // Midground leaves: medium parallax
-    const midgroundY1 = useTransform(scrollYProgress, [0, 1], [0, -200]);
-    const midgroundY2 = useTransform(scrollYProgress, [0, 1], [0, -250]);
-    const midgroundY3 = useTransform(scrollYProgress, [0, 1], [0, -180]);
-    const midgroundRotate1 = useTransform(scrollYProgress, [0, 1], [0, 25]);
-    const midgroundRotate2 = useTransform(scrollYProgress, [0, 1], [-10, 20]);
-    const midgroundRotate3 = useTransform(scrollYProgress, [0, 1], [5, -15]);
+    const midgroundY1 = useTransform(scrollYProgress, [0, 1], [0, -200 * parallaxMultiplier]);
+    const midgroundY2 = useTransform(scrollYProgress, [0, 1], [0, -250 * parallaxMultiplier]);
+    const midgroundRotate1 = useTransform(scrollYProgress, [0, 1], [0, isLowPower ? 0 : 25]);
 
     // Background leaves: slowest parallax
-    const backgroundY1 = useTransform(scrollYProgress, [0, 1], [0, -100]);
-    const backgroundY2 = useTransform(scrollYProgress, [0, 1], [0, -80]);
+    const backgroundY1 = useTransform(scrollYProgress, [0, 1], [0, -100 * parallaxMultiplier]);
 
+    // On mobile, render fewer leaves with no blur
+    if (isMobile) {
+        return (
+            <div ref={containerRef} className="fixed inset-0 pointer-events-none z-[5] overflow-hidden">
+                {/* Single background leaf - bottom left */}
+                <motion.div
+                    style={{ y: backgroundY1 }}
+                    className="absolute -bottom-20 -left-20 w-[300px] h-[300px] will-change-transform"
+                >
+                    <Image
+                        src="/images/mint_leaf_transparent.png"
+                        alt=""
+                        fill
+                        className="object-contain opacity-15 rotate-[30deg]"
+                        sizes="300px"
+                    />
+                </motion.div>
+
+                {/* Single background leaf - top right */}
+                <motion.div
+                    style={{ y: backgroundY1 }}
+                    className="absolute -top-20 -right-20 w-[250px] h-[250px] will-change-transform"
+                >
+                    <Image
+                        src="/images/mint_leaf_transparent.png"
+                        alt=""
+                        fill
+                        className="object-contain opacity-12 -rotate-[45deg] scale-x-[-1]"
+                        sizes="250px"
+                    />
+                </motion.div>
+
+                {/* Midground accent */}
+                <motion.div
+                    style={{ y: midgroundY1 }}
+                    className="absolute top-[50%] -left-16 w-[150px] h-[150px] will-change-transform"
+                >
+                    <Image
+                        src="/images/mint_leaf_transparent.png"
+                        alt=""
+                        fill
+                        className="object-contain opacity-20 rotate-[15deg]"
+                        sizes="150px"
+                    />
+                </motion.div>
+            </div>
+        );
+    }
+
+    // Desktop: full experience with blur effects
     return (
         <div ref={containerRef} className="fixed inset-0 pointer-events-none z-[5] overflow-hidden">
             {/* Washi Paper Grain Overlay */}
@@ -35,170 +88,84 @@ export default function MacroMintParallax() {
                 }}
             />
 
-            {/* ===== LARGE BACKGROUND LEAVES - Heavily Blurred ===== */}
-
-            {/* Giant leaf - bottom left corner */}
+            {/* ===== LARGE BACKGROUND LEAVES ===== */}
             <motion.div
                 style={{ y: backgroundY1 }}
-                className="absolute -bottom-40 -left-40 w-[700px] h-[700px]"
+                className="absolute -bottom-40 -left-40 w-[700px] h-[700px] will-change-transform"
             >
                 <Image
                     src="/images/mint_leaf_transparent.png"
                     alt=""
                     fill
-                    className="object-contain blur-[25px] opacity-20 rotate-[30deg]"
+                    className={`object-contain opacity-20 rotate-[30deg] ${isLowPower ? '' : 'blur-[25px]'}`}
                     sizes="700px"
                 />
             </motion.div>
 
-            {/* Giant leaf - top right */}
             <motion.div
-                style={{ y: backgroundY2 }}
-                className="absolute -top-60 -right-40 w-[600px] h-[600px]"
+                style={{ y: backgroundY1 }}
+                className="absolute -top-60 -right-40 w-[600px] h-[600px] will-change-transform"
             >
                 <Image
                     src="/images/mint_leaf_transparent.png"
                     alt=""
                     fill
-                    className="object-contain blur-[25px] opacity-15 -rotate-[45deg] scale-x-[-1]"
+                    className={`object-contain opacity-15 -rotate-[45deg] scale-x-[-1] ${isLowPower ? '' : 'blur-[25px]'}`}
                     sizes="600px"
                 />
             </motion.div>
 
-            {/* Large leaf - center left (shows in middle sections) */}
-            <motion.div
-                style={{ y: midgroundY3 }}
-                className="absolute top-[40%] -left-32 w-[500px] h-[500px]"
-            >
-                <Image
-                    src="/images/mint_leaf_transparent.png"
-                    alt=""
-                    fill
-                    className="object-contain blur-[20px] opacity-15 rotate-[15deg]"
-                    sizes="500px"
-                />
-            </motion.div>
-
-            {/* Large leaf - center right (shows in middle sections) */}
-            <motion.div
-                style={{ y: midgroundY2, rotate: midgroundRotate3 }}
-                className="absolute top-[60%] -right-24 w-[450px] h-[450px]"
-            >
-                <Image
-                    src="/images/mint_leaf_transparent.png"
-                    alt=""
-                    fill
-                    className="object-contain blur-[18px] opacity-12 -rotate-[25deg]"
-                    sizes="450px"
-                />
-            </motion.div>
-
-            {/* Large leaf - bottom right */}
-            <motion.div
-                style={{ y: backgroundY1 }}
-                className="absolute bottom-[10%] -right-48 w-[550px] h-[550px]"
-            >
-                <Image
-                    src="/images/mint_leaf_transparent.png"
-                    alt=""
-                    fill
-                    className="object-contain blur-[22px] opacity-18 rotate-[50deg] scale-x-[-1]"
-                    sizes="550px"
-                />
-            </motion.div>
-
-            {/* ===== FOREGROUND LEAVES - Medium Size, More Blur ===== */}
-
+            {/* ===== FOREGROUND LEAVES ===== */}
             <motion.div
                 style={{ y: foregroundY1 }}
-                className="absolute -bottom-20 -left-20 w-[350px] h-[350px]"
+                className="absolute -bottom-20 -left-20 w-[350px] h-[350px] will-change-transform"
             >
                 <Image
                     src="/images/mint_leaf_transparent.png"
                     alt=""
                     fill
-                    className="object-contain blur-[15px] opacity-25 rotate-[25deg]"
+                    className={`object-contain opacity-25 rotate-[25deg] ${isLowPower ? '' : 'blur-[15px]'}`}
                     sizes="350px"
                 />
             </motion.div>
 
             <motion.div
                 style={{ y: foregroundY2 }}
-                className="absolute -top-32 -right-20 w-[300px] h-[300px]"
+                className="absolute -top-32 -right-20 w-[300px] h-[300px] will-change-transform"
             >
                 <Image
                     src="/images/mint_leaf_transparent.png"
                     alt=""
                     fill
-                    className="object-contain blur-[15px] opacity-20 -rotate-[40deg]"
+                    className={`object-contain opacity-20 -rotate-[40deg] ${isLowPower ? '' : 'blur-[15px]'}`}
                     sizes="300px"
                 />
             </motion.div>
 
-            <motion.div
-                style={{ y: foregroundY3 }}
-                className="absolute top-[75%] left-[10%] w-[280px] h-[280px]"
-            >
-                <Image
-                    src="/images/mint_leaf_transparent.png"
-                    alt=""
-                    fill
-                    className="object-contain blur-[14px] opacity-22 rotate-[70deg]"
-                    sizes="280px"
-                />
-            </motion.div>
-
-            {/* ===== MIDGROUND LEAVES - Smaller, Less Blur, Rotating ===== */}
-
+            {/* ===== MIDGROUND LEAVES ===== */}
             <motion.div
                 style={{ y: midgroundY1, rotate: midgroundRotate1 }}
-                className="absolute top-[25%] left-[5%] w-[150px] h-[150px]"
+                className="absolute top-[25%] left-[5%] w-[150px] h-[150px] will-change-transform"
             >
                 <Image
                     src="/images/mint_leaf_transparent.png"
                     alt=""
                     fill
-                    className="object-contain blur-[6px] opacity-35"
+                    className={`object-contain opacity-35 ${isLowPower ? '' : 'blur-[6px]'}`}
                     sizes="150px"
                 />
             </motion.div>
 
             <motion.div
-                style={{ y: midgroundY2, rotate: midgroundRotate2 }}
-                className="absolute top-[55%] right-[8%] w-[120px] h-[120px]"
+                style={{ y: midgroundY2 }}
+                className="absolute top-[55%] right-[8%] w-[120px] h-[120px] will-change-transform"
             >
                 <Image
                     src="/images/mint_leaf_transparent.png"
                     alt=""
                     fill
-                    className="object-contain blur-[5px] opacity-30 scale-x-[-1]"
+                    className={`object-contain opacity-30 scale-x-[-1] ${isLowPower ? '' : 'blur-[5px]'}`}
                     sizes="120px"
-                />
-            </motion.div>
-
-            <motion.div
-                style={{ y: midgroundY1 }}
-                className="absolute bottom-[25%] left-[12%] w-[100px] h-[100px]"
-            >
-                <Image
-                    src="/images/mint_leaf_transparent.png"
-                    alt=""
-                    fill
-                    className="object-contain blur-[4px] opacity-28 rotate-[60deg]"
-                    sizes="100px"
-                />
-            </motion.div>
-
-            <motion.div
-                style={{ y: midgroundY3, rotate: midgroundRotate1 }}
-                className="absolute top-[85%] right-[15%] w-[90px] h-[90px]"
-            >
-                <Image
-                    src="/images/mint_leaf_transparent.png"
-                    alt=""
-                    fill
-                    className="object-contain blur-[3px] opacity-32 -rotate-[30deg]"
-                    sizes="90px"
                 />
             </motion.div>
         </div>

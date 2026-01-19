@@ -3,6 +3,7 @@
 import { motion, useMotionValue, useSpring, useTransform, useScroll } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useState, useMemo } from "react";
+import { usePerformance } from "@/lib/PerformanceContext";
 
 // Leaf depth configuration
 type LeafLayer = "foreground" | "midground" | "background";
@@ -12,8 +13,8 @@ interface LeafConfig {
     scale: number;
     blur: number;
     opacity: number;
-    scrollSpeed: number;      // Multiplier for scroll parallax
-    mouseSensitivity: number; // Multiplier for mouse drift
+    scrollSpeed: number;
+    mouseSensitivity: number;
     zIndex: number;
 }
 
@@ -50,7 +51,7 @@ function generateLeaves(count: number): Array<{ id: number; x: number; y: number
     const layers: LeafLayer[] = ["foreground", "midground", "background"];
 
     for (let i = 0; i < count; i++) {
-        const x = (i * 137.5) % 100; // Golden ratio distribution
+        const x = (i * 137.5) % 100;
         const y = (i * 89.3) % 100;
         const rotation = (i * 47) % 360;
         const layer = layers[i % 3];
@@ -62,9 +63,13 @@ function generateLeaves(count: number): Array<{ id: number; x: number; y: number
 
 export default function FloatingLeaves() {
     const [isClient, setIsClient] = useState(false);
-    const leaves = useMemo(() => generateLeaves(18), []); // 6 per layer
+    const { isMobile, isLowPower, prefersReducedMotion } = usePerformance();
 
-    // Mouse tracking
+    // Reduce leaf count on mobile/low-power devices
+    const leafCount = isMobile || isLowPower ? 6 : 18;
+    const leaves = useMemo(() => generateLeaves(leafCount), [leafCount]);
+
+    // Mouse tracking (disabled on mobile)
     const mouseX = useMotionValue(0);
     const mouseY = useMotionValue(0);
 
@@ -74,17 +79,22 @@ export default function FloatingLeaves() {
     useEffect(() => {
         setIsClient(true);
 
+        // Skip mouse tracking on mobile or if reduced motion preferred
+        if (isMobile || prefersReducedMotion) return;
+
         const handleMouseMove = (e: MouseEvent) => {
-            // Normalize to -0.5 to 0.5
             mouseX.set(e.clientX / window.innerWidth - 0.5);
             mouseY.set(e.clientY / window.innerHeight - 0.5);
         };
 
         window.addEventListener("mousemove", handleMouseMove);
         return () => window.removeEventListener("mousemove", handleMouseMove);
-    }, [mouseX, mouseY]);
+    }, [mouseX, mouseY, isMobile, prefersReducedMotion]);
 
     if (!isClient) return null;
+
+    // Completely disable on reduced motion
+    if (prefersReducedMotion) return null;
 
     return (
         <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 5 }}>
@@ -95,6 +105,8 @@ export default function FloatingLeaves() {
                     mouseX={mouseX}
                     mouseY={mouseY}
                     scrollY={scrollY}
+                    isMobile={isMobile}
+                    isLowPower={isLowPower}
                 />
             ))}
         </div>
@@ -110,43 +122,46 @@ interface LeafProps {
     mouseX: ReturnType<typeof useMotionValue<number>>;
     mouseY: ReturnType<typeof useMotionValue<number>>;
     scrollY: ReturnType<typeof useScroll>["scrollY"];
+    isMobile: boolean;
+    isLowPower: boolean;
 }
 
-function Leaf({ id, x, y, rotation, layer, mouseX, mouseY, scrollY }: LeafProps) {
+function Leaf({ id, x, y, rotation, layer, mouseX, mouseY, scrollY, isMobile, isLowPower }: LeafProps) {
     const config = layerConfigs[layer];
 
-    // Mouse drift: leaves move OPPOSITE to mouse direction
+    // Mouse drift (disabled on mobile)
     const springConfig = { damping: 30, stiffness: 40 };
     const driftX = useSpring(
-        useTransform(mouseX, [-0.5, 0.5], [config.mouseSensitivity, -config.mouseSensitivity]),
+        useTransform(mouseX, [-0.5, 0.5], isMobile ? [0, 0] : [config.mouseSensitivity, -config.mouseSensitivity]),
         springConfig
     );
     const driftY = useSpring(
-        useTransform(mouseY, [-0.5, 0.5], [config.mouseSensitivity, -config.mouseSensitivity]),
+        useTransform(mouseY, [-0.5, 0.5], isMobile ? [0, 0] : [config.mouseSensitivity, -config.mouseSensitivity]),
         springConfig
     );
 
-    // Scroll parallax: different speeds per layer
+    // Scroll parallax (simplified on mobile)
+    const scrollMultiplier = isMobile || isLowPower ? 0.5 : 1;
     const scrollParallax = useTransform(
         scrollY,
         [0, 2000],
-        [0, -200 * config.scrollSpeed]
+        [0, -200 * config.scrollSpeed * scrollMultiplier]
     );
 
-    // Gentle floating animation
-    const floatDuration = 8 + (id % 5) * 2; // 8-16s
+    // Animation durations (faster on low-power for less computation)
+    const floatDuration = isLowPower ? 12 + (id % 3) * 2 : 8 + (id % 5) * 2;
     const floatDelay = (id * 0.3) % 3;
 
     return (
         <motion.div
-            className="absolute"
+            className="absolute will-change-transform"
             style={{
                 left: `${x}%`,
                 top: `${y}%`,
-                x: driftX,
+                x: isMobile ? 0 : driftX,
                 y: scrollParallax,
                 zIndex: config.zIndex,
-                filter: config.blur > 0 ? `blur(${config.blur}px)` : undefined,
+                filter: config.blur > 0 && !isLowPower ? `blur(${config.blur}px)` : undefined,
             }}
         >
             <motion.div
@@ -154,18 +169,18 @@ function Leaf({ id, x, y, rotation, layer, mouseX, mouseY, scrollY }: LeafProps)
                 animate={{
                     opacity: config.opacity,
                     scale: config.scale,
-                    rotate: [rotation, rotation + 15, rotation - 10, rotation],
-                    y: [0, -20, 10, 0],
+                    rotate: isLowPower ? rotation : [rotation, rotation + 15, rotation - 10, rotation],
+                    y: isLowPower ? 0 : [0, -20, 10, 0],
                 }}
                 transition={{
                     opacity: { duration: 1, delay: floatDelay },
                     scale: { duration: 1, delay: floatDelay },
-                    rotate: { duration: floatDuration, repeat: Infinity, ease: "easeInOut" },
-                    y: { duration: floatDuration * 0.8, repeat: Infinity, ease: "easeInOut", delay: floatDelay },
+                    rotate: isLowPower ? undefined : { duration: floatDuration, repeat: Infinity, ease: "easeInOut" },
+                    y: isLowPower ? undefined : { duration: floatDuration * 0.8, repeat: Infinity, ease: "easeInOut", delay: floatDelay },
                 }}
             >
                 <motion.div
-                    style={{ x: driftX, y: driftY }}
+                    style={{ x: isMobile ? 0 : driftX, y: isMobile ? 0 : driftY }}
                     className="relative"
                 >
                     <Image
