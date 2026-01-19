@@ -1,0 +1,169 @@
+@font-face {
+    font-family: 'Mirador-SemiBold';
+    src: url('../fonts/Mirador-SemiBold_939bcc9f.woff2') format('woff2'),
+        url('../fonts/Mirador-SemiBold_866f66ea.woff') format('woff'),
+        url('../fonts/Mirador-SemiBold_ee1ceb9b.ttf') format('truetype'),
+        url('../img/Mirador-SemiBold_a1d50fc3.svg') format('svg');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Roboto-Regular';
+    src: url('../fonts/Roboto-Regular_e28d1d0a.woff2') format('woff2'),
+        url('../fonts/Roboto-Regular_54e987c8.woff') format('woff'),
+        url('../fonts/Roboto-Regular_0acc986b.ttf') format('truetype'),
+        url('../img/Roboto-Regular_53149923.svg') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Roboto-Bold';
+    src: url('../fonts/Roboto-Bold_eb2cb495.woff2') format('woff2'),
+        url('../fonts/Roboto-Bold_e58e8032.woff') format('woff'),
+        url('../fonts/Roboto-Bold_99ff18af.ttf') format('truetype'),
+        url('../img/Roboto-Bold_f952b43e.svg') format('svg');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Roboto-Medium';
+    src: url('../fonts/Roboto-Medium_60c4820a.woff2') format('woff2'),
+        url('../fonts/Roboto-Medium_b3ee0659.woff') format('woff'),
+        url('../fonts/Roboto-Medium_97980169.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Mirador-BookItalic';
+    src: url('../fonts/Mirador-BookItalic_511f9406.woff2') format('woff2'),
+        url('../fonts/Mirador-BookItalic_c72d52d4.woff') format('woff'),
+        url('../fonts/Mirador-BookItalic_cc7979e9.ttf') format('truetype');
+
+}
+
+@font-face {
+    font-family: 'Mirador-Medium';
+    src: url('../fonts/Mirador-Medium_023a4cdc.woff2') format('woff2'),
+        url('../fonts/Mirador-Medium_ce9d7d31.woff') format('woff'),
+        url('../fonts/Mirador-Medium_82fb6051.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+@font-face {
+  font-family: 'icomoon';
+  src:  url('../fonts/icomoon_85280972.eot');
+  src:  url('../fonts/icomoon_85280972.eot#iefix') format('embedded-opentype'),
+    url('../fonts/icomoon_0aeffca6.ttf') format('truetype'),
+    url('../fonts/icomoon_fe969761.woff') format('woff'),
+    url('../img/icomoon_22758773.svg') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-LinkedIn:before {
+  content: "\e902";
+  color: #fff;
+}
+.icon-Instagram:before {
+    transition:.3s ease all;    
+  content: "\e904";
+  color: #9B9B9B;
+}
+
+
+a:hover .icon-Instagram:before {
+transition:.3s ease all;
+  color: #f7f6f6;
+}
+
+.icon-Logo-Sublimio:before {
+  content: "\e914";
+
+    transition:.3s ease all;    
+  color: #333333;
+    
+}
+a:hover .icon-Logo-Sublimio:before {
+  
+
+    transition:.3s ease all;    
+  color: #9b9b9b;
+    
+}
+
+
+.icon-Play:before {
+  content: "\e915";
+  color: #fff;
+}
+.icon-Clessidra:before {
+  content: "\e910";
+  color: #595959;
+}
+.icon-Calendario:before {
+  content: "\e911";
+  color: #595959;
+}
+.icon-Logo-air_dark:before {
+  content: "\e912";
+}
+.icon-Logo-solid_dark:before {
+  content: "\e913";
+}
+.icon-ArtDirectorv2:before {
+  content: "\e907";
+}
+.icon-Copywriterv2:before {
+  content: "\e908";
+}
+.icon-Developerv2:before {
+  content: "\e909";
+}
+.icon-Photographerv2:before {
+  content: "\e90a";
+}
+.icon-Strategistv2:before {
+  content: "\e90b";
+}
+.icon-Videomakerv2:before {
+  content: "\e90c";
+}
+.icon-Email:before {
+  content: "\e900";
+  color: #505050;
+}
+.icon-Freccetta-salterina:before {
+  content: "\e901";
+  color: #fff;
+}
+.icon-Menu-Hamburger:before {
+  content: "\e903";
+  color: #fff;
+}

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="3000px" height="75px" viewBox="0 0 3000 75" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Path-9</title>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="wave10" transform="translate(0.000000, -0.000000)" fill="#171717" fill-rule="nonzero">
+            <g id="wave9" transform="translate(1500.000000, 37.092228) scale(-1, 1) rotate(-180.000000) translate(-1500.000000, -37.092228) translate(0.000000, 0.000000)">
+                <path d="M1110,0 C1467,0 1632.05504,74.1844564 1895.33594,74.1844564 C2158.61683,74.1844564 2342.43383,0 2499.45445,0 C2604.13486,0 2770.98338,24.7281521 3000,74.1844564 L3000,0 L0,0 C71.0893388,49.4563043 212.13361,74.1844564 423.132813,74.1844564 C739.631617,74.1844564 753,0 1110,0 Z" id="Path-9"></path>
+            </g>
+        </g>
+    </g>
+</svg>

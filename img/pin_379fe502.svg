@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="34px" viewBox="0 0 32 34" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 61.2 (89653) - https://sketch.com -->
+    <title>Group 2</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <radialGradient cx="50%" cy="50%" fx="50%" fy="50%" r="50%" gradientTransform="translate(0.500000,0.500000),scale(0.214286,1.000000),rotate(90.000000),scale(1.000000,4.721975),translate(-0.500000,-0.500000)" id="radialGradient-1">
+            <stop stop-color="#000000" offset="0%"></stop>
+            <stop stop-color="#000000" stop-opacity="0" offset="100%"></stop>
+        </radialGradient>
+        <filter x="-67.5%" y="-67.5%" width="235.0%" height="235.0%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="3.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+        <polygon id="path-3" points="0.000666666667 0.000833333333 17.9066667 0.000833333333 17.9066667 19.9575 0.000666666667 19.9575"></polygon>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Desktop-v5" transform="translate(-649.000000, -4315.000000)">
+            <g id="Group-2" transform="translate(656.000000, 4322.000000)">
+                <ellipse id="Oval" fill-opacity="0.5" fill="url(#radialGradient-1)" style="mix-blend-mode: multiply;" cx="9" cy="20.5" rx="7" ry="1.5"></ellipse>
+                <g id="Group-3" filter="url(#filter-2)">
+                    <mask id="mask-4" fill="white">
+                        <use xlink:href="#path-3"></use>
+                    </mask>
+                    <g id="Clip-2"></g>
+                    <path d="M8.954,0.000833333333 C4.01066667,0.000833333333 0.000666666667,4.0075 0.000666666667,8.95416667 C0.000666666667,11.8375 1.464,14.5508333 3.50066667,16.0108333 C5.534,17.4641667 8.954,19.9575 8.954,19.9575 C8.954,19.9575 12.374,17.4641667 14.4073333,16.0108333 C16.4406667,14.5508333 17.9073333,11.8375 17.9073333,8.95416667 C17.9073333,4.0075 13.8973333,0.000833333333 8.954,0.000833333333 M8.954,4.1375 C11.6073333,4.1375 13.7673333,6.30083333 13.7673333,8.95416667 C13.7673333,10.6175 12.8473333,12.0341667 11.9973333,12.6441667 C11.114,13.2775 9.96733333,14.1041667 8.954,14.8408333 C7.94066667,14.1041667 6.794,13.2775 5.91066667,12.6475 C5.05733333,12.0341667 4.13733333,10.6175 4.13733333,8.95416667 C4.13733333,6.30083333 6.30066667,4.1375 8.954,4.1375" id="Fill-1" fill="#DB2C15" mask="url(#mask-4)"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

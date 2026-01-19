@@ -1,0 +1,2559 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta content="img/hero_plaque.png" itemprop="image" property="og:image" />
+    <meta content="MeritMint - Handcrafted Award Plaques for Local Champions" property="og:title" />
+    <meta
+        content="MeritMint creates beautiful handmade award plaques to celebrate local achievements. Premium craftsmanship meets personalized recognition."
+        property="og:description" />
+    <meta content="img/hero_plaque.png" name="twitter:image" />
+    <meta content="MeritMint - Handcrafted Award Plaques for Local Champions" name="twitter:title" />
+    <meta
+        content="MeritMint creates beautiful handmade award plaques to celebrate local achievements. Premium craftsmanship meets personalized recognition."
+        name="twitter:description" />
+    <meta content="summary_large_image" name="twitter:card" />
+    <link href="img/meritmint_logo.png" rel="icon" type="image/png" />
+    <title>MeritMint - Handcrafted Award Plaques for Local Champions</title>
+
+    <!-- Restore correct CSS files -->
+    <link href="css/reset_5bd43800.css" rel="stylesheet" />
+    <link crossorigin="anonymous" href="css/foundation.min_14fc6c92.css"
+        integrity="sha256-ogmFxjqiTMnZhxCqVmcqTvjfe1Y/ec4WaRj/aQPvn+I=" rel="stylesheet" />
+    <link href="css/font_fe84f617.css" rel="stylesheet" />
+    <link href="css/style_b225c568.css" rel="stylesheet" />
+
+    <!--   
+    <script src="https://kit.fontawesome.com/2ec4116c75.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenLite.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/latest/jquery.gsap.min.js"></script>	
+    -->
+
+
+
+
+
+    <style>
+        /* ========================================
+           GLOBAL RESETS & FONTS
+           ======================================== */
+        @font-face {
+            font-family: 'SakariGin';
+            src: url('fonts/sakari-gin.woff2') format('woff2'),
+                url('fonts/sakari-gin.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        body {
+            font-family: 'SakariGin', 'Roboto', sans-serif;
+            overflow-x: hidden;
+            width: 100%;
+            /* Mint leaves background */
+            background-image: url('img/mint_leaves_bg.png');
+            background-repeat: repeat;
+            background-size: 400px;
+            background-attachment: fixed;
+            letter-spacing: 0.02em;
+        }
+
+        /* Overlay to keep text readable against the pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.92);
+            /* High opacity white overlay */
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        #wrap {
+            padding-top: 20px;
+            position: relative;
+            background: transparent;
+            /* Allow body bg to show through */
+        }
+
+        /* --- Custom Plaque Carousel Styles --- */
+        .plaque-carousel-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            aspect-ratio: 1/1;
+            background: white;
+        }
+
+        .plaque-slides {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            height: 100%;
+        }
+
+        .plaque-slide {
+            min-width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+        }
+
+        .plaque-slide.active {
+            opacity: 1;
+        }
+
+        .plaque-slide img {
+            max-width: 80%;
+            max-height: 80%;
+            object-fit: contain;
+            filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.2));
+        }
+
+        /* Navigation Dots */
+        .carousel-dots {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ddd;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .dot.active {
+            background: #DAA520;
+            /* Gold */
+        }
+
+        .fixed #menu {
+            transform: translateY(-20px);
+            top: 20px;
+        }
+
+        @media only screen and (min-width: 40.063em) {
+            #wrap {
+                padding-top: 70px;
+            }
+
+            .fixed #menu {
+                top: 70px;
+                transform: translateY(0px);
+            }
+        }
+
+        /* ========================================
+           FLOATING GOLD PARTICLE ANIMATION
+           ======================================== */
+        .sakura-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .sakura-petal {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: radial-gradient(ellipse at center, #FFD700 0%, #DAA520 40%, transparent 70%);
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: sakura-fall linear infinite;
+            transform-origin: center center;
+            box-shadow: 0 0 6px rgba(255, 215, 0, 0.4);
+        }
+
+        .sakura-petal::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            border-radius: inherit;
+            transform: rotate(45deg) scale(0.8);
+            opacity: 0.5;
+        }
+
+        @keyframes sakura-fall {
+            0% {
+                transform: translateY(-100px) translateX(0) rotate(0deg) scale(1);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.7;
+            }
+
+            90% {
+                opacity: 0.4;
+            }
+
+            100% {
+                transform: translateY(100vh) translateX(50px) rotate(360deg) scale(0.3);
+                opacity: 0;
+            }
+        }
+
+        @keyframes sakura-sway {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            50% {
+                transform: translateX(30px);
+            }
+        }
+
+        /* Individual petal variations */
+        .sakura-petal:nth-child(1) {
+            left: 5%;
+            animation-duration: 12s;
+            animation-delay: 0s;
+            width: 20px;
+            height: 20px;
+        }
+
+        .sakura-petal:nth-child(2) {
+            left: 15%;
+            animation-duration: 15s;
+            animation-delay: 2s;
+            width: 28px;
+            height: 28px;
+        }
+
+        .sakura-petal:nth-child(3) {
+            left: 25%;
+            animation-duration: 11s;
+            animation-delay: 4s;
+            width: 22px;
+            height: 22px;
+        }
+
+        .sakura-petal:nth-child(4) {
+            left: 35%;
+            animation-duration: 14s;
+            animation-delay: 1s;
+            width: 26px;
+            height: 26px;
+        }
+
+        .sakura-petal:nth-child(5) {
+            left: 45%;
+            animation-duration: 13s;
+            animation-delay: 3s;
+            width: 18px;
+            height: 18px;
+        }
+
+        .sakura-petal:nth-child(6) {
+            left: 55%;
+            animation-duration: 16s;
+            animation-delay: 5s;
+            width: 24px;
+            height: 24px;
+        }
+
+        .sakura-petal:nth-child(7) {
+            left: 65%;
+            animation-duration: 10s;
+            animation-delay: 2.5s;
+            width: 30px;
+            height: 30px;
+        }
+
+        .sakura-petal:nth-child(8) {
+            left: 75%;
+            animation-duration: 14s;
+            animation-delay: 4.5s;
+            width: 20px;
+            height: 20px;
+        }
+
+        .sakura-petal:nth-child(9) {
+            left: 85%;
+            animation-duration: 12s;
+            animation-delay: 1.5s;
+            width: 25px;
+            height: 25px;
+        }
+
+        .sakura-petal:nth-child(10) {
+            left: 95%;
+            animation-duration: 15s;
+            animation-delay: 3.5s;
+            width: 22px;
+            height: 22px;
+        }
+
+        /* ========================================
+           WAVE BORDERS BETWEEN SECTIONS
+           ======================================== */
+        .wave-border {
+            position: relative;
+            width: 100%;
+            height: 80px;
+            margin-top: -40px;
+            z-index: 10;
+        }
+
+        .wave-border svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .wave-top {
+            background: transparent;
+        }
+
+        .wave-bottom {
+            transform: rotate(180deg);
+        }
+
+        /* ========================================
+           ENHANCED TYPOGRAPHY
+           ======================================== */
+        h1,
+        h2,
+        h3,
+        h4,
+        h5 {
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            line-height: 1.4;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 1.5rem;
+        }
+
+        h2 {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            margin-bottom: 1.2rem;
+        }
+
+        p {
+            font-size: clamp(0.95rem, 2vw, 1.1rem);
+            line-height: 1.8;
+            letter-spacing: 0.03em;
+            color: #444;
+        }
+
+        /* ========================================
+           VISUAL DEPTH & LAYERING
+           ======================================== */
+        .depth-layer {
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .parallax-bg {
+            will-change: transform;
+            transition: transform 0.1s ease-out;
+        }
+
+        /* Hide original sakura petals - replaced with gold particles */
+        .petallo,
+        .leaf,
+        [class*="petallo"],
+        [class*="leaf"],
+        [style*="petalo"] {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            width: 0 !important;
+            height: 0 !important;
+        }
+
+        /* Background texture overlay */
+        .texture-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* ========================================
+           SECTION SPACING ENHANCEMENTS
+           ======================================== */
+        section {
+            position: relative;
+            padding: 100px 0;
+        }
+
+        .grid-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        @media (max-width: 768px) {
+            section {
+                padding: 60px 0;
+            }
+
+            .grid-container {
+                padding: 0 20px;
+            }
+        }
+    </style>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <style>
+        /* ========================================
+           SAFE MODE & VISIBILITY
+           ======================================== */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        html,
+        body {
+            opacity: 1 !important;
+            visibility: visible !important;
+            overflow-x: hidden;
+            width: 100%;
+            background: #fff;
+        }
+
+        * {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Disable transitions on resize to prevent janky animations */
+        body.resizing * {
+            transition: none !important;
+        }
+
+        #s1,
+        section {
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: block;
+        }
+
+        /* Smooth image scaling */
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* ========================================
+    HERO SECTION STYLES (Premium Layout)
+    ======================================== */
+
+        /* Main hero section container */
+        #s1 {
+            position: relative;
+            overflow: visible;
+            min-height: 100vh;
+            padding: 120px 0 100px;
+            background: linear-gradient(180deg, #fdfbf9 0%, #fff 100%);
+        }
+
+        /* Decorative petal overlays for hero */
+        /* Removed pink petal decorations - using gold particles instead */
+        #s1::before,
+        #s1::after {
+            display: none;
+        }
+
+        @keyframes float-petal {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+        }
+
+        #s1>.grid-container {
+            position: relative;
+            z-index: 5;
+            width: 100%;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 60px;
+        }
+
+        /* Force the grid to be a two-column layout on desktop */
+        #s1 .grid-x {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            min-height: 70vh;
+        }
+
+        /* Text container - positioned on LEFT with generous spacing */
+        #s1 .cell.small-12.medium-6:first-of-type {
+            position: relative;
+            z-index: 20;
+            flex: 0 0 45% !important;
+            max-width: 45% !important;
+            width: 45% !important;
+            padding-right: 40px !important;
+            padding-left: 20px;
+        }
+
+        #s1 h1 {
+            font-size: clamp(2.2rem, 4vw, 3.2rem) !important;
+            line-height: 1.25 !important;
+            margin-bottom: 1.8rem !important;
+            letter-spacing: 0.02em;
+            color: #222;
+            font-weight: 300;
+        }
+
+        #s1 p {
+            font-size: clamp(1rem, 1.5vw, 1.15rem) !important;
+            line-height: 1.9 !important;
+            color: #555;
+            max-width: 480px;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Right column for spacing */
+        #s1 .cell.small-12.medium-6.text-right {
+            flex: 0 0 55% !important;
+            max-width: 55% !important;
+            width: 55% !important;
+        }
+
+        /* Bottle container - positioned elegantly on right */
+        #bottle_shadow {
+            position: absolute !important;
+            top: 50% !important;
+            right: 8% !important;
+            left: auto !important;
+            transform: translateY(-50%) rotate(-3deg) !important;
+            width: 420px !important;
+            height: 680px !important;
+            z-index: 10;
+            pointer-events: none;
+            filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.12));
+        }
+
+        #bottle {
+            width: 100% !important;
+            height: 100% !important;
+            background-size: contain !important;
+            background-repeat: no-repeat !important;
+            background-position: center !important;
+            transition: transform 0.5s ease;
+        }
+
+        #bottle:hover {
+            transform: scale(1.02) rotate(1deg);
+        }
+
+        #shadow {
+            width: 100%;
+            height: 120px;
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        /* Sun decoration - push to right */
+        #JDG {
+            right: -150px !important;
+            left: auto !important;
+        }
+
+        /* ========================================
+    RESPONSIVE BREAKPOINTS
+    ======================================== */
+
+        /* Extra Large screens (1600px+) */
+        @media only screen and (min-width: 100em) {
+            #bottle_shadow {
+                right: 10% !important;
+                width: 500px !important;
+                height: 800px !important;
+            }
+
+            #s1 .cell.small-12.medium-6:first-of-type {
+                flex: 0 0 45% !important;
+                max-width: 45% !important;
+                width: 45% !important;
+            }
+        }
+
+        /* Large screens (1200px - 1599px) */
+        @media only screen and (max-width: 99.99em) and (min-width: 75em) {
+            #bottle_shadow {
+                right: 3% !important;
+                width: 400px !important;
+                height: 650px !important;
+            }
+
+            #s1 .cell.small-12.medium-6:first-of-type {
+                flex: 0 0 50% !important;
+                max-width: 50% !important;
+                width: 50% !important;
+            }
+        }
+
+        /* Medium-Large screens (1024px - 1199px) */
+        @media only screen and (max-width: 74.99em) and (min-width: 64.01em) {
+            #bottle_shadow {
+                right: 0 !important;
+                width: 350px !important;
+                height: 580px !important;
+            }
+
+            #s1 .cell.small-12.medium-6:first-of-type {
+                flex: 0 0 55% !important;
+                max-width: 55% !important;
+                width: 55% !important;
+                padding-right: 40px !important;
+            }
+        }
+
+        /* ========================================
+           TABLET & MOBILE RESPONSIVE (max-width: 1024px)
+           ======================================== */
+        @media only screen and (max-width: 64em) {
+            #s1 {
+                padding: 120px 20px 60px !important;
+                min-height: auto !important;
+            }
+
+            #s1>.grid-container {
+                padding: 0 15px;
+            }
+
+            /* STACK LAYOUT: Flex direction column */
+            #s1 .grid-x {
+                flex-direction: column !important;
+                align-items: center !important;
+                gap: 30px;
+            }
+
+            /* Text container full width and centered */
+            #s1 .cell.small-12.medium-6:first-of-type {
+                flex: 0 0 100% !important;
+                max-width: 100% !important;
+                width: 100% !important;
+                padding: 0 20px !important;
+                text-align: center !important;
+                order: 1;
+            }
+
+            /* Right column hidden */
+            #s1 .cell.small-12.medium-6.text-right {
+                display: none !important;
+            }
+
+            /* Bottle becomes relative and centered below text */
+            #bottle_shadow {
+                position: relative !important;
+                top: auto !important;
+                right: auto !important;
+                left: auto !important;
+                transform: none !important;
+                margin: 30px auto 0 !important;
+                width: 350px !important;
+                height: 570px !important;
+                order: 2;
+            }
+
+            #s1 h1 {
+                font-size: 2.5rem !important;
+                line-height: 1.2 !important;
+                margin-bottom: 20px !important;
+                font-weight: 600;
+            }
+
+            #s1 p {
+                font-size: 1.1rem !important;
+                line-height: 1.6 !important;
+                max-width: 600px;
+                margin: 0 auto 15px !important;
+                padding: 0 10px;
+            }
+
+            /* Hide sun decoration on tablet */
+            #JDG {
+                display: none !important;
+            }
+
+            /* Better menu icon sizing */
+            #menu {
+                padding: 20px 25px;
+            }
+        }
+
+        /* ========================================
+           MOBILE PORTRAIT (max-width: 768px)
+           ======================================== */
+        @media only screen and (max-width: 48em) {
+            #s1 {
+                padding: 100px 15px 50px !important;
+            }
+
+            #bottle_shadow {
+                width: 280px !important;
+                height: 460px !important;
+                margin-top: 25px !important;
+            }
+
+            #s1 h1 {
+                font-size: 2rem !important;
+                margin-bottom: 15px !important;
+            }
+
+            #s1 p {
+                font-size: 1rem !important;
+                line-height: 1.5 !important;
+                padding: 0 15px;
+            }
+
+            /* Tighter spacing for mobile */
+            #s1 .grid-x {
+                gap: 20px;
+            }
+        }
+
+        /* ========================================
+           SMALL MOBILE (max-width: 480px)
+           ======================================== */
+        @media only screen and (max-width: 30em) {
+            #s1 {
+                padding: 90px 10px 40px !important;
+            }
+
+            #bottle_shadow {
+                width: 240px !important;
+                height: 400px !important;
+                margin-top: 20px !important;
+            }
+
+            #s1 h1 {
+                font-size: 1.75rem !important;
+                line-height: 1.3 !important;
+            }
+
+            #s1 p {
+                font-size: 0.95rem !important;
+                padding: 0 10px;
+            }
+
+            /* Smaller menu icon */
+            #menu {
+                padding: 15px 20px;
+            }
+
+            .bottle-name-ita {
+                display: none !important;
+            }
+        }
+
+        /* ========================================
+    GENERAL MOBILE IMPROVEMENTS
+    ======================================== */
+
+        /* Improve touch targets */
+        @media (hover: none) and (pointer: coarse) {
+
+            a,
+            button {
+                min-height: 44px;
+                min-width: 44px;
+            }
+        }
+
+        /* Hide decorative petals on tablet/mobile for cleaner look */
+        @media only screen and (max-width: 64em) {
+
+            .petallo,
+            .leaf,
+            #leaf1,
+            #leaf2,
+            #leaf3,
+            #leafIntro,
+            #leafIntro2,
+            #petaloIntro,
+            #leafCarou,
+            #leafMaterials,
+            #leafFooter1,
+            #leafFooter2,
+            #leafFooter3 {
+                display: none !important;
+            }
+
+            /* Scale down menu icons on mobile to prevent overlap */
+            #menu .cell img {
+                height: 30px !important;
+                width: auto !important;
+            }
+
+            #menu {
+                padding: 15px !important;
+            }
+        }
+
+        /* Ensure images scale properly */
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Fix potential z-index issues */
+        #menu {
+            z-index: 1000;
+        }
+
+        /* ========================================
+    SAKE KASU / SECRETS SECTION (Premium Style)
+    ======================================== */
+
+        #sake-kasu {
+            padding: 120px 0 80px;
+            overflow: hidden;
+            background: linear-gradient(180deg, #fff 0%, #faf8f5 50%, #fff 100%);
+            position: relative;
+        }
+
+        /* Wave border at top of section */
+        #sake-kasu::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 1440 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,30 C240,60 480,0 720,30 C960,60 1200,0 1440,30 L1440,0 L0,0 Z' fill='%23ffffff'/%3E%3C/svg%3E") no-repeat center;
+            background-size: cover;
+            z-index: 5;
+        }
+
+        #sake-kasu .grid-container {
+            max-width: 1200px;
+            padding: 0 40px;
+        }
+
+        /* Center content effectively on desktop */
+        #sake-kasu>.grid-container>.grid-x {
+            justify-content: center;
+        }
+
+        #sake-kasu h2 {
+            font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+            margin-bottom: 30px;
+            line-height: 1.25;
+            text-align: center;
+            color: #333;
+            font-weight: 300;
+            letter-spacing: 0.03em;
+        }
+
+        #sake-kasu>.grid-container>.grid-x>.cell>.grid-x>.r {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        /* Circular Ingredient Medallions - matching original */
+        #top-carou {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-bottom: 50px;
+            justify-content: center;
+        }
+
+        #top-carou .cello {
+            flex: 0 1 calc(33% - 30px);
+            max-width: 320px;
+            min-width: 260px;
+            padding: 35px 25px;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.06);
+            text-align: center;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        #top-carou .cello:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Circular image container */
+        .cello .ingredient,
+        .cello .ico-container {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f8f6f3 0%, #ebe7e0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .cello .ingredient img,
+        .cello .ico img {
+            max-width: 80%;
+            max-height: 80%;
+            object-fit: contain;
+        }
+
+        .cello h5 {
+            font-size: 1.35rem;
+            margin: 20px 0 12px;
+            color: #333;
+            font-weight: 400;
+            letter-spacing: 0.04em;
+        }
+
+        .cello p {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #666;
+            padding: 0 10px;
+        }
+
+        .cello .ico {
+            margin-top: 15px;
+        }
+
+        .cello .bu {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+        }
+
+        /* Carousel image center */
+        #carou {
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 30px auto;
+            max-width: 800px;
+        }
+
+        #carou img {
+            width: 100%;
+            height: auto;
+        }
+
+        /* Bottom carousel section */
+        #bottom-carou {
+            padding: 60px 0;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #bottom-carou h2 {
+            max-width: 600px !important;
+            /* Allow wider text */
+            margin: 0 auto 20px;
+        }
+
+        #bottom-carou p {
+            max-width: 700px;
+            margin: 0 auto 15px;
+        }
+
+        /* Ingredients grid */
+        .grid-ingre {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+
+        .cello-ing {
+            flex: 0 1 calc(45% - 15px);
+            /* Slightly narrower */
+            max-width: 500px;
+            min-width: 280px;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 248, 248, 0.9) 100%);
+            border-radius: 16px;
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.06);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .cello-ing:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .cello-ing .ingredient {
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .cello-ing .lo-ingredient {
+            max-height: 160px;
+            /* Cap height */
+            width: auto;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .cello-ing h5 {
+            font-size: 1.3rem;
+            margin: 10px 0;
+        }
+
+        .cello-ing .ideo {
+            max-width: 60px;
+            margin: 10px 0;
+        }
+
+        /* ========================================
+    HISTORY SECTION (Premium Dark Aesthetic)
+    ======================================== */
+
+        #history {
+            background: linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%);
+            padding: 140px 0 120px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Wave border at top */
+        #history::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 1440 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,40 C360,80 720,0 1080,40 C1260,60 1380,30 1440,40 L1440,0 L0,0 Z' fill='%23faf8f5'/%3E%3C/svg%3E") no-repeat center;
+            background-size: cover;
+            z-index: 5;
+        }
+
+        /* Atmospheric glow effect */
+        #history::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 300px;
+            background: radial-gradient(ellipse at center bottom, rgba(255, 255, 255, 0.03) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        #history .grid-container {
+            max-width: 900px;
+            padding: 0 40px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 3;
+        }
+
+        #history .grid-x {
+            justify-content: center;
+        }
+
+        #history h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            color: #fff !important;
+            margin-bottom: 40px;
+            line-height: 1.2;
+            text-align: center;
+            font-weight: 300;
+            letter-spacing: 0.05em;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        #history p {
+            font-size: 1.15rem;
+            color: #bbb !important;
+            line-height: 2;
+            margin-bottom: 25px;
+            max-width: 750px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+            letter-spacing: 0.02em;
+        }
+
+        /* Background image styling */
+        #history .bgT {
+            opacity: 0.4;
+            filter: contrast(1.1) brightness(0.8);
+        }
+
+        #wave2 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background-size: cover;
+            background-position: center top;
+        }
+
+        #glf {
+            padding-top: 40px;
+            display: none;
+        }
+
+        /* ========================================
+    SAKE / RIVER SECTION
+    ======================================== */
+
+        #sake {
+            min-height: 500px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        #sake .wave {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background-size: cover;
+        }
+
+        #wave4 {
+            bottom: 0;
+        }
+
+        #wave5 {
+            top: 0;
+        }
+
+        #didaus {
+            padding: 20px;
+        }
+
+        /* ========================================
+    LOCATION SECTION (Premium Style)
+    ======================================== */
+
+        #location {
+            padding: 120px 0 140px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(180deg, #0f0f0f 0%, #1a1a1a 100%);
+        }
+
+        /* Wave border at top */
+        #location::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 1440 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,40 C360,80 720,0 1080,40 C1260,60 1380,30 1440,40 L1440,0 L0,0 Z' fill='%231a1a1a'/%3E%3C/svg%3E") no-repeat center;
+            background-size: cover;
+            z-index: 5;
+        }
+
+        #location .grid-container {
+            max-width: 900px;
+            padding: 0 40px;
+            text-align: center;
+            position: relative;
+            z-index: 3;
+        }
+
+        #location .grid-x {
+            justify-content: center;
+        }
+
+        #location h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            margin-bottom: 35px;
+            line-height: 1.25;
+            color: #fff;
+            font-weight: 300;
+            letter-spacing: 0.04em;
+        }
+
+        #location p {
+            font-size: 1.15rem;
+            line-height: 2;
+            margin-bottom: 30px;
+            color: #ccc;
+            max-width: 750px;
+            margin-left: auto;
+            margin-right: auto;
+            letter-spacing: 0.02em;
+        }
+
+        #location p.min {
+            font-size: 0.9rem;
+            color: #777;
+            font-style: italic;
+        }
+
+        #logozzi {
+            margin-bottom: 40px;
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        #logozzi img {
+            height: 60px;
+            width: auto;
+        }
+
+        #sakari-gin-neck {
+            position: absolute;
+            right: -50px;
+            bottom: -50px;
+            width: 300px;
+            height: 350px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            z-index: 5;
+            opacity: 0.8;
+        }
+
+        /* ========================================
+    FOOTER SECTION
+    ======================================== */
+
+        #contacts {
+            background: #111 !important;
+            padding: 80px 0 40px;
+            position: relative;
+        }
+
+        #contacts .footer-content {
+            max-width: 1200px;
+            padding: 0 20px;
+        }
+
+        .f-title {
+            display: block;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff !important;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        .f-p {
+            display: block;
+            font-size: 0.95rem;
+            color: #999 !important;
+            line-height: 1.7;
+            margin-bottom: 12px;
+        }
+
+        .f-p a {
+            color: #bbb;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .f-p a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+
+        .f-p-j {
+            display: block;
+            margin-top: 20px;
+        }
+
+        .f-p-j a {
+            color: #bbb;
+            text-decoration: none;
+        }
+
+        /* Remove overlap in footer */
+        #contacts .cell {
+            margin-bottom: 30px;
+        }
+
+        #fInsta {
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        #fInsta a {
+            color: #888;
+            font-size: 1.8rem;
+            transition: color 0.3s ease;
+        }
+
+        #fInsta a:hover {
+            color: #fff;
+        }
+
+        /* Scroll to top button */
+        #scrollUp {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+        #scrollUp.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #scrollUp:hover {
+            transform: translateY(-5px);
+            background: #fff;
+        }
+
+        #scrollUp svg g {
+            stroke: #333 !important;
+        }
+
+        /* ========================================
+    RESPONSIVE - TABLET (768px - 1024px)
+    ======================================== */
+
+        @media only screen and (max-width: 64em) {
+
+            /* Sake Kasu section */
+            #sake-kasu {
+                padding: 80px 20px 60px;
+            }
+
+            #sake-kasu h2 {
+                font-size: 2.2rem;
+                text-align: center;
+                margin-bottom: 40px;
+                line-height: 1.3;
+            }
+
+            #top-carou {
+                flex-direction: column;
+                gap: 25px;
+                padding: 0 15px;
+            }
+
+            #top-carou .cello {
+                flex: 1 1 100%;
+                max-width: 600px;
+                margin: 0 auto;
+            }
+
+            .grid-ingre {
+                flex-direction: column;
+                gap: 25px;
+                padding: 0 15px;
+            }
+
+            .cello-ing {
+                flex: 1 1 100%;
+                max-width: 600px;
+                margin: 0 auto;
+            }
+
+            /* History section */
+            #history {
+                padding: 80px 20px;
+            }
+
+            #history h2 {
+                font-size: 2rem;
+                text-align: center;
+                margin-bottom: 25px;
+            }
+
+            #history p {
+                text-align: center;
+                font-size: 1.1rem;
+                line-height: 1.7;
+                max-width: 700px;
+                margin: 0 auto 20px;
+            }
+
+            /* Location section */
+            #location {
+                padding: 80px 20px 60px;
+            }
+
+            #location h2 {
+                font-size: 2rem;
+                text-align: center;
+                margin-bottom: 25px;
+            }
+
+            #location p {
+                text-align: center;
+                font-size: 1.1rem;
+                line-height: 1.7;
+                max-width: 700px;
+                margin: 0 auto;
+            }
+
+            #logozzi {
+                justify-content: center;
+                gap: 20px;
+                padding: 20px;
+            }
+
+            #sakari-gin-neck {
+                display: none;
+            }
+
+            /* Footer */
+            #contacts {
+                padding: 60px 20px 40px;
+            }
+
+            #contacts .grid-x {
+                flex-direction: column;
+                gap: 40px;
+            }
+
+            #contacts .cell {
+                text-align: center;
+                width: 100% !important;
+                max-width: 100% !important;
+                flex: 0 0 100% !important;
+            }
+
+            .f-title,
+            .f-p,
+            .f-p-j {
+                text-align: center;
+            }
+        }
+
+        /* ========================================
+    RESPONSIVE - MOBILE (up to 768px)
+    ======================================== */
+
+        @media only screen and (max-width: 48em) {
+
+            /* Sake Kasu section */
+            #sake-kasu {
+                padding: 60px 15px 40px;
+            }
+
+            #sake-kasu h2 {
+                font-size: 1.8rem;
+                line-height: 1.3;
+                margin-bottom: 30px;
+            }
+
+            .cello {
+                padding: 25px 20px;
+                margin-bottom: 20px;
+            }
+
+            .cello h5 {
+                font-size: 1.3rem;
+                margin-bottom: 10px;
+            }
+
+            .cello p {
+                font-size: 1rem;
+                line-height: 1.6;
+            }
+
+            .cello-ing {
+                padding: 25px 20px;
+                margin-bottom: 20px;
+            }
+
+            .cello-ing .lo-ingredient {
+                max-height: 160px;
+            }
+
+            .cello-ing h5 {
+                font-size: 1.3rem;
+            }
+
+            .cello-ing p {
+                font-size: 1rem;
+                line-height: 1.6;
+            }
+
+            /* History section */
+            #history {
+                padding: 60px 15px;
+            }
+
+            #history h2 {
+                font-size: 1.7rem;
+                margin-bottom: 20px;
+            }
+
+            #history p {
+                font-size: 1rem;
+                line-height: 1.6;
+            }
+
+            /* Sake section */
+            #sake {
+                min-height: 300px;
+                padding: 40px 15px;
+            }
+
+            /* Location section */
+            #location {
+                padding: 60px 15px 40px;
+            }
+
+            #location h2 {
+                font-size: 1.7rem;
+                margin-bottom: 20px;
+            }
+
+            #location p {
+                font-size: 1rem;
+                line-height: 1.6;
+            }
+
+            #logozzi img {
+                height: 40px;
+            }
+
+            /* Footer */
+            #contacts {
+                padding: 40px 0 25px;
+            }
+
+            .f-title {
+                font-size: 1rem;
+            }
+
+            .f-p {
+                font-size: 0.85rem;
+            }
+        }
+
+        /* ========================================
+    RESPONSIVE - SMALL MOBILE (up to 480px)
+    ======================================== */
+
+        @media only screen and (max-width: 30em) {
+
+            #sake-kasu h2,
+            #bottom-carou h2,
+            #history h2,
+            #location h2 {
+                font-size: 1.3rem;
+            }
+
+            .cello h5,
+            .cello-ing h5 {
+                font-size: 1.1rem;
+            }
+
+            .cello p,
+            .cello-ing p {
+                font-size: 0.9rem;
+            }
+
+            #logozzi img {
+                height: 35px;
+            }
+
+            #scrollUp {
+                bottom: 20px;
+                right: 20px;
+                width: 36px;
+                height: 36px;
+            }
+        }
+
+        /* ========================================
+    REDUCE WHITESPACE
+    ======================================== */
+
+        .sese {
+            position: relative;
+        }
+
+        /* Reduce gaps between sections */
+        .wave {
+            margin: 0;
+        }
+
+        /* Tighter spacing on content */
+        .grid-margin-y>.cell {
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Remove excessive padding */
+        .spacer {
+            height: 20px !important;
+        }
+
+        /* Ensure content doesn't overflow */
+        .grid-container {
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body id="body">
+    <!-- Floating Sakura Petals -->
+    <div class="sakura-container">
+        <div class="sakura-petal"></div>
+        <div class="sakura-petal"></div>
+        <div class="sakura-petal"></div>
+        <div class="sakura-petal"></div>
+        <div class="sakura-petal"></div>
+        <div class="sakura-petal"></div>
+        <div class="sakura-petal"></div>
+        <div class="sakura-petal"></div>
+        <div class="sakura-petal"></div>
+        <div class="sakura-petal"></div>
+    </div>
+    <div class="" id="site-preloader" style="opacity: 0; display: none;">
+        <div class="" id="site-preloader-bar" style="width: 100%;"></div>
+        <div id="site-preloader-box">
+            <img class="" id="site-preloader-image" src="img/logo_small_c5400f45.svg"
+                style="transform: rotateZ(720deg) translateY(100px);" />
+        </div>
+    </div>
+
+    <div id="wrap">
+        <div class="_slide-bl" id="menuOver">
+            <!--
+        <section id="closeMenu" style="z-index:1">
+            <div class="grid-container">
+                <div class="grid-x">
+                    <div class="cell small-6 text-right"></div>
+                    <div class="cell small-6 text-right"><a id="closeMenuA" href="#"><img  src="img/close.svg"></a></div>
+                </div>
+            </div>
+        </section>
+-->
+            <section id="menuOverContent" style="overflow: hidden;">
+                <div class="grid-container" style="position:relative">
+                    <!--<svg id="pattozzo" width="443px" height="417px" viewBox="0 0 443 417" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <title>Path 2 Copy 3</title>
+                    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                        <path d="M383.857545,99.7635589 C253.130198,-71.1114411 -57.5633939,-16.6919704 10.6700452,235.371418 C78.9034842,487.434806 309.677241,415.36674 383.852854,375.193246 C426.167969,352.275391 445.467348,302.581866 441.1875,243.21875 C438.202416,201.814507 437.572031,169.974291 383.857545,99.7635589 Z" id="lopo" stroke="#E6E6E6"></path>
+                    </g>
+                </svg>-->
+                    <div class="grid-x align-middle">
+                        <div class="cell small-8">
+                            <div id="menuLogo">
+                                <span class="hide-for-small-only overflow"><a href="#" id="_menuLogoDaje">
+                                        <h1 class="title yop" data-delay="0" style="margin-bottom:0"><img
+                                                src="img/logo_menu_991dc592.jpg" /></h1>
+                                    </a></span>
+                            </div>
+                            <ul id="menuLinks">
+                                <li><span class="overflow"><a class="yop" data-delay="0" href="#sake-kasu"
+                                            id="r_sake-kasu">Craftsmanship</a></span></li>
+                                <li><span class="overflow"><a class="yop" data-delay=".1" href="#botanicals"
+                                            id="r_botanics-img">Materials</a></span></li>
+                                <li><span class="overflow"><a class="yop" data-delay=".2" href="#history"
+                                            id="r_history">Our Story</a></span></li>
+                                <li><span class="overflow"><a class="yop" data-delay=".3" href="#location"
+                                            id="r_location">Process</a></span></li>
+                                <li><span class="overflow"><a class="yop active" data-delay=".4" href="#contacts"
+                                            id="r_contacts">Contact</a></span></li>
+                            </ul>
+                            <div id="menuSocial">
+                                <span class="overflow"><a class="yop" href="https://www.instagram.com/meritmint/"
+                                        target="_blank"><i class="icon-Instagram"></i></a></span>
+                            </div>
+                        </div>
+                        <div class="cell small-4 text-right">
+                            <!--
+                        <ul id="menuLangs">
+                            <li><span  class="overflow"><a class="yop" data-delay="0" href="<br />
+<b>Warning</b>:  Undefined global variable $_SESSION in <b>/home/vuser/0/9/0006790005/www.sakarigin.com/index.php</b> on line <b>204</b><br />
+<br />
+<b>Warning</b>:  Trying to access array offset on value of type null in <b>/home/vuser/0/9/0006790005/www.sakarigin.com/index.php</b> on line <b>204</b><br />
+">ENG</a></span></li>
+                            <li><span  class="overflow"><a class="yop" data-delay="0" href="<br />
+<b>Warning</b>:  Undefined global variable $_SESSION in <b>/home/vuser/0/9/0006790005/www.sakarigin.com/index.php</b> on line <b>205</b><br />
+<br />
+<b>Warning</b>:  Trying to access array offset on value of type null in <b>/home/vuser/0/9/0006790005/www.sakarigin.com/index.php</b> on line <b>205</b><br />
+/ja">日本語</a></span></li>
+                            <li><span  class="overflow"><a class="yop" data-delay="0" href="<br />
+<b>Warning</b>:  Undefined global variable $_SESSION in <b>/home/vuser/0/9/0006790005/www.sakarigin.com/index.php</b> on line <b>206</b><br />
+<br />
+<b>Warning</b>:  Trying to access array offset on value of type null in <b>/home/vuser/0/9/0006790005/www.sakarigin.com/index.php</b> on line <b>206</b><br />
+/it">ITA</a></span></li>
+                            <li><span  class="overflow"><a class="yop" data-delay="0" href="<br />
+<b>Warning</b>:  Undefined global variable $_SESSION in <b>/home/vuser/0/9/0006790005/www.sakarigin.com/index.php</b> on line <b>207</b><br />
+<br />
+<b>Warning</b>:  Trying to access array offset on value of type null in <b>/home/vuser/0/9/0006790005/www.sakarigin.com/index.php</b> on line <b>207</b><br />
+/fr">FRA</a></span></li>
+                            <li><span  class="overflow"><a class="yop" data-delay="0" href="<br />
+<b>Warning</b>:  Undefined global variable $_SESSION in <b>/home/vuser/0/9/0006790005/www.sakarigin.com/index.php</b> on line <b>208</b><br />
+<br />
+<b>Warning</b>:  Trying to access array offset on value of type null in <b>/home/vuser/0/9/0006790005/www.sakarigin.com/index.php</b> on line <b>208</b><br />
+/es">ESP</a></span></li>
+                            <li><span  class="overflow"><a class="yop" data-delay="0" href="<br />
+<b>Warning</b>:  Undefined global variable $_SESSION in <b>/home/vuser/0/9/0006790005/www.sakarigin.com/index.php</b> on line <b>209</b><br />
+<br />
+<b>Warning</b>:  Trying to access array offset on value of type null in <b>/home/vuser/0/9/0006790005/www.sakarigin.com/index.php</b> on line <b>209</b><br />
+/ru">RUS</a></span></li>                                                                                    
+                        </ul>
+                        -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <section id="menu">
+            <div class="grid-container">
+                <div class="grid-x align-middle">
+                    <div class="cell small-6"><img id="sakari-logo-min" src="img/meritmint_logo.png"
+                            style="transform: translate(0px, 0px); height: 50px; width: auto;" />
+                    </div>
+                    <div class="cell small-6 text-right"><span class="overflow" style="height:31px;text-align:center">
+                            <span id="blocchi">
+                                <a href="#" id="openMenuA" style="display:block"><img
+                                        src="img/hamburger_3bd0431f.svg" /></a>
+                                <a href="#" id="closeMenuA" style="display:block"><img
+                                        src="img/close_9549527f.svg" /></a>
+                            </span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="sese" id="s1">
+            <div class="grid-container" style="position:relative">
+                <!--
+            <div id="leaf3" data-depth='2.80'  class="parallax leaf" style="background-image:url(img/petalo.png)"></div>
+            <div id="leaf1" data-depth='3.00' class="parallax leaf hide-for-small-only" style="background-image:url(img/petalo.png)"></div>
+            <div id="leaf2" data-depth='3.00' class="parallax leaf" style="background-image:url(img/petalo.png)"></div>
+            -->
+                <div class="grid-x" style="position:relative">
+                    <div class="cell small-12 medium-6">
+                        <span class="overflow" style="display:block">
+                            <h1 class="inside title" data-delay=".4" style="margin-bottom:0">Merit<span class="gin"
+                                    style="color:#DAA520;">Mint</span></h1>
+                        </span>
+                        <span class="overflow" style="display:block">
+                            <h1 class="title inside" data-delay=".5" style="margin-bottom:0"><span
+                                    style="color:#646464">Handcrafted Award Plaques for Local Champions</span></h1>
+                        </span>
+                        <span class="overflow">
+                            <p data-delay=".6" style="margin-top: 25px; margin-bottom: 0px;">
+                                Celebrate achievements that matter. Our premium handmade plaques honor the winners of
+                                local awards with timeless elegance.</p>
+                        </span>
+                        <span class="overflow">
+                            <p data-delay=".7" style="margin-top: 25px; margin-bottom: 0px;">
+                                Each plaque is crafted from premium hardwoods, featuring precision engraving and
+                                optional gold leaf accents. Whether for sports, arts, academics, or community service—we
+                                create lasting tributes to excellence.
+                            </p>
+                        </span>
+                        <span class="overflow">
+                            <p class="min inside" data-delay="1.4" style="margin-top:.6rem;margin-bottom:0">
+                                Custom designs available. Personalized engraving included. Ships nationwide within 5-7
+                                business days.
+                            </p>
+                        </span>
+                    </div>
+                    <div class="cell small-12 medium-6 text-right">
+                        <div class="bottle-name-ita">
+                        </div>
+                    </div>
+                </div>
+                <div id="bottle_shadow">
+                    <div class="parallax" data-depth="0.50" id="bottle"
+                        style="background-image: url(img/hero_plaque.png); transform-origin: 150px 300px; transform: rotate(-5deg);">
+                    </div>
+                    <div id="shadow"
+                        style="background-image: url(img/shadow_b8a4b2e0.png); opacity: 0.15; transform-origin: 50% 50%; transform: scale(1.5, 0.8);">
+                    </div>
+                </div>
+                <div class="parallax rotallo" data-depth="0.20" id="JDG"
+                    style="background-image: url(img/meritmint_logo.png); background-size: contain; transform-origin: 225px 225px; transform: translate(0px, 0px); opacity: 0.15;">
+                </div>
+            </div>
+            <div class="wave" id="wave1">
+            </div>
+        </section>
+        <section class="sese" id="sake-kasu">
+            <div class="grid-container" style="position:relative">
+                <div class="grid-x">
+                    <div class="cell small-12">
+                        <div class="grid-x align-center grid-margin-y">
+                            <div class="r cell small-12 medium-11" style="transform: translate(0px, 0px); opacity: 1;">
+                                <h2>Create a Buzz</h2>
+                                <p style="font-size: 1.2rem; font-weight: bold; color: #DAA520;">Bring your news worthy
+                                    moments to life</p>
+                                <p>Were you nominated as one of the best in your city? Featured as a 40 under 40
+                                    recipient? Got a magazine article you want to keep forever? Show off your memories
+                                    with a custom MeritMint plaque.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- New Carousel Section -->
+                <div class="grid-x align-center" style="padding: 40px 0;">
+                    <div class="cell small-12 medium-10">
+                        <div class="plaque-carousel-container" id="plaqueSwiper">
+                            <div class="plaque-slides" id="plaqueSlidesTrack">
+                                <div class="plaque-slide active"><img src="img/plaque_slide_1.png"
+                                        alt="Premium Walnut Plaque"></div>
+                                <div class="plaque-slide"><img src="img/plaque_slide_2.png" alt="Modern Acrylic Plaque">
+                                </div>
+                                <div class="plaque-slide"><img src="img/plaque_slide_3.png"
+                                        alt="Rosewood Piano Finish Plaque"></div>
+                            </div>
+
+                            <div class="carousel-dots">
+                                <span class="dot active" onclick="changeSlide(0)"></span>
+                                <span class="dot" onclick="changeSlide(1)"></span>
+                                <span class="dot" onclick="changeSlide(2)"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid-x" id="top-carou">
+                    <div class="cello cell small-12 medium-6 tete l"
+                        style="transform: translate(0px, 0px); opacity: 1;">
+                        <span class="overflow gus"><img class="bu" data-delay=".2" src="img/wood_materials.png"
+                                style="transform: translate(0px, 0px); opacity: 1;" /></span>
+                        <h5>Premium Hardwoods</h5>
+                        <p>Each plaque begins with carefully selected premium hardwoods—rich mahogany, elegant walnut,
+                            warm cherry, or classic maple. We source only the finest timber with beautiful grain
+                            patterns that will endure for generations.</p>
+                        <div class="spacer"></div>
+                    </div>
+                    <div class="cello cell small-12 medium-6 tete r"
+                        style="transform: translate(0px, 0px); opacity: 1;">
+                        <span class="overflow gus"><img class="bu" data-delay=".4" src="img/engraving_detail.png"
+                                style="transform: translate(0px, 0px); opacity: 1;" /></span>
+                        <h5>Precision Engraving</h5>
+                        <p>Our master craftsmen use state-of-the-art CNC engraving combined with traditional
+                            hand-finishing techniques to create crisp, elegant lettering and designs that capture every
+                            detail of your achievement.</p>
+                    </div>
+                </div>
+                <div class="grid-x">
+                    <div class="cell small-12">
+                        <div class="grid-x">
+                            <div class="cell small-12 medium-2">
+                            </div>
+                            <div class="cell small-12 medium-10" style="position:relative">
+                                <!--div id="caroDida">
+                                    <p style="font-size:10px" class="min">
+                                        <span class="seg" style="color:#D3D3D3">^</span>
+                                        Sakari Sake brewing
+                                    </p>
+                                </div>-->
+                                <div class="fader" id="carou">
+                                    <img class="slide" src="img/craftsmanship.png" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bottom-carou grid-x align-center grid-margin-y" id="bottom-carou">
+                    <div class="r cell small-12 medium-11" style="transform: translate(0px, 0px); opacity: 1;">
+                        <h2 style="max-width:450px">Finishing Touches for a Perfect Tribute</h2>
+                        <p>Premium hardwoods and precision engraving are just the beginning. </p>
+                        <p>We offer a range of elegant finishing options to make your plaque truly special and perfectly
+                            suited to the occasion. </p>
+                        <p>Each element is applied with care by our skilled artisans.</p>
+                    </div>
+                    <div class="r" id="botanics-img" style="transform: translate(-50%, 0%); opacity: 1;"></div>
+                </div>
+                <div class="grid-x grid-ingre">
+                    <div class="cello-ing cello cell small-12 medium-6 tete l"
+                        style="transform: translate(0px, 0px); opacity: 1;">
+                        <div class="ingredient ingredient-left"><img class="lo-ingredient" src="img/gold_leaf.png" />
+                        </div>
+                        <h5>Gold Leaf Accents</h5>
+                        <p>Add a touch of luxury with genuine gold leaf borders and decorative elements. Hand-applied by
+                            our artisans, this elegant finish catches the light beautifully and adds a distinguished,
+                            premium appearance.</p>
+                    </div>
+                    <div class="cello-ing cello cell small-12 medium-6 tete r"
+                        style="transform: translate(0px, 0px); opacity: 1;">
+                        <div class="ingredient ingredient-right"><img class="lo-ingredient"
+                                src="img/engraving_detail.png" /></div>
+                        <h5>Brass Name Plates</h5>
+                        <p>Classic brass plates with precision engraving offer a timeless look. Choose from polished,
+                            brushed, or antique finishes to complement various wood tones and design styles.</p>
+                    </div>
+                </div>
+                <div class="grid-x grid-ingre">
+                    <div class="cello-ing cello cell small-12 medium-6 tete l"
+                        style="transform: translate(0px, 0px); opacity: 1;">
+                        <div class="ingredient ingredient-left"><img class="lo-ingredient"
+                                src="img/wood_materials.png" /></div>
+                        <h5>Custom Frames & Borders</h5>
+                        <p>Elevate your plaque with decorative routed edges, beveled borders, or inlaid accent strips.
+                            Each frame style adds dimension and visual interest to your award presentation.</p>
+                    </div>
+                    <div class="cello-ing cello cell small-12 medium-6 tete end r"
+                        style="transform: translate(0px, 0px); opacity: 1;">
+                        <div class="ingredient ingredient-right"><img class="lo-ingredient" src="img/hero_plaque.png" />
+                        </div>
+                        <h5>Logo & Graphics Integration</h5>
+                        <p>Incorporate organization logos, emblems, or custom graphics with precision laser engraving or
+                            full-color printing. Perfect for schools, sports leagues, and corporate awards.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="sese" id="history">
+            <div id="wave2" style="background-image:url(img/wave2_8ab87728.svg)"></div>
+            <div class="grid-container" style="position:relative">
+                <div class="grid-x align-bottom">
+                    <div class="cell medium-6 small-4">
+                        <div id="glf">
+                            <img class="glfF t" src="img/glf1_3d4e0c29.png"
+                                style="transform: translate(0px, 0px); opacity: 1;" width="42" />
+                        </div>
+                    </div>
+                    <div class="cell medium-6 small-8 text-right">
+                        <p class="min" style="margin-bottom:60px"><span class="seg">^</span>MeritMint Workshop
+                        </p>
+                    </div>
+                </div>
+                <div class="grid-x">
+                    <div class="cell medium-6 small-12">
+                        <h2 class="l" style="color: rgb(240, 240, 240); transform: translate(0px, 0px); opacity: 1;">A
+                            Passion for Celebrating Local Excellence</h2>
+                        <p class="l" style="color: rgb(155, 155, 155); transform: translate(0px, 0px); opacity: 1;">
+                            MeritMint was born from a simple belief: every achievement deserves to be commemorated
+                            beautifully. From little league champions to community volunteers, local heroes shape our
+                            neighborhoods.
+                        </p>
+                        <p class="l" style="color: rgb(155, 155, 155); transform: translate(0px, 0px); opacity: 1;">Our
+                            team of skilled artisans brings decades of woodworking and engraving experience to every
+                            plaque we create. Each piece is a labor of love.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="sese" id="sake" style="background-position: 50% 360px;">
+            <div class="wave" id="wave5" style="background-image:url(img/wave5_c88b1568.svg)"></div>
+            <div class="wave" id="wave4" style="background-image:url(img/wave4_01681f79.svg)"></div>
+            <div class="grid-container" id="didda" style="position:relative">
+                <div class="grid-x align-bottom">
+                    <div class="cell small-12 medium-6 text-right"></div>
+                    <div class="cell small-12 medium-6 text-right">
+                        <div id="didaus">
+                            <p class="min" style="font-size:10px">
+                                <span class="seg" style="color:#D3D3D3">^</span>
+                                Shukugawa river
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="sese" id="location">
+            <div class="grid-container" style="position:relative">
+                <div class="grid-x">
+                    <div class="cell small-12">
+                        <div class="grid-x align-center grid-margin-y">
+                            <div class="cell small-12 medium-11">
+                                <div id="logozzi">
+                                    <span class="overflow"><img class="prefooter_l bu" data-delay=".2"
+                                            src="img/meritmint_logo.png"
+                                            style="transform: translate(0px, 0px); opacity: 1; height: 60px; width: auto;" /></span>
+                                </div>
+                                <h2 class="l" style="transform: translate(0px, 0px); opacity: 1;">Simple Ordering,
+                                    Exceptional Results</h2>
+                                <p class="l" style="transform: translate(0px, 0px); opacity: 1;">Getting your custom
+                                    award plaque is easy. Share your details, choose your options, and we handle the
+                                    rest. Most orders ship within 5-7 business days.</p>
+                                <p class="l" style="transform: translate(0px, 0px); opacity: 1;">For bulk orders,
+                                    leagues, or special events, we offer volume discounts and expedited production.
+                                    Contact us to discuss your needs.</p>
+                                <p class="min l" style="transform: translate(0px, 0px); opacity: 1;">Each plaque comes
+                                    carefully packaged and ready to present. We stand behind our craftsmanship with a
+                                    100% satisfaction guarantee.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div alt="sakari gin shukugawa neck" class="parallax leaf rotaus" data-depth="0.9" data-rotaus="10"
+                id="sakari-gin-neck"
+                style="background-image: url(img/sakari-gin_shukugawa-neck_8d4bb9aa.png); transform-origin: 50% 50%; transform: translate3d(0px, 7.5516px, 0px) rotate(4.6354deg) scale(1.00001, 1.00001);"
+                title="sakari gin shukugawa neck"></div>
+            <div class="wave" id="wave10"></div>
+        </section>
+        <section class="footer sese" id="contacts" style="background:#171717">
+            <div class="wave" id="wave9"></div>
+            <div class="grid-container footer-content">
+                <div class="grid-x grid-margin-x">
+                    <div class="cell medium-4" style="position:relative">
+                        <span class="f-title" style="color:#f7f6f6">MeritMint Awards</span>
+                        <span class="f-p" style="color:#686868">Handcrafted Award Plaques<br />for Local
+                            Champions<br />Ships Nationwide <span style="display:inline-block;color:#333333">—</span>
+                            USA</span>
+                        <span class="f-p-j"><a href="mailto:hello@meritmint.com">hello@meritmint.com</a></span>
+                    </div>
+                    <div class="cell medium-4">
+                        <span class="f-title" id="tWhere" style="color:#f7f6f6">Get a Quote</span>
+                        <div class="wtb">
+                            <span class="f-p" style="color:#9b9b9b"><a href="#">Request Custom Quote</a></span>
+                        </div>
+                    </div>
+                    <div class="cell medium-3">
+                        <span class="f-title gray hide-for-small-only" style="color:white"></span>
+                        <div class="wtb tomin">
+                            <span class="f-p"><a href="#" id="link-privacy">Privacy policy</a></span>
+                            <span class="f-p-j">
+                                <div id="fInsta"><a href="https://www.instagram.com/meritmint/" target="_blank"><i
+                                            class="icon-Instagram"></i></a></div>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="cell medium-1" style="position:relative">
+                    </div>
+                </div>
+            </div>
+        </section>
+        <a id="scrollUp">
+            <svg height="6px" version="1.1" viewbox="0 0 10 6" width="10px" xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
+                <g fill="none" fill-rule="evenodd" id="Page-1" stroke="none" stroke-width="1">
+                    <g id="strokaus" stroke="#979797" transform="translate(-1136.000000, -1623.000000)">
+                        <g id="Group-9" transform="translate(1130.000000, 1615.000000)">
+                            <polyline id="Path" points="6 13 11 9 16 13"></polyline>
+                        </g>
+                    </g>
+                </g>
+            </svg>
+        </a>
+    </div>
+    <div id="bianco"></div>
+    <div id="privacy">
+        <div id="overflowwo">
+            <a href="#" id="closePrivacy"><img src="img/close_9549527f.svg" /></a>
+            <div id="overflowwo-inside">
+                <div id="davvero-dentro">
+                    <p style="font-size:20px"><strong>Privacy Policy</strong></p>
+                    <p> </p>
+                    <p>Our Commitment to Personal Information Protection</p>
+                    <p> </p>
+                    <p>“Privacy Policy” for Nihonsakari Co., Ltd</p>
+                    <p>Under our management philosophy of fostering “Dreams for enterprises, happiness for society, and
+                        a Nihonsakari loved by people, we are engaged mainly in manufacturing and distribution of sake
+                        and other relevant business in accordance with our creed “Quality first, reputation first,
+                        implementation first”. For this reason, we will require our employees to be fully aware of the
+                        importance of protection of personal information processed by the Company (hereinafter referred
+                        to as “Personal Information”), and prescribe internal regulations for Personal Information
+                        control to promote its implementation, maintenance, and improvement in a consistent manner.</p>
+                    <ol>
+                        <li>The Company will comply with the applicable laws and regulations, guidance provided by the
+                            Government, or other relevant standards for Personal Information processed at all our
+                            businesses as well as Personal Information of employees, and establish a Personal
+                            Information Protection Management System in compliance with the “Requirements for Personal
+                            Information Protection Management System” pursuant to Japanese Industrial Standards (JIS
+                            Q15001) to protect your Personal Information.</li>
+                        <li>In collecting and using Personal Information, we will specify the purposes of use of
+                            Personal Information, and process Personal Information to the extent necessary for
+                            accomplishing such specified purposes, and take appropriate measures to avoid any use other
+                            than such specified purposes (“Use for an Unintended Purpose”).</li>
+                        <li>Personal Information collected by us will not be provided or disclosed to any third party
+                            unless otherwise allowable by the applicable laws and regulations or with consent of the
+                            principal.</li>
+                        <li>Personal Information collected by us will be accumulated, maintained, and strictly
+                            controlled in a safe manner in order to protect unauthorized disclosure, loss, or
+                            destruction.</li>
+                        <li>Upon request from a customer for disclosure, correction, or deletion of Personal
+                            Information, the following contact for inquiries will respond to your request.</li>
+                        <li>We will perform ongoing improvements of the Personal Information Protection Management
+                            System.</li>
+                    </ol>
+                    <p> </p>
+                    <p>Prescribed on: July, 2004</p>
+                    <p>Revised on: April 1, 2007</p>
+                    <p>Nihonsakari Co., Ltd.</p>
+                    <p>Taro Morimoto, President</p>
+                    <p> </p>
+                    <p>If you have any questions or inquiries about our Privacy Policy, please do not hesitate to
+                        contact us at:Customer Service, Nihonsakari Co., Ltd.</p>
+                    <p>4-57 Yogai-Cho, Nishinomiya-shi, Hyogo 662-8521, JAPAN</p>
+                    <p>Business hours: 9:00 a.m. through 4:30 p.m. Monday to Friday, Closed Saturday, Sunday and Public
+                        Holidays</p>
+                    <p>Email: info@nihonsakari.net</p>
+                    <p>You can have access to such service by using the online Inquiry Form.</p>
+                    <p> </p>
+                    <p><strong>Processing of Personal Information</strong></p>
+                    <p> </p>
+                    <p>Nihonsakari Co., Ltd</p>
+                    <p>Privacy Protection Controller</p>
+                    <p>Director of Mail Order Business</p>
+                    <p> </p>
+                    <p><strong>1.Definition of Personal Information </strong></p>
+                    <p>The term Personal Information means “Information that can be used on its own or with other
+                        information to identify an individual, such as name, birthday, or other statement, or number,
+                        symbol, or code that is assigned to an individual, which are included in such information.
+                        Personal Information may include personally identifiable information that;</p>
+                    <p>i.is acquired via toll free call, fax, post card, internet, or email;</p>
+                    <p>ii.is acquired from an application for campaigns, or answers to a questionnaire;</p>
+                    <p>iii.is made available to us during the ordinary course of business with customers (such as
+                        purchase history, or use by customers); and</p>
+                    <p>iv.is acquired from an entry sheet or resume collected through the recruitment process</p>
+                    <p> </p>
+                    <p><strong>2.Acquisition of Personal Information </strong></p>
+                    <p>In acquiring Personal Information, we will specify the purpose for acquiring your Personal
+                        Information via a statement in writing (such as an application), from a website, or verbally, in
+                        a lawful and fair manner. The telephone conversation may be recorded for the purpose of
+                        correctly understanding an order, opinion, request, or inquiry from you, and ongoing improvement
+                        of our service quality.</p>
+                    <p> </p>
+                    <p><strong>3.Voluntary acceptance of acquisition of Personal Information </strong></p>
+                    <p>Entry or input of your Personal Information will be voluntarily made; however, if you do not
+                        enter your Personal Information into a written or online form indicating “This information must
+                        be entered”, your request may not be accommodated.</p>
+                    <p> </p>
+                    <p><strong>4.Purpose of Personal Information </strong></p>
+                    <p>Unless otherwise required by the applicable laws and regulations, Personal Information will be
+                        used to the extent necessary to accomplish the purpose hereof and will be subject to your
+                        consent; provided, however, that Personal Information may be used to:</p>
+                    <p>i.deliver goods ordered by you, or send direct mail advertising catalogs for goods to be provided
+                        by us;</p>
+                    <p>ii.describe the method of use or provide the relevant information upon inquiries prior to your
+                        purchase of goods;</p>
+                    <p>iii.administer an aggregate questionnaire, campaign, or prize competition;</p>
+                    <p>iv.provide guidance for recruitment or determine whether to hire an employee (Personal
+                        Information pertinent to recruitment may not be used for direct mail advertising purposes);</p>
+                    <p>v.carry out and facilitate work in whole or in part entrusted by other providers to process
+                        Personal Information, in an appropriate manner.</p>
+                    <p>vi.control and administer the hiring of employees;</p>
+                    <p> </p>
+                    <p><strong>5.Entrustment </strong></p>
+                    <p>Your Personal Information may not be entrusted to any third party (excluding external providers
+                        who executed binding confidential agreements to protect Personal Information) except to the
+                        extent necessary to accomplish the purpose hereof. Permitted entrustment includes;</p>
+                    <p>i.to deliver goods ordered by you, or entrust delivery to home delivery services; and</p>
+                    <p>ii.to deliver catalogs or direct mail, or entrust the making of address labels to a printer</p>
+                    <p> </p>
+                    <p><strong>6.Disclosure, correction, and deletion of Personal Information </strong></p>
+                    <p>If you wish to have the Company disclose or correct your Personal Information, we will reasonably
+                        respond to your request in a prompt manner. For any inquiry or correction, our Customer Service
+                        handling Personal Information will be consulted. The Company may invoice you those charges on
+                        actuals for disclosure. In principle, we do not accept any request for disclosure or correction
+                        from a family member (excluding those living together for which the Company determines that it
+                        is necessary to do so in accordance with a purchase agreement).</p>
+                    <p> </p>
+                    <p><strong>7.Consultation and claims for processing of Personal Information </strong></p>
+                    <p>If you wish to have consultation with us or submit claims in connection with our Personal
+                        Information processing, you should contact the following service as indicated below.</p>
+                    <p> </p>
+                    <p><strong>8.Inquiries </strong></p>
+                    <p>Customer Service, Nihonsakari Co., Ltd</p>
+                    <p>4-57 Yogai-Cho, Nishinomiya-shi, Hyogo 662-8521, JAPAN</p>
+                    <p>Business hours: 9:00 a.m. through 4:30 p.m. Monday to Friday, Closed Saturday , Sunday and Public
+                        Holidays</p>
+                    <p>Email: info@nihonsakari.net</p>
+                    <p>You can have access to such service by using the online Inquiry Form.</p>
+                    <p>Cookies</p>
+                    <p>For your convenience when you visit our website again, certain data called “cookies” that
+                        identify your computer may be sent and stored in your computer’s hard disc. We will use cookies
+                        acquired from you together with certain customer information to the extent necessary to
+                        accomplish the purpose set by us. You can reject cookies sent from our website, but you must
+                        agree that as a result of this, you may not properly use our website or online services.</p>
+                    <p> </p>
+                    <p><strong>Log</strong></p>
+                    <p>To the extent necessary for accomplishing purposes hereof, we will maintain an access log
+                        recording information with respect to your operation through which you have access to our
+                        website in combination with your customer information, for the purpose of improving services
+                        provided by us to you, and will identify causes of accidents, if any, or aggregate statistics or
+                        analysis used by you.</p>
+                    <p> </p>
+                    <p><strong>SSL</strong></p>
+                    <p>Our website uses an encrypted protocol for managing the security of a Personal Information
+                        transmission on the homepage (including member registration and answers to questionnaires), via
+                        SSL (Secure Socket Layer) to prevent or discourage an external third party from intercepting
+                        your message that includes Personal Information.</p>
+                    <p> </p>
+                    <p> </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <link href="css/splitting_8eebe90a.css" rel="stylesheet" />
+    <link href="css/splitting-cells_4ee4c847.css" rel="stylesheet" />
+
+    <!-- Parallax Effect Styles -->
+    <style>
+        /* Parallax container needs proper positioning */
+        #bottle_shadow {
+            will-change: transform;
+            transition: transform 0.1s ease-out;
+        }
+
+        /* Floating petals animation for extra visual interest */
+        @keyframes floatPetal {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            25% {
+                transform: translateY(-20px) rotate(15deg);
+            }
+
+            50% {
+                transform: translateY(-10px) rotate(-10deg);
+            }
+
+            75% {
+                transform: translateY(-25px) rotate(5deg);
+            }
+        }
+
+        .parallax-petal {
+            position: fixed;
+            pointer-events: none;
+            z-index: 5;
+            opacity: 0.7;
+            will-change: transform;
+        }
+
+        /* Subtle fade effect for sections as they scroll */
+        .sese {
+            transition: opacity 0.3s ease-out;
+        }
+
+        /* Hero text subtle animation on load */
+        #s1 h1,
+        #s1 p {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        #s1 h1:nth-of-type(1) {
+            animation-delay: 0.2s;
+        }
+
+        #s1 h1:nth-of-type(2) {
+            animation-delay: 0.4s;
+        }
+
+        #s1 p {
+            animation-delay: 0.6s;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Smooth scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-indicator::before {
+            content: '';
+            display: block;
+            width: 24px;
+            height: 24px;
+            border-right: 2px solid rgba(100, 100, 100, 0.5);
+            border-bottom: 2px solid rgba(100, 100, 100, 0.5);
+            transform: rotate(45deg);
+        }
+
+        @keyframes bounce {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateX(-50%) translateY(0);
+            }
+
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
+        }
+
+        /* Hide scroll indicator on mobile */
+        @media only screen and (max-width: 64em) {
+            .scroll-indicator {
+                display: none;
+            }
+        }
+    </style>
+
+    <!-- Parallax JavaScript -->
+    <script>
+        (function () {
+            'use strict';
+
+            // Parallax configuration
+            const config = {
+                bottleSpeed: 0.4,      // How fast the bottle moves relative to scroll (0.5 = half speed)
+                petalsSpeed: 0.3,      // Petals move even slower for depth
+                sunSpeed: 0.2,         // Sun decoration moves slowest
+                smoothing: 0.1,        // Smoothing factor for interpolation (lower = smoother but slower)
+                mobileBreakpoint: 1024 // Disable on screens smaller than this
+            };
+
+            // Elements
+            let bottleShadow = null;
+            let sunDecoration = null;
+            let petals = [];
+            let isDesktop = true;
+
+            // Animation state
+            let currentBottleY = 0;
+            let targetBottleY = 0;
+            let currentSunY = 0;
+            let targetSunY = 0;
+            let ticking = false;
+
+            // Initialize on DOM ready
+            document.addEventListener('DOMContentLoaded', init);
+
+            function init() {
+                // Get elements
+                bottleShadow = document.getElementById('bottle_shadow');
+                sunDecoration = document.getElementById('JDG');
+                petals = document.querySelectorAll('.petallo, .parallax.petallo');
+
+                // Check viewport
+                checkViewport();
+                window.addEventListener('resize', debounce(checkViewport, 150));
+
+                // Start scroll listener
+                window.addEventListener('scroll', onScroll, { passive: true });
+
+                // Start animation loop
+                requestAnimationFrame(animate);
+
+                // Add scroll indicator to hero section
+                addScrollIndicator();
+
+                console.log('Parallax effect initialized');
+            }
+
+            function checkViewport() {
+                isDesktop = window.innerWidth > config.mobileBreakpoint;
+
+                if (!isDesktop) {
+                    // Reset transforms on mobile
+                    if (bottleShadow) {
+                        bottleShadow.style.transform = '';
+                    }
+                    if (sunDecoration) {
+                        sunDecoration.style.transform = '';
+                    }
+                }
+            }
+
+            function onScroll() {
+                if (!ticking && isDesktop) {
+                    ticking = true;
+                    requestAnimationFrame(updateTargets);
+                }
+            }
+
+            function updateTargets() {
+                const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+
+                // Calculate target positions based on scroll
+                targetBottleY = scrollY * config.bottleSpeed;
+                targetSunY = scrollY * config.sunSpeed;
+
+                ticking = false;
+            }
+
+            function animate() {
+                if (isDesktop) {
+                    // Smooth interpolation for bottle
+                    currentBottleY += (targetBottleY - currentBottleY) * config.smoothing;
+
+                    // Smooth interpolation for sun
+                    currentSunY += (targetSunY - currentSunY) * config.smoothing;
+
+                    // Apply transforms
+                    if (bottleShadow) {
+                        // Keep the existing translateY(-50%) for centering, add parallax offset
+                        bottleShadow.style.transform = `translateY(calc(-50% + ${currentBottleY}px))`;
+                    }
+
+                    if (sunDecoration) {
+                        sunDecoration.style.transform = `translateY(${currentSunY}px)`;
+                    }
+
+                    // Animate petals with varying speeds
+                    petals.forEach((petal, index) => {
+                        const petalSpeed = config.petalsSpeed + (index * 0.05);
+                        const petalY = (targetBottleY * petalSpeed);
+                        const rotation = Math.sin(Date.now() / 1000 + index) * 5;
+                        petal.style.transform = `translateY(${petalY}px) rotate(${rotation}deg)`;
+                    });
+                }
+
+                requestAnimationFrame(animate);
+            }
+
+            function addScrollIndicator() {
+                const heroSection = document.getElementById('s1');
+                if (heroSection && isDesktop) {
+                    const indicator = document.createElement('div');
+                    indicator.className = 'scroll-indicator';
+                    indicator.setAttribute('aria-hidden', 'true');
+                    heroSection.appendChild(indicator);
+
+                    // Hide indicator after scrolling
+                    let hasScrolled = false;
+                    window.addEventListener('scroll', function hideIndicator() {
+                        if (!hasScrolled && window.pageYOffset > 100) {
+                            hasScrolled = true;
+                            indicator.style.opacity = '0';
+                            indicator.style.transition = 'opacity 0.5s ease';
+                            setTimeout(() => indicator.remove(), 500);
+                            window.removeEventListener('scroll', hideIndicator);
+                        }
+                    }, { passive: true });
+                }
+            }
+
+            // Utility: Debounce function
+            function debounce(func, wait) {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            }
+        })();
+
+        /* --- Plaque Carousel Logic --- */
+        let currentDotIndex = 0;
+        const slides = document.querySelectorAll('.plaque-slide');
+        const dots = document.querySelectorAll('.dot');
+        const track = document.getElementById('plaqueSlidesTrack');
+        let slideInterval;
+
+        function showSlide(index) {
+            // Normalize index
+            if (index >= slides.length) currentDotIndex = 0;
+            else if (index < 0) currentDotIndex = slides.length - 1;
+            else currentDotIndex = index;
+
+            // Update transform
+            if (track) {
+                track.style.transform = `translateX(-${currentDotIndex * 100}%)`;
+            }
+
+            // Update dots
+            dots.forEach(dot => dot.classList.remove('active'));
+            if (dots[currentDotIndex]) dots[currentDotIndex].classList.add('active');
+        }
+
+        function changeSlide(index) {
+            showSlide(index);
+            resetInterval();
+        }
+
+        function nextSlide() {
+            showSlide(currentDotIndex + 1);
+        }
+
+        function resetInterval() {
+            clearInterval(slideInterval);
+            slideInterval = setInterval(nextSlide, 5000);
+        }
+
+        // Initialize
+        if (slides.length > 0) {
+            showSlide(0);
+            resetInterval();
+        }
+    </script>
+
+</body>
+
+</html>

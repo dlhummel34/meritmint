@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* Organic/Heirloom Palette */
+  --color-merit-sage: #8DA399;
+  --color-merit-charcoal: #2D3436;
+  --color-merit-paper: #F9F7F2;
+  --color-merit-gold: #C5A059;
+  --color-merit-navy: #1A2634;
+  --color-merit-warm-brown: #4A3728;
+
+  /* Aliases */
+  --color-merit-green: var(--color-merit-sage);
+  --color-merit-dark: var(--color-merit-charcoal);
+  --color-merit-cream: var(--color-merit-paper);
+  --color-merit-silver: #E5E7EB;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-playfair), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+}
+
+/* Base body styling */
+body {
+  background-color: var(--color-merit-paper);
+  color: var(--color-merit-charcoal);
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Refined Washi Paper Grain - More subtle, finer frequency */
+  .bg-texture-paper {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)' opacity='0.03'/%3E%3C/svg%3E");
+  }
+
+  .text-vertical {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+  }
+
+  /* Vignette effect overlay */
+  .vignette::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 50;
+    background: radial-gradient(ellipse at center, transparent 50%, rgba(45, 52, 54, 0.08) 100%);
+  }
+
+  /* Warm brown shadow for floating elements */
+  .shadow-warm {
+    box-shadow: 0 25px 50px -12px rgba(74, 55, 40, 0.4);
+  }
+
+  /* Superellipse / Organic shape mask */
+  .mask-organic {
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+  }
+
+  /* Luxury underline input styling */
+  .input-underline {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0;
+    padding: 1rem 0;
+    font-size: 1.125rem;
+    color: var(--color-merit-paper);
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+
+  .input-underline::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+  }
+
+  .input-underline:focus {
+    border-bottom-color: var(--color-merit-gold);
+  }
+}
