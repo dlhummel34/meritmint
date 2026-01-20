@@ -57,12 +57,12 @@ export default function Hero() {
                 </span>
             </div>
 
-            <div className="container mx-auto px-6 lg:px-20 relative z-30 pt-24 pb-12 lg:pb-0">
+            <div className="container mx-auto px-6 lg:px-20 relative z-30 pt-16 lg:pt-24 pb-12 lg:pb-0">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
 
                     {/* Text Content */}
                     <div className="lg:col-span-6 lg:pr-12 relative">
-                        <div className="space-y-10">
+                        <div className="space-y-6 lg:space-y-10">
 
                             {/* Eyebrow */}
                             <motion.div
@@ -98,23 +98,18 @@ export default function Hero() {
                                 className="text-lg md:text-xl text-merit-charcoal/60 font-sans leading-[1.8] tracking-wide max-w-md ml-4"
                             >
                                 Transforming fleeting accolades into heirloom artifacts.
-                                <br />
-                                <span className="text-merit-charcoal/40">A curated preservation service for the distinguished few.</span>
                             </motion.p>
 
-                            {/* Mobile Plaque - Integrated for perfect positioning */}
-                            <MobilePlaque />
-
-                            {/* CTA */}
+                            {/* CTA - Moved up on mobile to be immediately visible */}
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.8, delay: 0.8 }}
-                                className="pt-2 ml-4 flex justify-center lg:justify-start"
+                                className="ml-4 flex justify-center lg:justify-start"
                             >
                                 <a
                                     href="/purchase"
-                                    className="group relative px-8 py-4 bg-merit-charcoal/5 border border-merit-charcoal/30 hover:border-merit-gold/60 hover:bg-merit-charcoal/10 transition-all duration-500 rounded-full overflow-hidden backdrop-blur-sm"
+                                    className="group relative px-8 py-4 bg-merit-charcoal/5 border border-merit-charcoal/30 hover:border-merit-gold/60 hover:bg-merit-charcoal/10 transition-all duration-500 rounded-full overflow-hidden backdrop-blur-sm shadow-xl shadow-merit-sage/5"
                                 >
                                     <span className="relative z-10 flex items-center space-x-3 text-merit-charcoal group-hover:text-merit-gold transition-colors duration-500 font-serif tracking-[0.2em] uppercase text-xs font-semibold">
                                         <span>Begin Commission</span>
@@ -122,6 +117,9 @@ export default function Hero() {
                                     </span>
                                 </a>
                             </motion.div>
+
+                            {/* Mobile Plaque - Integrated for perfect positioning */}
+                            <MobilePlaque />
                         </div>
                     </div>
 

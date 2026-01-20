@@ -1,34 +1,95 @@
-'use client';
+import { PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import StripeProvider from '@/lib/StripeProvider';
 
-import { useSearchParams } from 'next/navigation';
-import { useEffect, useState, Suspense } from 'react';
-import { motion } from 'framer-motion';
-import { CreditCard, Lock, ArrowLeft, CheckCircle } from 'lucide-react';
-import Link from 'next/link';
-import {
-    getProductLine,
-    formatPrice,
-    DESKTOP_REPLICA,
-    CRYSTAL_MINT,
-    HERITAGE_MINT,
-} from '@/lib/products';
+// ... other imports ...
+
+function CheckoutForm({ amountInCents, customerEmail, customerName, productLine, product, onSuccess }: any) {
+    const stripe = useStripe();
+    const elements = useElements();
+    const [errorMessage, setErrorMessage] = useState('');
+    const [isProcessing, setIsProcessing] = useState(false);
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        if (!stripe || !elements) return;
+
+        setIsProcessing(true);
+        setErrorMessage('');
+
+        const { error } = await stripe.confirmPayment({
+            elements,
+            confirmParams: {
+                return_url: window.location.origin + '/checkout?success=true',
+                receipt_email: customerEmail,
+                payment_method_data: {
+                    billing_details: {
+                        name: customerName,
+                        email: customerEmail,
+                    },
+                },
+            },
+            redirect: 'if_required',
+        });
+
+        if (error) {
+            setErrorMessage(error.message || 'Payment failed');
+            setIsProcessing(false);
+        } else {
+            // Success!
+            onSuccess();
+        }
+    };
+
+    return (
+        <form onSubmit={handleSubmit} className="space-y-6">
+            <PaymentElement />
+
+            {errorMessage && (
+                <div className="text-red-500 text-sm bg-red-500/10 p-3 rounded-lg border border-red-500/20">
+                    {errorMessage}
+                </div>
+            )}
+
+            <button
+                type="submit"
+                disabled={!stripe || isProcessing}
+                className={`
+                  w-full py-4 px-6 rounded-xl font-bold transition-all duration-300
+                  ${!stripe || isProcessing
+                        ? 'bg-stone-700 text-stone-400 cursor-not-allowed'
+                        : 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-stone-900'
+                    }
+                `}
+            >
+                {isProcessing ? 'Processing Payment...' : `Pay ${formatPrice(amountInCents / 100)}`}
+            </button>
+
+            <p className="text-xs text-stone-500 text-center">
+                Payments processed securely by Stripe. 256-bit SSL encryption.
+            </p>
+        </form>
+    );
+}
 
 function CheckoutContent() {
     const searchParams = useSearchParams();
     const productId = searchParams.get('product') || '';
     const includeReplica = searchParams.get('replica') === 'true';
+    const isSuccess = searchParams.get('success') === 'true';
 
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
-    const [isProcessing, setIsProcessing] = useState(false);
-    const [isComplete, setIsComplete] = useState(false);
+    const [clientSecret, setClientSecret] = useState('');
+    const [step, setStep] = useState<'details' | 'payment'>('details');
 
-    // Find the product
+    // ... (product finding logic remains the same) ...
     const allProducts = [...CRYSTAL_MINT.tiers, ...HERITAGE_MINT.tiers];
     const product = allProducts.find((p) => p.id === productId);
     const productLine = productId.startsWith('crystal') ? CRYSTAL_MINT : HERITAGE_MINT;
 
     if (!product) {
+        // ... (product not found UI) ...
         return (
             <div className="min-h-screen bg-stone-950 flex items-center justify-center">
                 <div className="text-center">
@@ -45,19 +106,35 @@ function CheckoutContent() {
     const replicaPrice = includeReplica ? DESKTOP_REPLICA.price : 0;
     const total = subtotal + replicaPrice;
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    // Fetch Client Secret when user provides details
+    const handleDetailsSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setIsProcessing(true);
 
-        // Simulate payment processing
-        // In production, this would integrate with Stripe Elements
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+        try {
+            const res = await fetch('/api/create-payment-intent', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    productId: product.id,
+                    productName: `${productLine.name} - ${product.name}`,
+                    price: total,
+                    customerEmail: email,
+                    includeReplica,
+                })
+            });
 
-        setIsProcessing(false);
-        setIsComplete(true);
+            const data = await res.json();
+            if (data.clientSecret) {
+                setClientSecret(data.clientSecret);
+                setStep('payment');
+            }
+        } catch (err) {
+            console.error('Failed to init payment:', err);
+        }
     };
 
-    if (isComplete) {
+    if (isSuccess) {
+        // ... (Success UI remains mostly the same) ...
         return (
             <div className="min-h-screen bg-stone-950 flex items-center justify-center px-4">
                 <motion.div
@@ -70,10 +147,7 @@ function CheckoutContent() {
                     </div>
                     <h1 className="font-serif text-3xl text-stone-100">Order Confirmed!</h1>
                     <p className="text-stone-400">
-                        Thank you for your order. We'll send you a proof within 24-48 hours.
-                    </p>
-                    <p className="text-stone-500 text-sm">
-                        A confirmation email has been sent to {email}
+                        Thank you for your order. We'll send you a confirmation email shortly.
                     </p>
                     <Link
                         href="/"
@@ -88,8 +162,8 @@ function CheckoutContent() {
 
     return (
         <div className="min-h-screen bg-stone-950 py-12 px-4">
+            {/* ... (Header and layout structure remains) ... */}
             <div className="max-w-4xl mx-auto">
-                {/* Header */}
                 <div className="mb-8">
                     <Link
                         href="/purchase"
@@ -101,10 +175,10 @@ function CheckoutContent() {
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-8">
-                    {/* Order Summary */}
+                    {/* Order Summary - Refactored slightly to reduce dupes if needed, or keep existing structure */}
                     <div className="bg-stone-900/50 border border-stone-800 rounded-2xl p-6 h-fit">
                         <h2 className="font-serif text-xl text-stone-100 mb-6">Order Summary</h2>
-
+                        {/* ... (Existing Summary JSX) ... */}
                         <div className="space-y-4">
                             <div className="flex justify-between items-start">
                                 <div>
@@ -144,67 +218,56 @@ function CheckoutContent() {
                         </div>
                     </div>
 
-                    {/* Payment Form */}
+                    {/* Checkout Form */}
                     <div className="bg-stone-900/50 border border-stone-800 rounded-2xl p-6">
                         <div className="flex items-center gap-2 mb-6">
                             <Lock className="w-5 h-5 text-emerald-500" />
                             <h2 className="font-serif text-xl text-stone-100">Secure Checkout</h2>
                         </div>
 
-                        <form onSubmit={handleSubmit} className="space-y-4">
-                            <div>
-                                <label className="block text-stone-300 text-sm mb-2">Email</label>
-                                <input
-                                    type="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    required
-                                    placeholder="you@example.com"
-                                    className="w-full px-4 py-3 bg-stone-800 border border-stone-700 rounded-lg text-stone-100 placeholder:text-stone-500 focus:outline-none focus:border-amber-500 transition-colors"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-stone-300 text-sm mb-2">Full Name</label>
-                                <input
-                                    type="text"
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                    required
-                                    placeholder="John Doe"
-                                    className="w-full px-4 py-3 bg-stone-800 border border-stone-700 rounded-lg text-stone-100 placeholder:text-stone-500 focus:outline-none focus:border-amber-500 transition-colors"
-                                />
-                            </div>
-
-                            {/* Stripe Elements would go here */}
-                            <div className="p-4 bg-stone-800 border border-stone-700 rounded-lg">
-                                <div className="flex items-center gap-2 text-stone-400">
-                                    <CreditCard className="w-5 h-5" />
-                                    <span className="text-sm">Card details (Stripe integration pending)</span>
+                        {step === 'details' ? (
+                            <form onSubmit={handleDetailsSubmit} className="space-y-4">
+                                <div>
+                                    <label className="block text-stone-300 text-sm mb-2">Email</label>
+                                    <input
+                                        type="email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        required
+                                        placeholder="you@example.com"
+                                        className="w-full px-4 py-3 bg-stone-800 border border-stone-700 rounded-lg text-stone-100 placeholder:text-stone-500 focus:outline-none focus:border-amber-500 transition-colors"
+                                    />
                                 </div>
-                                <p className="text-xs text-stone-500 mt-2">
-                                    Add STRIPE_PUBLIC_KEY to .env.local to enable payments
-                                </p>
-                            </div>
-
-                            <button
-                                type="submit"
-                                disabled={isProcessing || !email || !name}
-                                className={`
-                  w-full py-4 px-6 rounded-xl font-bold transition-all duration-300
-                  ${isProcessing || !email || !name
-                                        ? 'bg-stone-700 text-stone-400 cursor-not-allowed'
-                                        : 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-stone-900'
-                                    }
-                `}
-                            >
-                                {isProcessing ? 'Processing...' : `Pay ${formatPrice(total)}`}
-                            </button>
-
-                            <p className="text-xs text-stone-500 text-center">
-                                Your payment is secured with 256-bit SSL encryption
-                            </p>
-                        </form>
+                                <div>
+                                    <label className="block text-stone-300 text-sm mb-2">Full Name</label>
+                                    <input
+                                        type="text"
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
+                                        required
+                                        placeholder="John Doe"
+                                        className="w-full px-4 py-3 bg-stone-800 border border-stone-700 rounded-lg text-stone-100 placeholder:text-stone-500 focus:outline-none focus:border-amber-500 transition-colors"
+                                    />
+                                </div>
+                                <button
+                                    type="submit"
+                                    className="w-full py-4 px-6 rounded-xl font-bold bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-stone-900 transition-all duration-300"
+                                >
+                                    Continue to Payment
+                                </button>
+                            </form>
+                        ) : (
+                            <StripeProvider clientSecret={clientSecret}>
+                                <CheckoutForm
+                                    amountInCents={total * 100}
+                                    customerEmail={email}
+                                    customerName={name}
+                                    productLine={productLine}
+                                    product={product}
+                                    onSuccess={() => window.location.href = `/checkout?product=${productId}&success=true`}
+                                />
+                            </StripeProvider>
+                        )}
                     </div>
                 </div>
             </div>

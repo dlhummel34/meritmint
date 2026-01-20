@@ -162,16 +162,7 @@ export default function Navbar() {
                 )}
             </AnimatePresence>
 
-            {/* Mobile Menu Button - Floating */}
-            <div className="md:hidden fixed top-6 right-6 z-50">
-                <button
-                    className="p-3 rounded-full bg-white/80 backdrop-blur-lg shadow-lg border border-white/20"
-                    aria-label="Menu"
-                >
-                    <div className="w-5 h-0.5 bg-merit-charcoal mb-1.5 rounded-full" />
-                    <div className="w-5 h-0.5 bg-merit-charcoal rounded-full" />
-                </button>
-            </div>
+
         </>
     );
 }

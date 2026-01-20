@@ -97,7 +97,7 @@ export default function MacroMintParallax() {
                     src="/images/mint_leaf_transparent.png"
                     alt=""
                     fill
-                    className={`object-contain opacity-20 rotate-[30deg] ${isLowPower ? '' : 'blur-[25px]'}`}
+                    className={`object-contain opacity-20 rotate-[30deg]`}
                     sizes="700px"
                 />
             </motion.div>
@@ -110,64 +110,14 @@ export default function MacroMintParallax() {
                     src="/images/mint_leaf_transparent.png"
                     alt=""
                     fill
-                    className={`object-contain opacity-15 -rotate-[45deg] scale-x-[-1] ${isLowPower ? '' : 'blur-[25px]'}`}
+                    className={`object-contain opacity-15 -rotate-[45deg] scale-x-[-1]`}
                     sizes="600px"
                 />
             </motion.div>
 
-            {/* ===== FOREGROUND LEAVES ===== */}
-            <motion.div
-                style={{ y: foregroundY1 }}
-                className="absolute -bottom-20 -left-20 w-[350px] h-[350px] will-change-transform"
-            >
-                <Image
-                    src="/images/mint_leaf_transparent.png"
-                    alt=""
-                    fill
-                    className={`object-contain opacity-25 rotate-[25deg] ${isLowPower ? '' : 'blur-[15px]'}`}
-                    sizes="350px"
-                />
-            </motion.div>
+            {/* ===== FOREGROUND LEAVES - REMOVED ===== */}
 
-            <motion.div
-                style={{ y: foregroundY2 }}
-                className="absolute -top-32 -right-20 w-[300px] h-[300px] will-change-transform"
-            >
-                <Image
-                    src="/images/mint_leaf_transparent.png"
-                    alt=""
-                    fill
-                    className={`object-contain opacity-20 -rotate-[40deg] ${isLowPower ? '' : 'blur-[15px]'}`}
-                    sizes="300px"
-                />
-            </motion.div>
-
-            {/* ===== MIDGROUND LEAVES ===== */}
-            <motion.div
-                style={{ y: midgroundY1, rotate: midgroundRotate1 }}
-                className="absolute top-[25%] left-[5%] w-[150px] h-[150px] will-change-transform"
-            >
-                <Image
-                    src="/images/mint_leaf_transparent.png"
-                    alt=""
-                    fill
-                    className={`object-contain opacity-35 ${isLowPower ? '' : 'blur-[6px]'}`}
-                    sizes="150px"
-                />
-            </motion.div>
-
-            <motion.div
-                style={{ y: midgroundY2 }}
-                className="absolute top-[55%] right-[8%] w-[120px] h-[120px] will-change-transform"
-            >
-                <Image
-                    src="/images/mint_leaf_transparent.png"
-                    alt=""
-                    fill
-                    className={`object-contain opacity-30 scale-x-[-1] ${isLowPower ? '' : 'blur-[5px]'}`}
-                    sizes="120px"
-                />
-            </motion.div>
+            {/* ===== MIDGROUND LEAVES - REMOVED ===== */}
         </div>
     );
 }

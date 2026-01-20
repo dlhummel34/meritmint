@@ -21,7 +21,7 @@ interface LeafConfig {
 const layerConfigs: Record<LeafLayer, Omit<LeafConfig, "layer">> = {
     foreground: {
         scale: 1.5,
-        blur: 4,
+        blur: 0,
         opacity: 0.6,
         scrollSpeed: 1.5,
         mouseSensitivity: 40,
@@ -45,19 +45,44 @@ const layerConfigs: Record<LeafLayer, Omit<LeafConfig, "layer">> = {
     },
 };
 
-// Generate leaf data with deterministic pseudo-random positions
+// Generate leaf data with collision avoidance for the logo area
 function generateLeaves(count: number): Array<{ id: number; x: number; y: number; rotation: number; layer: LeafLayer }> {
-    const leaves = [];
+    const leaves: Array<{ id: number; x: number; y: number; rotation: number; layer: LeafLayer }> = [];
     const layers: LeafLayer[] = ["foreground", "midground", "background"];
 
-    for (let i = 0; i < count; i++) {
-        const x = (i * 137.5) % 100;
-        const y = (i * 89.3) % 100;
-        const rotation = (i * 47) % 360;
-        const layer = layers[i % 3];
+    // Exclusion zones in percentages (based on desktop layout)
+    const exclusionZones = [
+        // Protect Left Text Area (Eyebrow, Merit, Mint, Tagline, Button)
+        { minX: -5, maxX: 55, minY: 15, maxY: 85 },
+        // Protect Right Plaque Area
+        { minX: 55, maxX: 105, minY: 5, maxY: 95 }
+    ];
 
-        leaves.push({ id: i, x, y, rotation, layer });
+    let attempts = 0;
+    const maxAttempts = count * 10; // Safety break
+
+    while (leaves.length < count && attempts < maxAttempts) {
+        let x = (attempts * 137.5) % 100;
+        let y = (attempts * 89.3) % 100;
+
+        // Check against all exclusion zones
+        const isExcluded = exclusionZones.some(zone =>
+            x > zone.minX &&
+            x < zone.maxX &&
+            y > zone.minY &&
+            y < zone.maxY
+        );
+
+        if (!isExcluded) {
+            const leafId = leaves.length;
+            const rotation = (leafId * 47) % 360;
+            const layer = layers[leafId % 3];
+            leaves.push({ id: leafId, x, y, rotation, layer });
+        }
+
+        attempts++;
     }
+
     return leaves;
 }
 

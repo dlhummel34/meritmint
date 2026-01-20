@@ -12,7 +12,7 @@ export default function MobilePlaque() {
     const y = useTransform(scrollYProgress, [0, 1], [0, -50]);
 
     return (
-        <div ref={containerRef} className="relative w-full flex justify-center items-center py-12 lg:hidden perspective-container">
+        <div ref={containerRef} className="relative w-full flex justify-center items-center pt-12 pb-2 lg:hidden perspective-container">
             <motion.div
                 initial={{ opacity: 0, y: 30, rotateX: 10 }}
                 animate={{
