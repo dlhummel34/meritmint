@@ -92,6 +92,13 @@ export function PurchasePage() {
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
 
+    // Section C: Shipping Address
+    const [address, setAddress] = useState('');
+    const [city, setCity] = useState('');
+    const [state, setState] = useState('');
+    const [zip, setZip] = useState('');
+    const [country, setCountry] = useState('United States');
+
     // Payment State
     const [clientSecret, setClientSecret] = useState('');
     const [isLoadingPayment, setIsLoadingPayment] = useState(false);
@@ -120,7 +127,8 @@ export function PurchasePage() {
     // Validation
     const hasValidAward = articleUrl.trim() !== '' || articleFile !== null;
     const hasValidCustomer = name.trim() !== '' && email.trim() !== '' && email.includes('@');
-    const canProceed = selectedTier && hasValidAward && hasValidCustomer;
+    const hasValidShipping = address.trim() !== '' && city.trim() !== '' && state.trim() !== '' && zip.trim() !== '';
+    const canProceed = selectedTier && hasValidAward && hasValidCustomer && hasValidShipping;
 
     // Proceed to Payment
     const handleProceedToPayment = async () => {
@@ -337,7 +345,67 @@ export function PurchasePage() {
                                 </div>
                             </motion.div>
 
-                            {/* Payment Section (Inline) */}
+                            {/* Step 4: Shipping Address */}
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.3 }}
+                                className="bg-white/60 rounded-2xl p-6 border border-merit-charcoal/10 shadow-sm"
+                            >
+                                <div className="flex items-center gap-3 mb-6">
+                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center font-serif font-bold text-sm ${hasValidShipping ? 'bg-emerald-500 text-white' : 'bg-merit-charcoal/10 text-merit-charcoal/40'}`}>
+                                        {hasValidShipping ? <Check className="w-4 h-4" /> : '4'}
+                                    </div>
+                                    <h2 className="font-serif text-xl text-merit-charcoal">Shipping Address</h2>
+                                </div>
+
+                                <div className="space-y-4">
+                                    <input
+                                        type="text"
+                                        value={address}
+                                        onChange={(e) => setAddress(e.target.value)}
+                                        placeholder="Street Address"
+                                        className="w-full px-4 py-3.5 bg-white border border-merit-charcoal/20 rounded-xl text-merit-charcoal placeholder:text-merit-charcoal/40 focus:outline-none focus:border-merit-gold focus:ring-1 focus:ring-merit-gold/20 transition-all"
+                                    />
+
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <input
+                                            type="text"
+                                            value={city}
+                                            onChange={(e) => setCity(e.target.value)}
+                                            placeholder="City"
+                                            className="w-full px-4 py-3.5 bg-white border border-merit-charcoal/20 rounded-xl text-merit-charcoal placeholder:text-merit-charcoal/40 focus:outline-none focus:border-merit-gold focus:ring-1 focus:ring-merit-gold/20 transition-all"
+                                        />
+                                        <input
+                                            type="text"
+                                            value={state}
+                                            onChange={(e) => setState(e.target.value)}
+                                            placeholder="State"
+                                            className="w-full px-4 py-3.5 bg-white border border-merit-charcoal/20 rounded-xl text-merit-charcoal placeholder:text-merit-charcoal/40 focus:outline-none focus:border-merit-gold focus:ring-1 focus:ring-merit-gold/20 transition-all"
+                                        />
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <input
+                                            type="text"
+                                            value={zip}
+                                            onChange={(e) => setZip(e.target.value)}
+                                            placeholder="ZIP Code"
+                                            className="w-full px-4 py-3.5 bg-white border border-merit-charcoal/20 rounded-xl text-merit-charcoal placeholder:text-merit-charcoal/40 focus:outline-none focus:border-merit-gold focus:ring-1 focus:ring-merit-gold/20 transition-all"
+                                        />
+                                        <select
+                                            value={country}
+                                            onChange={(e) => setCountry(e.target.value)}
+                                            className="w-full px-4 py-3.5 bg-white border border-merit-charcoal/20 rounded-xl text-merit-charcoal focus:outline-none focus:border-merit-gold focus:ring-1 focus:ring-merit-gold/20 transition-all"
+                                        >
+                                            <option value="United States">United States</option>
+                                            <option value="Canada">Canada</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </motion.div>
+
+                            {/* Payment Section (Inline) - Step 5 */}
                             <AnimatePresence>
                                 {step === 'payment' && clientSecret && (
                                     <motion.div
@@ -347,7 +415,7 @@ export function PurchasePage() {
                                         className="bg-white/60 rounded-2xl p-6 border border-merit-charcoal/10 shadow-sm overflow-hidden"
                                     >
                                         <div className="flex items-center gap-3 mb-6">
-                                            <div className="w-8 h-8 rounded-full bg-merit-gold text-white flex items-center justify-center font-serif font-bold text-sm">4</div>
+                                            <div className="w-8 h-8 rounded-full bg-merit-gold text-white flex items-center justify-center font-serif font-bold text-sm">5</div>
                                             <h2 className="font-serif text-xl text-merit-charcoal">Payment</h2>
                                         </div>
 
@@ -379,9 +447,30 @@ export function PurchasePage() {
                                             {selectedTier.name} • {selectedTier.size}
                                         </div>
 
+                                        <div className="border-t border-merit-charcoal/10 pt-3 space-y-2">
+                                            <div className="flex justify-between text-sm">
+                                                <span className="text-merit-charcoal/60 font-sans">Shipping</span>
+                                                <span className="text-emerald-600 font-medium">FREE</span>
+                                            </div>
+                                            <div className="flex justify-between text-sm">
+                                                <span className="text-merit-charcoal/60 font-sans">Estimated Tax</span>
+                                                <span className="text-merit-charcoal/60 font-sans">Calculated at checkout</span>
+                                            </div>
+                                        </div>
+
                                         <div className="border-t border-merit-charcoal/10 pt-3 flex justify-between">
                                             <span className="font-serif text-lg text-merit-charcoal">Total</span>
                                             <span className="font-serif text-2xl text-merit-gold">{formatPrice(total)}</span>
+                                        </div>
+
+                                        {/* Delivery Estimate */}
+                                        <div className="bg-merit-gold/5 rounded-lg p-3 border border-merit-gold/20">
+                                            <p className="text-sm text-merit-charcoal/70 font-sans">
+                                                <span className="font-medium text-merit-charcoal">Estimated Delivery:</span> 5-7 business days
+                                            </p>
+                                            <p className="text-xs text-merit-charcoal/50 mt-1">
+                                                Handcrafted with care, shipped with tracking
+                                            </p>
                                         </div>
                                     </div>
                                 )}
