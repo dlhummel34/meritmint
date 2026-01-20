@@ -46,18 +46,18 @@ function SizeCard({ tier, isSelected, onClick, priceGapMessage, delay }: SizeCar
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay, duration: 0.4 }}
             className={`
-        relative p-6 rounded-2xl border-2 transition-all duration-300 text-left
+        relative p-6 rounded-2xl border transition-all duration-300 text-left
         ${isSelected
-                    ? 'border-amber-500 bg-amber-500/10'
-                    : 'border-stone-700 bg-stone-900/50 hover:border-stone-600'
+                    ? 'border-merit-gold bg-merit-gold/5 shadow-md'
+                    : 'border-merit-charcoal/10 bg-white/40 hover:border-merit-gold/40'
                 }
-        ${isBestValue ? 'ring-2 ring-amber-500/30 ring-offset-2 ring-offset-stone-950' : ''}
+        ${isBestValue ? 'ring-2 ring-merit-gold/20 ring-offset-2 ring-offset-merit-paper' : ''}
       `}
         >
             {/* Badge */}
             {tier.badge && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className="px-3 py-1 bg-gradient-to-r from-amber-500 to-amber-600 text-stone-900 text-xs font-bold rounded-full uppercase tracking-wide">
+                    <span className="px-3 py-1 bg-merit-gold text-white text-xs font-bold rounded-full uppercase tracking-wide shadow-sm font-sans">
                         {tier.badge}
                     </span>
                 </div>
@@ -66,8 +66,8 @@ function SizeCard({ tier, isSelected, onClick, priceGapMessage, delay }: SizeCar
             {/* Selection indicator */}
             {isSelected && (
                 <div className="absolute top-4 right-4">
-                    <div className="w-6 h-6 bg-amber-500 rounded-full flex items-center justify-center">
-                        <Check className="w-4 h-4 text-stone-900" />
+                    <div className="w-6 h-6 bg-merit-gold rounded-full flex items-center justify-center shadow-sm">
+                        <Check className="w-4 h-4 text-white" />
                     </div>
                 </div>
             )}
@@ -75,24 +75,24 @@ function SizeCard({ tier, isSelected, onClick, priceGapMessage, delay }: SizeCar
             {/* Content */}
             <div className="space-y-4">
                 <div>
-                    <h3 className="font-serif text-xl text-stone-100">{tier.name}</h3>
-                    <p className="text-stone-400 text-sm">{tier.size}</p>
+                    <h3 className="font-serif text-xl text-merit-charcoal">{tier.name}</h3>
+                    <p className="text-merit-charcoal/60 text-sm font-sans">{tier.size}</p>
                 </div>
 
                 <div className="flex items-baseline gap-1">
-                    <span className="font-serif text-3xl text-amber-400">{formatPrice(tier.price)}</span>
+                    <span className="font-serif text-3xl text-merit-gold">{formatPrice(tier.price)}</span>
                 </div>
 
                 {/* Upsell message for non-top tiers */}
                 {priceGapMessage && tier.tier < 3 && (
-                    <p className="text-xs text-amber-500/80 italic">
+                    <p className="text-xs text-merit-gold/80 italic font-sans">
                         {priceGapMessage}
                     </p>
                 )}
 
                 {/* Statement for top tier */}
                 {tier.tier === 3 && (
-                    <p className="text-xs text-stone-500">
+                    <p className="text-xs text-merit-charcoal/50 font-sans">
                         The Statement Piece
                     </p>
                 )}

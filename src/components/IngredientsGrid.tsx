@@ -1,175 +1,201 @@
-"use client";
-
-import { useState } from "react";
-import { motion } from "framer-motion";
-import Image from "next/image";
-
 const materials = [
     {
-        title: "Hand-Finished Hardwoods",
-        subtitle: "American Black Walnut",
-        description: "Sourced from sustainable forests, air-dried for decades to ensure stability and depth of color. Hand-finished with organic oils for a satin luster.",
+        title: "Heirloom-Grade Cherrywood",
+        subtitle: "High-Definition Permanence",
+        description: "Deep, rich cherrywood with a sleek matte black finish. Infused directly into coated aluminum for archival durability and modern elegance.",
         image: "/images/walnut_hd.png",
         position: "left"
     },
     {
-        title: "Optical-Grade Crystal Acrylic",
-        subtitle: "Museum-Quality Clarity",
-        description: "UV-resistant, anti-reflective crystal acrylic provides unparalleled clarity—protecting your achievement while remaining virtually invisible.",
+        title: "Museum-Grade Acrylic",
+        subtitle: "Optical Crystal Clarity",
+        description: "UV-resistant, anti-reflective acrylic with diamond-polished edges. Provides a floating, ethereal presentation that protects and preserves your achievement.",
         image: "/images/acrylic_hd.png",
         position: "right"
     }
-];
+] as const;
+
+import { useRef, useState, useEffect } from "react";
+import { motion, useScroll, useTransform, useSpring, useMotionValue } from "framer-motion";
+import Image from "next/image";
 
 export default function IngredientsGrid() {
-    const [activeIndex, setActiveIndex] = useState<number | null>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const { scrollYProgress } = useScroll({
+        target: containerRef,
+        offset: ["start end", "end start"]
+    });
+
+    // Mouse tilt effect
+    const mouseX = useMotionValue(0);
+    const mouseY = useMotionValue(0);
+
+    const handleMouseMove = (e: React.MouseEvent) => {
+        const { clientX, clientY } = e;
+        const { innerWidth, innerHeight } = window;
+        const x = (clientX / innerWidth - 0.5) * 2; // -1 to 1
+        const y = (clientY / innerHeight - 0.5) * 2; // -1 to 1
+        mouseX.set(x);
+        mouseY.set(y);
+    };
+
+    // Smooth tilt values
+    const tiltX = useSpring(useTransform(mouseY, [-1, 1], [5, -5]), { stiffness: 100, damping: 30 });
+    const tiltY = useSpring(useTransform(mouseX, [-1, 1], [-5, 5]), { stiffness: 100, damping: 30 });
+
+    // Opposing tilt for the second item
+    const tiltX2 = useSpring(useTransform(mouseY, [-1, 1], [-5, 5]), { stiffness: 100, damping: 30 });
+    const tiltY2 = useSpring(useTransform(mouseX, [-1, 1], [5, -5]), { stiffness: 100, damping: 30 });
 
     return (
         <section
+            ref={containerRef}
             id="craft-section"
-            className="relative min-h-screen w-full bg-merit-paper overflow-hidden py-32"
+            className="relative min-h-[120vh] w-full bg-merit-paper overflow-hidden py-32 md:py-48"
+            onMouseMove={handleMouseMove}
         >
-            {/* Caustic Light Effect - Visible when hovering Acrylic */}
-            <div
-                className="absolute inset-0 pointer-events-none z-0 transition-opacity duration-500"
-                style={{
-                    opacity: activeIndex === 1 ? 1 : 0,
-                    background: "radial-gradient(ellipse 80% 60% at 60% 40%, rgba(212, 175, 55, 0.15) 0%, transparent 70%)"
-                }}
-            />
+            {/* Background elements */}
+            <div className="absolute inset-0 pointer-events-none opacity-30 select-none overflow-hidden">
+                <motion.div
+                    className="absolute top-[10%] left-[5%] w-[40vw] h-[40vw] rounded-full bg-merit-gold/5 blur-[120px]"
+                    style={{ x: useTransform(mouseX, [-1, 1], [-50, 50]), y: useTransform(mouseY, [-1, 1], [-50, 50]) }}
+                />
+                <motion.div
+                    className="absolute bottom-[20%] right-[10%] w-[30vw] h-[30vw] rounded-full bg-merit-gold/10 blur-[100px]"
+                    style={{ x: useTransform(mouseX, [-1, 1], [30, -30]), y: useTransform(mouseY, [-1, 1], [30, -30]) }}
+                />
+            </div>
 
-            {/* Content Container */}
-            <div className="container relative z-20 mx-auto px-6 flex flex-col items-center justify-center min-h-screen">
+            <div className="container relative z-10 mx-auto px-6">
 
                 {/* Section Header */}
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="mb-24 text-center space-y-4"
+                    className="mb-32 md:mb-48 text-center space-y-4 max-w-3xl mx-auto"
                 >
-                    <span className="text-merit-gold/80 font-serif italic text-xl">The Elements of Permanence</span>
-                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif text-merit-charcoal">
+                    <span className="text-merit-gold/80 font-serif italic text-xl md:text-2xl">The Elements of Permanence</span>
+                    <h2 className="text-5xl md:text-7xl font-serif text-merit-charcoal">
                         Crafted to Endure
                     </h2>
                 </motion.div>
 
-                {/* Interactive Material List */}
-                <div className="flex flex-col items-center space-y-16 w-full max-w-4xl">
-                    {materials.map((item, index) => (
+                {/* Immersive 3D Layout */}
+                <div className="flex flex-col gap-32 md:gap-0 relative">
+
+                    {/* Item 1: Cherrywood (Left Pop-out) */}
+                    <div className="flex flex-col md:flex-row items-center md:justify-between w-full relative group perspective-1000">
+                        {/* Image Side - Pops from Left */}
                         <motion.div
-                            key={index}
-                            className="relative group w-full cursor-pointer py-8"
-                            onMouseEnter={() => setActiveIndex(index)}
-                            onMouseLeave={() => setActiveIndex(null)}
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, margin: "-10%" }}
-                            transition={{ delay: index * 0.15 }}
+                            className="md:absolute md:left-[-15%] md:top-1/2 md:-translate-y-1/2 w-[300px] h-[400px] md:w-[600px] md:h-[800px] z-20"
+                            style={{
+                                x: useTransform(scrollYProgress, [0, 0.5], [-100, 0]),
+                                rotateX: tiltX,
+                                rotateY: tiltY,
+                                opacity: useTransform(scrollYProgress, [0, 0.2], [0, 1])
+                            }}
                         >
-                            {/* Container for text + image side by side */}
-                            <div className="flex items-center justify-center gap-8">
-
-                                {/* Left Image - for Hardwoods (index 0) */}
-                                {index === 0 && (
-                                    <div
-                                        className="hidden md:block relative w-56 h-72 rounded-2xl overflow-hidden transition-all duration-500 ease-out flex-shrink-0"
-                                        style={{
-                                            transform: activeIndex === 0
-                                                ? 'perspective(1000px) rotateY(-8deg) rotateX(5deg) scale(1.25) translateX(10px)'
-                                                : 'perspective(1000px) rotateY(12deg) rotateX(0deg) scale(1) translateX(-30px)',
-                                            opacity: activeIndex === 0 ? 1 : 0.35,
-                                            boxShadow: activeIndex === 0
-                                                ? '0 25px 50px -12px rgba(0,0,0,0.4), 0 0 30px rgba(212,175,55,0.2)'
-                                                : '0 10px 25px -5px rgba(0,0,0,0.2)',
-                                        }}
-                                    >
-                                        <Image
-                                            src={item.image}
-                                            alt="Walnut texture"
-                                            fill
-                                            className="object-cover transition-transform duration-500"
-                                            style={{
-                                                transform: activeIndex === 0 ? 'scale(1.1)' : 'scale(1)',
-                                            }}
-                                            sizes="224px"
-                                        />
-                                        <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-black/30 transition-opacity duration-500"
-                                            style={{ opacity: activeIndex === 0 ? 0.8 : 1 }} />
-                                    </div>
-                                )}
-
-                                {/* Text Content */}
-                                <div className="text-center flex-grow max-w-2xl">
-                                    <h3
-                                        className="text-4xl md:text-5xl lg:text-6xl font-serif transition-all duration-300"
-                                        style={{
-                                            color: activeIndex === index ? '#2a2a2a' : 'rgba(42, 42, 42, 0.25)',
-                                            transform: activeIndex === index ? 'scale(1.05)' : 'scale(1)',
-                                        }}
-                                    >
-                                        {item.title}
-                                    </h3>
-
-                                    <div
-                                        className="overflow-hidden transition-all duration-300"
-                                        style={{
-                                            maxHeight: activeIndex === index ? '200px' : '0',
-                                            opacity: activeIndex === index ? 1 : 0,
-                                            marginTop: activeIndex === index ? '24px' : '0',
-                                        }}
-                                    >
-                                        <h4 className="text-merit-gold font-serif italic text-xl mb-3">{item.subtitle}</h4>
-                                        <p className="text-merit-charcoal/60 font-sans max-w-lg mx-auto leading-relaxed text-lg">
-                                            {item.description}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                {/* Right Image - for Acrylic (index 1) */}
-                                {index === 1 && (
-                                    <div
-                                        className="hidden md:block relative w-56 h-72 rounded-2xl overflow-hidden transition-all duration-500 ease-out flex-shrink-0"
-                                        style={{
-                                            transform: activeIndex === 1
-                                                ? 'perspective(1000px) rotateY(8deg) rotateX(-5deg) scale(1.25) translateX(-10px)'
-                                                : 'perspective(1000px) rotateY(-12deg) rotateX(0deg) scale(1) translateX(30px)',
-                                            opacity: activeIndex === 1 ? 1 : 0.35,
-                                            boxShadow: activeIndex === 1
-                                                ? '0 25px 50px -12px rgba(0,0,0,0.4), 0 0 40px rgba(100,200,255,0.25)'
-                                                : '0 10px 25px -5px rgba(0,0,0,0.2)',
-                                        }}
-                                    >
-                                        <Image
-                                            src={item.image}
-                                            alt="Crystal acrylic texture"
-                                            fill
-                                            className="object-cover transition-transform duration-500"
-                                            style={{
-                                                transform: activeIndex === 1 ? 'scale(1.1)' : 'scale(1)',
-                                            }}
-                                            sizes="224px"
-                                        />
-                                        <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-black/20 transition-opacity duration-500"
-                                            style={{ opacity: activeIndex === 1 ? 0.6 : 1 }} />
-                                        {/* Prismatic shimmer overlay on hover */}
-                                        <div
-                                            className="absolute inset-0 bg-gradient-to-tr from-cyan-200/20 via-purple-200/15 to-pink-200/20 mix-blend-overlay transition-opacity duration-500"
-                                            style={{ opacity: activeIndex === 1 ? 1 : 0 }}
-                                        />
-                                    </div>
-                                )}
+                            <div className="relative w-full h-full transform-style-3d transition-transform duration-500 hover:scale-[1.02]">
+                                <Image
+                                    src={materials[0].image}
+                                    alt={materials[0].title}
+                                    fill
+                                    className="object-contain drop-shadow-2xl"
+                                    sizes="(max-width: 768px) 300px, 600px"
+                                    priority
+                                />
+                                {/* Dynamic Shine */}
+                                <motion.div
+                                    className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/10 to-white/0 pointer-events-none"
+                                    style={{
+                                        x: useTransform(mouseX, [-1, 1], [20, -20]),
+                                        opacity: 0.5
+                                    }}
+                                />
                             </div>
-
-                            {/* Vertical connector line */}
-                            {index < materials.length - 1 && (
-                                <div className="absolute left-1/2 -bottom-16 h-12 w-px bg-gradient-to-b from-merit-charcoal/20 to-transparent -translate-x-1/2" />
-                            )}
                         </motion.div>
-                    ))}
+
+                        {/* Text Side - Right Aligned */}
+                        <motion.div
+                            className="w-full md:w-1/2 md:ml-auto md:pl-20 md:pr-10 mt-12 md:mt-0 relative z-10 pointer-events-none md:pointer-events-auto"
+                            initial={{ opacity: 0, x: 50 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.2 }}
+                            viewport={{ margin: "-20%" }}
+                        >
+                            <h3 className="text-4xl md:text-6xl font-serif text-merit-charcoal mb-4">
+                                {materials[0].title}
+                            </h3>
+                            <div className="h-1 w-24 bg-merit-gold mb-6" />
+                            <h4 className="text-xl md:text-2xl font-serif italic text-merit-gold/90 mb-6">
+                                {materials[0].subtitle}
+                            </h4>
+                            <p className="text-lg md:text-xl text-merit-charcoal/70 leading-relaxed max-w-lg">
+                                {materials[0].description}
+                            </p>
+                        </motion.div>
+                    </div>
+
+
+                    {/* Item 2: Acrylic (Right Pop-out) - Spacing for desktop vertical layout */}
+                    <div className="flex flex-col md:flex-row items-center md:mt-64 md:justify-between w-full relative group perspective-1000">
+                        {/* Text Side - Left Aligned */}
+                        <motion.div
+                            className="w-full md:w-1/2 md:mr-auto md:pr-20 md:pl-10 order-2 md:order-1 mt-12 md:mt-0"
+                            initial={{ opacity: 0, x: -50 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.2 }}
+                            viewport={{ margin: "-20%" }}
+                        >
+                            <div className="md:text-right flex flex-col items-center md:items-end">
+                                <h3 className="text-4xl md:text-6xl font-serif text-merit-charcoal mb-4">
+                                    {materials[1].title}
+                                </h3>
+                                <div className="h-1 w-24 bg-merit-gold mb-6" />
+                                <h4 className="text-xl md:text-2xl font-serif italic text-merit-gold/90 mb-6">
+                                    {materials[1].subtitle}
+                                </h4>
+                                <p className="text-lg md:text-xl text-merit-charcoal/70 leading-relaxed max-w-lg">
+                                    {materials[1].description}
+                                </p>
+                            </div>
+                        </motion.div>
+
+                        {/* Image Side - Pops from Right */}
+                        <motion.div
+                            className="md:absolute md:right-[-10%] md:top-1/2 md:-translate-y-1/2 w-[300px] h-[400px] md:w-[600px] md:h-[800px] z-20 order-1 md:order-2"
+                            style={{
+                                x: useTransform(scrollYProgress, [0.3, 0.8], [200, 0]),
+                                rotateX: tiltX2,
+                                rotateY: tiltY2,
+                                opacity: useTransform(scrollYProgress, [0.4, 0.6], [0, 1])
+                            }}
+                        >
+                            <div className="relative w-full h-full transform-style-3d transition-transform duration-500 hover:scale-[1.02]">
+                                <Image
+                                    src={materials[1].image}
+                                    alt={materials[1].title}
+                                    fill
+                                    className="object-contain drop-shadow-2xl"
+                                    sizes="(max-width: 768px) 300px, 600px"
+                                    priority
+                                />
+                                {/* Caustic/Glass Effect */}
+                                <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-30 mix-blend-overlay border border-white/30 rounded-lg pointer-events-none" />
+                                <motion.div
+                                    className="absolute inset-0 bg-gradient-to-tr from-cyan-50/0 via-cyan-100/20 to-cyan-50/0 pointer-events-none mix-blend-overlay"
+                                    style={{
+                                        x: useTransform(mouseX, [-1, 1], [-30, 30]),
+                                        opacity: 0.6
+                                    }}
+                                />
+                            </div>
+                        </motion.div>
+                    </div>
+
                 </div>
             </div>
-
         </section>
     );
 }

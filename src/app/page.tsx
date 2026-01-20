@@ -2,7 +2,6 @@
 
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
-import MobilePlaque from "@/components/MobilePlaque";
 import ProcessSection from "@/components/ProcessSection";
 import IngredientsGrid from "@/components/IngredientsGrid";
 import IntakeForm from "@/components/IntakeForm";
@@ -35,8 +34,6 @@ function HomeContent() {
           {/* Hero Section - Base layer (z-index: 1) */}
           <div className="relative" style={{ zIndex: 1 }}>
             <Hero />
-            {/* Mobile plaque shown inline after hero content */}
-            {isMobile && <MobilePlaque />}
           </div>
 
           {/* Content Sections - Slide OVER Hero (z-index: 10+) */}

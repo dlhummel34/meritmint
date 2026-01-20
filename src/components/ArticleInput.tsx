@@ -51,7 +51,7 @@ export function ArticleInput({ value, file, onUrlChange, onFileChange }: Article
 
     return (
         <div className="space-y-4">
-            <label className="block text-stone-300 font-medium">
+            <label className="block text-merit-charcoal font-medium font-serif">
                 Your Award Article
             </label>
 
@@ -62,8 +62,8 @@ export function ArticleInput({ value, file, onUrlChange, onFileChange }: Article
                 className={`
           relative rounded-xl border-2 border-dashed transition-all duration-300
           ${isDragging
-                        ? 'border-amber-500 bg-amber-500/10'
-                        : 'border-stone-700 bg-stone-900/50 hover:border-stone-600'
+                        ? 'border-merit-gold bg-merit-gold/5'
+                        : 'border-merit-charcoal/20 bg-white/40 hover:border-merit-gold/40'
                     }
         `}
             >
@@ -76,18 +76,18 @@ export function ArticleInput({ value, file, onUrlChange, onFileChange }: Article
                             exit={{ opacity: 0 }}
                             className="p-6 flex items-center gap-4"
                         >
-                            <div className="w-12 h-12 bg-amber-500/20 rounded-lg flex items-center justify-center">
-                                <FileText className="w-6 h-6 text-amber-500" />
+                            <div className="w-12 h-12 bg-merit-gold/10 rounded-lg flex items-center justify-center">
+                                <FileText className="w-6 h-6 text-merit-gold" />
                             </div>
                             <div className="flex-1 min-w-0">
-                                <p className="text-stone-100 font-medium truncate">{file.name}</p>
-                                <p className="text-stone-500 text-sm">
+                                <p className="text-merit-charcoal font-medium truncate font-sans">{file.name}</p>
+                                <p className="text-merit-charcoal/50 text-sm font-sans">
                                     {(file.size / 1024 / 1024).toFixed(2)} MB
                                 </p>
                             </div>
                             <button
                                 onClick={clearFile}
-                                className="p-2 text-stone-400 hover:text-stone-200 transition-colors"
+                                className="p-2 text-merit-charcoal/40 hover:text-merit-charcoal transition-colors"
                             >
                                 <X className="w-5 h-5" />
                             </button>
@@ -101,21 +101,21 @@ export function ArticleInput({ value, file, onUrlChange, onFileChange }: Article
                             className="p-6"
                         >
                             <div className="flex items-center gap-3">
-                                <div className="flex-shrink-0 w-10 h-10 bg-stone-800 rounded-lg flex items-center justify-center">
-                                    <Link className="w-5 h-5 text-stone-400" />
+                                <div className="flex-shrink-0 w-10 h-10 bg-merit-charcoal/5 rounded-lg flex items-center justify-center">
+                                    <Link className="w-5 h-5 text-merit-charcoal/40" />
                                 </div>
                                 <input
                                     type="url"
                                     value={value}
                                     onChange={(e) => onUrlChange(e.target.value)}
                                     placeholder="Paste your article link..."
-                                    className="flex-1 bg-transparent text-stone-100 placeholder:text-stone-600 outline-none"
+                                    className="flex-1 bg-transparent text-merit-charcoal placeholder:text-merit-charcoal/40 outline-none font-sans"
                                 />
-                                <div className="flex items-center gap-2 text-stone-500">
+                                <div className="flex items-center gap-2 text-merit-charcoal/40 font-sans">
                                     <span className="text-sm">or</span>
                                     <button
                                         onClick={() => fileInputRef.current?.click()}
-                                        className="flex items-center gap-2 px-4 py-2 bg-stone-800 hover:bg-stone-700 rounded-lg transition-colors text-stone-300"
+                                        className="flex items-center gap-2 px-4 py-2 bg-white border border-merit-charcoal/10 hover:border-merit-charcoal/30 rounded-lg transition-colors text-merit-charcoal/80 shadow-sm"
                                     >
                                         <Upload className="w-4 h-4" />
                                         <span className="text-sm">Upload</span>
@@ -135,7 +135,7 @@ export function ArticleInput({ value, file, onUrlChange, onFileChange }: Article
                 />
             </div>
 
-            <p className="text-xs text-stone-500">
+            <p className="text-xs text-merit-charcoal/50 font-sans">
                 We handle the design. You'll receive a proof before we print.
             </p>
         </div>

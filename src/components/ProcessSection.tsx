@@ -16,7 +16,7 @@ const steps = [
     {
         title: "The Minting",
         subtitle: "Creation",
-        description: "Once verified, we craft your achievement into a museum-quality plaque. Precision milled hardwoods, laser-etched metals, and optional digital twin minting on the blockchain.",
+        description: "Once verified, we craft your achievement into a museum-quality plaque. Precision milled hardwoods and laser-etched metals.",
         image: "/images/plaque_2.png",
         stamp: "/images/stamp_certified.png",
         stampLabel: "Certified",
@@ -53,7 +53,7 @@ export default function ProcessSection() {
 
             <div className="max-w-6xl mx-auto px-6 relative z-10">
                 {/* Header */}
-                <div className="text-center mb-24 relative">
+                <div className="text-center mb-16 md:mb-24 relative">
                     <motion.span
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
@@ -74,7 +74,7 @@ export default function ProcessSection() {
                 </div>
 
                 {/* Process Steps - Zig-Zag Layout */}
-                <div className="space-y-32 md:space-y-40">
+                <div className="space-y-24 md:space-y-40 mb-32">
                     {steps.map((step, index) => {
                         // Zig-zag: Step 01 & 03 = Text Left / Image Right, Step 02 = Image Left / Text Right
                         const isReversed = index === 1;
@@ -86,16 +86,17 @@ export default function ProcessSection() {
                                 onMouseEnter={() => setHoveredIndex(index)}
                                 onMouseLeave={() => setHoveredIndex(null)}
                             >
-                                {/* Stamp Overlay - Positioned OUTSIDE text block at outer edge */}
+                                {/* Stamp Overlay - Positioned adjusted for mobile to prevent cutoff */}
                                 <div
-                                    className="absolute top-0 z-30 pointer-events-none transition-all"
+                                    className={`absolute top-0 z-30 pointer-events-none transition-all ${isReversed
+                                        ? 'left-[-40px] md:left-[-140px] right-auto'
+                                        : 'right-[-40px] md:right-[-140px] left-auto'
+                                        }`}
                                     style={{
-                                        right: isReversed ? 'auto' : '-140px',
-                                        left: isReversed ? '-140px' : 'auto',
                                         transform: hoveredIndex === index
                                             ? `translateX(0) rotate(${isReversed ? '15deg' : '-15deg'}) scale(1)`
-                                            : `translateX(${isReversed ? '-80px' : '80px'}) rotate(0deg) scale(0.7)`,
-                                        opacity: hoveredIndex === index ? 0.9 : 0,
+                                            : `translateX(${isReversed ? '-20px' : '20px'}) rotate(0deg) scale(0.6)`,
+                                        opacity: hoveredIndex === index ? 0.9 : 0.4, // Keep slightly visible
                                         transitionDuration: '600ms',
                                         transitionTimingFunction: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
                                     }}
@@ -103,9 +104,9 @@ export default function ProcessSection() {
                                     <Image
                                         src={step.stamp}
                                         alt={step.stampLabel}
-                                        width={150}
-                                        height={150}
-                                        className="drop-shadow-lg mix-blend-multiply"
+                                        width={220}
+                                        height={220}
+                                        className="drop-shadow-lg mix-blend-multiply w-[100px] h-[100px] md:w-[200px] md:h-[200px] object-contain"
                                     />
                                 </div>
 

@@ -91,7 +91,7 @@ export default function Navbar() {
                                 transition={{ delay: 0.3 }}
                             >
                                 <Link
-                                    href="#commission"
+                                    href="/purchase"
                                     className="group relative overflow-hidden"
                                 >
                                     <span className="relative z-10 px-6 py-3 text-xs font-medium tracking-[0.15em] uppercase text-merit-charcoal border border-merit-charcoal/20 hover:border-merit-gold/60 hover:text-merit-gold transition-all duration-500 inline-flex items-center gap-2 rounded-full">
@@ -152,7 +152,7 @@ export default function Navbar() {
 
                             {/* CTA Button */}
                             <Link
-                                href="#commission"
+                                href="/purchase"
                                 className="ml-2 px-5 py-2 bg-gradient-to-r from-merit-charcoal to-merit-sage text-white text-xs font-medium tracking-wider uppercase rounded-full hover:shadow-lg hover:shadow-merit-sage/20 transition-all duration-300 hover:scale-105"
                             >
                                 Start

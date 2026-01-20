@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, Diamond } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import MobilePlaque from "./MobilePlaque";
 
 // Register GSAP plugins
 if (typeof window !== "undefined") {
@@ -21,7 +22,7 @@ export default function Hero() {
     return (
         <section
             id="hero-section"
-            className="relative min-h-[120vh] flex flex-col justify-center overflow-hidden bg-merit-paper bg-texture-paper"
+            className="relative min-h-[100vh] flex flex-col justify-center overflow-hidden bg-merit-paper bg-texture-paper"
         >
             {/* Vignette Overlay */}
             <div className="fixed inset-0 pointer-events-none z-40 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(45,52,54,0.06)_100%)]" />
@@ -56,7 +57,7 @@ export default function Hero() {
                 </span>
             </div>
 
-            <div className="container mx-auto px-6 lg:px-20 relative z-10 pt-24">
+            <div className="container mx-auto px-6 lg:px-20 relative z-30 pt-24 pb-12 lg:pb-0">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
 
                     {/* Text Content */}
@@ -101,28 +102,31 @@ export default function Hero() {
                                 <span className="text-merit-charcoal/40">A curated preservation service for the distinguished few.</span>
                             </motion.p>
 
+                            {/* Mobile Plaque - Integrated for perfect positioning */}
+                            <MobilePlaque />
+
                             {/* CTA */}
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.8, delay: 0.8 }}
-                                className="pt-6 ml-4"
+                                className="pt-2 ml-4 flex justify-center lg:justify-start"
                             >
-                                <button
-                                    onClick={() => document.getElementById('commission')?.scrollIntoView({ behavior: 'smooth' })}
-                                    className="group relative px-10 py-5 bg-transparent border border-merit-charcoal/15 hover:border-merit-gold/60 transition-all duration-700 rounded-full overflow-hidden"
+                                <a
+                                    href="/purchase"
+                                    className="group relative px-8 py-4 bg-merit-charcoal/5 border border-merit-charcoal/30 hover:border-merit-gold/60 hover:bg-merit-charcoal/10 transition-all duration-500 rounded-full overflow-hidden backdrop-blur-sm"
                                 >
-                                    <span className="relative z-10 flex items-center space-x-3 text-merit-charcoal/80 group-hover:text-merit-gold transition-colors duration-500 font-serif tracking-[0.2em] uppercase text-xs">
+                                    <span className="relative z-10 flex items-center space-x-3 text-merit-charcoal group-hover:text-merit-gold transition-colors duration-500 font-serif tracking-[0.2em] uppercase text-xs font-semibold">
                                         <span>Begin Commission</span>
                                         <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-2 duration-500" />
                                     </span>
-                                </button>
+                                </a>
                             </motion.div>
                         </div>
                     </div>
 
                     {/* Plaque Space with Golden Ratio Wireframe */}
-                    <div className="lg:col-span-6 relative min-h-[50vh] lg:min-h-[70vh]">
+                    <div className="hidden lg:block lg:col-span-6 relative min-h-[50vh] lg:min-h-[70vh]">
                         {/* Golden Ratio Wireframe Backdrop */}
                         <motion.svg
                             initial={{ pathLength: 0, opacity: 0 }}

@@ -132,11 +132,7 @@ export default function ParallaxPlaque() {
 
                     {/* Main Plaque Image */}
                     <div
-                        className="relative"
-                        style={{
-                            width: "clamp(360px, 48vw, 600px)",
-                            height: "clamp(450px, 60vw, 750px)",
-                        }}
+                        className="relative w-[50vw] max-w-[600px] aspect-[360/450]"
                     >
                         <Image
                             src="/images/meritmint_plaque.png"

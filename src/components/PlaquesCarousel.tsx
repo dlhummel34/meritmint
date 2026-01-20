@@ -38,23 +38,24 @@ export default function PlaquesCarousel() {
     const scrollRef = useRef<HTMLDivElement>(null);
     const [isHovered, setIsHovered] = useState(false);
 
+    const scrollPosRef = useRef(0);
+
     // Auto-scroll animation
     useEffect(() => {
         const scrollContainer = scrollRef.current;
         if (!scrollContainer) return;
 
         let animationId: number;
-        let scrollPos = 0;
         const speed = 0.5; // pixels per frame
 
         const animate = () => {
             if (!isHovered && scrollContainer) {
-                scrollPos += speed;
+                scrollPosRef.current += speed;
                 // Reset to beginning for infinite scroll effect
-                if (scrollPos >= scrollContainer.scrollWidth / 2) {
-                    scrollPos = 0;
+                if (scrollPosRef.current >= scrollContainer.scrollWidth / 2) {
+                    scrollPosRef.current = 0;
                 }
-                scrollContainer.scrollLeft = scrollPos;
+                scrollContainer.scrollLeft = scrollPosRef.current;
             }
             animationId = requestAnimationFrame(animate);
         };
@@ -65,19 +66,19 @@ export default function PlaquesCarousel() {
     }, [isHovered]);
 
     return (
-        <section className="relative pt-24 pb-48 bg-merit-paper overflow-hidden">
+        <section className="relative pt-12 md:pt-24 pb-32 md:pb-48 bg-merit-paper overflow-hidden">
             {/* Section Header */}
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="text-center mb-16"
+                className="text-center mb-10 md:mb-16"
             >
                 <span className="text-merit-gold/80 font-serif italic text-xl">Our Portfolio</span>
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif text-merit-charcoal mt-4">
+                <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif text-merit-charcoal mt-4 leading-tight md:leading-tight py-2">
                     Distinguished Creations
                 </h2>
-                <p className="text-merit-charcoal/60 mt-6 max-w-2xl mx-auto px-6">
+                <p className="text-merit-charcoal/60 mt-4 md:mt-6 max-w-2xl mx-auto px-6">
                     Each plaque tells a unique story of achievement. Explore our collection of custom-crafted recognition pieces.
                 </p>
             </motion.div>
@@ -85,7 +86,7 @@ export default function PlaquesCarousel() {
             {/* Carousel Container */}
             <div
                 ref={scrollRef}
-                className="flex gap-8 overflow-x-hidden px-8 py-8 cursor-grab active:cursor-grabbing"
+                className="flex gap-4 md:gap-8 overflow-x-hidden px-4 md:px-8 py-8 cursor-grab active:cursor-grabbing"
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
                 style={{ scrollBehavior: 'auto' }}
@@ -99,18 +100,14 @@ export default function PlaquesCarousel() {
                         transition={{ type: "spring", stiffness: 300, damping: 20 }}
                     >
                         <div
-                            className="relative rounded-xl overflow-hidden shadow-2xl transition-shadow duration-300 group-hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)]"
-                            style={{
-                                width: '280px',
-                                height: '380px',
-                            }}
+                            className="relative rounded-xl overflow-hidden shadow-2xl transition-shadow duration-300 group-hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] w-[200px] h-[280px] md:w-[320px] md:h-[420px]"
                         >
                             <Image
                                 src={src}
                                 alt={`Plaque ${(index % plaques.length) + 1}`}
                                 fill
                                 className="object-cover"
-                                sizes="280px"
+                                sizes="(max-width: 768px) 200px, 280px"
                             />
                             {/* Hover overlay with shine effect */}
                             <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -119,9 +116,9 @@ export default function PlaquesCarousel() {
                 ))}
             </div>
 
-            {/* Gradient fades on edges - matching the paper background */}
-            <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-merit-paper to-transparent pointer-events-none z-10" />
-            <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-merit-paper to-transparent pointer-events-none z-10" />
+            {/* Gradient fades on edges - matching the paper background - Reduced width on mobile */}
+            <div className="absolute left-0 top-0 bottom-0 w-8 md:w-32 bg-gradient-to-r from-merit-paper to-transparent pointer-events-none z-10" />
+            <div className="absolute right-0 top-0 bottom-0 w-8 md:w-32 bg-gradient-to-l from-merit-paper to-transparent pointer-events-none z-10" />
         </section>
     );
 }

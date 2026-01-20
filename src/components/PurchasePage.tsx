@@ -59,14 +59,14 @@ export function PurchasePage() {
     };
 
     return (
-        <div className="min-h-screen bg-stone-950">
+        <div className="min-h-screen bg-merit-paper bg-texture-paper">
             {/* Hero */}
             <section className="py-16 px-4">
                 <div className="max-w-4xl mx-auto text-center space-y-6">
                     <motion.h1
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="font-serif text-5xl md:text-6xl text-stone-100"
+                        className="font-serif text-5xl md:text-6xl text-merit-charcoal"
                     >
                         Mint Your Achievement
                     </motion.h1>
@@ -74,7 +74,7 @@ export function PurchasePage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
-                        className="text-stone-400 text-lg max-w-2xl mx-auto"
+                        className="text-merit-charcoal/60 text-lg max-w-2xl mx-auto font-sans"
                     >
                         Transform your award or press feature into a timeless display piece.
                         Premium craftsmanship, delivered to your door.
@@ -105,14 +105,14 @@ export function PurchasePage() {
                         animate={{ opacity: 1 }}
                         className="text-center"
                     >
-                        <p className="text-stone-500 text-sm">
+                        <p className="text-merit-charcoal/60 text-sm font-sans">
                             Perfect for: {currentProductLine.vibe}
                         </p>
                     </motion.div>
 
                     {/* Size Selector */}
                     <div>
-                        <h2 className="font-serif text-2xl text-stone-100 mb-6 text-center">
+                        <h2 className="font-serif text-2xl text-merit-charcoal mb-6 text-center">
                             Choose Your Size
                         </h2>
                         <SizeSelector
@@ -142,21 +142,21 @@ export function PurchasePage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.5 }}
-                        className="bg-stone-900/50 border border-stone-800 rounded-2xl p-6 space-y-6"
+                        className="bg-white/40 border border-merit-charcoal/10 rounded-2xl p-6 space-y-6 shadow-sm backdrop-blur-sm"
                     >
                         <div className="flex items-center justify-between">
                             <div>
-                                <h3 className="font-serif text-xl text-stone-100">Order Summary</h3>
+                                <h3 className="font-serif text-xl text-merit-charcoal">Order Summary</h3>
                                 {selectedTier && (
-                                    <p className="text-stone-400 text-sm">
+                                    <p className="text-merit-charcoal/60 text-sm font-sans">
                                         {currentProductLine.name} • {selectedTier.name} ({selectedTier.size})
                                     </p>
                                 )}
                             </div>
                             <div className="text-right">
-                                <p className="font-serif text-3xl text-amber-400">{formatPrice(total)}</p>
+                                <p className="font-serif text-3xl text-merit-gold">{formatPrice(total)}</p>
                                 {includeReplica && (
-                                    <p className="text-stone-500 text-xs">
+                                    <p className="text-merit-charcoal/50 text-xs font-sans">
                                         Includes Desktop Replica
                                     </p>
                                 )}
@@ -167,10 +167,10 @@ export function PurchasePage() {
                             onClick={handleCheckoutClick}
                             disabled={!canCheckout}
                             className={`
-                w-full py-4 px-6 rounded-xl font-bold flex items-center justify-center gap-2 transition-all duration-300
+                w-full py-4 px-6 rounded-xl font-bold flex items-center justify-center gap-2 transition-all duration-300 font-serif tracking-wide
                 ${canCheckout
-                                    ? 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-stone-900 transform hover:scale-[1.02]'
-                                    : 'bg-stone-800 text-stone-500 cursor-not-allowed'
+                                    ? 'bg-merit-gold text-white hover:bg-merit-gold/90 transform hover:scale-[1.02] shadow-md'
+                                    : 'bg-merit-charcoal/10 text-merit-charcoal/40 cursor-not-allowed'
                                 }
               `}
                         >
@@ -179,7 +179,7 @@ export function PurchasePage() {
                         </button>
 
                         {/* Trust Badges */}
-                        <div className="flex items-center justify-center gap-6 pt-4 border-t border-stone-800">
+                        <div className="flex items-center justify-center gap-6 pt-4 border-t border-merit-charcoal/10">
                             <TrustBadge icon={Shield} text="Secure Payment" />
                             <TrustBadge icon={Truck} text="Free Shipping" />
                             <TrustBadge icon={Award} text="Quality Guaranteed" />
@@ -200,9 +200,9 @@ export function PurchasePage() {
 
 function TrustBadge({ icon: Icon, text }: { icon: typeof Shield; text: string }) {
     return (
-        <div className="flex items-center gap-2 text-stone-500">
+        <div className="flex items-center gap-2 text-merit-charcoal/50">
             <Icon className="w-4 h-4" />
-            <span className="text-xs">{text}</span>
+            <span className="text-xs font-sans">{text}</span>
         </div>
     );
 }
