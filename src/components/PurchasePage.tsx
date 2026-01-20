@@ -1,114 +1,37 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, Shield, Truck, Award, User, Mail, Phone, Link as LinkIcon, Upload, CreditCard, Check, Loader2 } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ArrowRight, Shield, Truck, Award, User, Mail, Link as LinkIcon, Upload, Check, Loader2, ExternalLink } from 'lucide-react';
 import { ProductToggle } from './ProductToggle';
 import { SizeSelector } from './SizeSelector';
-import { PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
-import StripeProvider from '@/lib/StripeProvider';
 import {
     ProductLine,
     getProductLine,
     formatPrice,
 } from '@/lib/products';
 
-// Inline Payment Form Component
-function PaymentForm({ onSuccess, amount }: { onSuccess: () => void; amount: number }) {
-    const stripe = useStripe();
-    const elements = useElements();
-    const [isProcessing, setIsProcessing] = useState(false);
-    const [error, setError] = useState('');
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!stripe || !elements) return;
-
-        setIsProcessing(true);
-        setError('');
-
-        const { error: paymentError } = await stripe.confirmPayment({
-            elements,
-            confirmParams: {
-                return_url: window.location.origin + '/checkout?success=true',
-            },
-            redirect: 'if_required',
-        });
-
-        if (paymentError) {
-            setError(paymentError.message || 'Payment failed');
-            setIsProcessing(false);
-        } else {
-            onSuccess();
-        }
-    };
-
-    return (
-        <form onSubmit={handleSubmit} className="space-y-4">
-            <PaymentElement />
-            {error && (
-                <div className="text-red-600 text-sm bg-red-50 p-3 rounded-lg border border-red-200">
-                    {error}
-                </div>
-            )}
-            <button
-                type="submit"
-                disabled={!stripe || isProcessing}
-                className={`
-                    w-full py-4 px-6 rounded-xl font-bold flex items-center justify-center gap-2 transition-all duration-300 font-serif tracking-wide
-                    ${!stripe || isProcessing
-                        ? 'bg-merit-charcoal/20 text-merit-charcoal/40 cursor-not-allowed'
-                        : 'bg-merit-gold text-white hover:bg-merit-gold/90 shadow-lg'
-                    }
-                `}
-            >
-                {isProcessing ? (
-                    <>
-                        <Loader2 className="w-5 h-5 animate-spin" />
-                        <span>Processing...</span>
-                    </>
-                ) : (
-                    <>
-                        <CreditCard className="w-5 h-5" />
-                        <span>Pay {formatPrice(amount)}</span>
-                    </>
-                )}
-            </button>
-        </form>
-    );
-}
-
 export function PurchasePage() {
     // Product Selection
     const [productLine, setProductLine] = useState<ProductLine>('crystal');
     const [selectedTierId, setSelectedTierId] = useState<string>('');
 
-    // Section A: Award Details
+    // Award Details
     const [articleUrl, setArticleUrl] = useState('');
     const [articleFile, setArticleFile] = useState<File | null>(null);
 
-    // Section B: Customer Info
+    // Customer Info (basic - Stripe collects the rest)
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
 
-    // Section C: Shipping Address
-    const [address, setAddress] = useState('');
-    const [city, setCity] = useState('');
-    const [state, setState] = useState('');
-    const [zip, setZip] = useState('');
-    const [country, setCountry] = useState('United States');
-
-    // Payment State
-    const [clientSecret, setClientSecret] = useState('');
-    const [isLoadingPayment, setIsLoadingPayment] = useState(false);
-    const [paymentSuccess, setPaymentSuccess] = useState(false);
-    const [step, setStep] = useState<'form' | 'payment'>('form');
+    // Checkout State
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
 
     const currentProductLine = getProductLine(productLine);
     const selectedTier = currentProductLine.tiers.find((t) => t.id === selectedTierId);
 
-    // Auto-select top tier on mount or product line change
+    // Auto-select top tier
     const handleProductLineChange = (line: ProductLine) => {
         setProductLine(line);
         const newLine = getProductLine(line);
@@ -127,17 +50,17 @@ export function PurchasePage() {
     // Validation
     const hasValidAward = articleUrl.trim() !== '' || articleFile !== null;
     const hasValidCustomer = name.trim() !== '' && email.trim() !== '' && email.includes('@');
-    const hasValidShipping = address.trim() !== '' && city.trim() !== '' && state.trim() !== '' && zip.trim() !== '';
-    const canProceed = selectedTier && hasValidAward && hasValidCustomer && hasValidShipping;
+    const canCheckout = selectedTier && hasValidAward && hasValidCustomer;
 
-    // Proceed to Payment
-    const handleProceedToPayment = async () => {
-        if (!canProceed) return;
+    // Redirect to Stripe Checkout
+    const handleCheckout = async () => {
+        if (!canCheckout) return;
 
-        setIsLoadingPayment(true);
+        setIsLoading(true);
+        setError('');
 
         try {
-            const res = await fetch('/api/create-payment-intent', {
+            const res = await fetch('/api/create-checkout-session', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -145,45 +68,26 @@ export function PurchasePage() {
                     productName: `${currentProductLine.name} - ${selectedTier?.name}`,
                     price: total,
                     customerEmail: email,
-                    articleUrl: articleUrl || 'File uploaded',
+                    customerName: name,
+                    articleUrl: articleUrl || (articleFile ? `File: ${articleFile.name}` : ''),
                 }),
             });
 
             const data = await res.json();
-            if (data.clientSecret) {
-                setClientSecret(data.clientSecret);
-                setStep('payment');
+
+            if (data.url) {
+                // Redirect to Stripe Checkout
+                window.location.href = data.url;
+            } else {
+                setError('Failed to create checkout session');
+                setIsLoading(false);
             }
         } catch (err) {
-            console.error('Payment init failed:', err);
-        } finally {
-            setIsLoadingPayment(false);
+            console.error('Checkout error:', err);
+            setError('Something went wrong. Please try again.');
+            setIsLoading(false);
         }
     };
-
-    // Success State
-    if (paymentSuccess) {
-        return (
-            <div className="min-h-screen bg-merit-paper flex items-center justify-center px-4">
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="max-w-md w-full text-center space-y-6 bg-white/60 rounded-3xl p-8 border border-merit-charcoal/10 shadow-xl"
-                >
-                    <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto">
-                        <Check className="w-10 h-10 text-emerald-600" />
-                    </div>
-                    <h1 className="font-serif text-3xl text-merit-charcoal">Order Confirmed!</h1>
-                    <p className="text-merit-charcoal/60">
-                        Thank you for your order. We&apos;ll send you a proof within 24-48 hours.
-                    </p>
-                    <p className="text-merit-charcoal/40 text-sm">
-                        A confirmation email has been sent to {email}
-                    </p>
-                </motion.div>
-            </div>
-        );
-    }
 
     return (
         <div className="min-h-screen bg-merit-paper bg-texture-paper">
@@ -332,99 +236,11 @@ export function PurchasePage() {
                                         />
                                     </div>
 
-                                    <div className="relative">
-                                        <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-merit-charcoal/40" />
-                                        <input
-                                            type="tel"
-                                            value={phone}
-                                            onChange={(e) => setPhone(e.target.value)}
-                                            placeholder="Phone (optional)"
-                                            className="w-full pl-12 pr-4 py-3.5 bg-white border border-merit-charcoal/20 rounded-xl text-merit-charcoal placeholder:text-merit-charcoal/40 focus:outline-none focus:border-merit-gold focus:ring-1 focus:ring-merit-gold/20 transition-all"
-                                        />
-                                    </div>
+                                    <p className="text-xs text-merit-charcoal/50 text-center">
+                                        Shipping address will be collected on the next page
+                                    </p>
                                 </div>
                             </motion.div>
-
-                            {/* Step 4: Shipping Address */}
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.3 }}
-                                className="bg-white/60 rounded-2xl p-6 border border-merit-charcoal/10 shadow-sm"
-                            >
-                                <div className="flex items-center gap-3 mb-6">
-                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center font-serif font-bold text-sm ${hasValidShipping ? 'bg-emerald-500 text-white' : 'bg-merit-charcoal/10 text-merit-charcoal/40'}`}>
-                                        {hasValidShipping ? <Check className="w-4 h-4" /> : '4'}
-                                    </div>
-                                    <h2 className="font-serif text-xl text-merit-charcoal">Shipping Address</h2>
-                                </div>
-
-                                <div className="space-y-4">
-                                    <input
-                                        type="text"
-                                        value={address}
-                                        onChange={(e) => setAddress(e.target.value)}
-                                        placeholder="Street Address"
-                                        className="w-full px-4 py-3.5 bg-white border border-merit-charcoal/20 rounded-xl text-merit-charcoal placeholder:text-merit-charcoal/40 focus:outline-none focus:border-merit-gold focus:ring-1 focus:ring-merit-gold/20 transition-all"
-                                    />
-
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <input
-                                            type="text"
-                                            value={city}
-                                            onChange={(e) => setCity(e.target.value)}
-                                            placeholder="City"
-                                            className="w-full px-4 py-3.5 bg-white border border-merit-charcoal/20 rounded-xl text-merit-charcoal placeholder:text-merit-charcoal/40 focus:outline-none focus:border-merit-gold focus:ring-1 focus:ring-merit-gold/20 transition-all"
-                                        />
-                                        <input
-                                            type="text"
-                                            value={state}
-                                            onChange={(e) => setState(e.target.value)}
-                                            placeholder="State"
-                                            className="w-full px-4 py-3.5 bg-white border border-merit-charcoal/20 rounded-xl text-merit-charcoal placeholder:text-merit-charcoal/40 focus:outline-none focus:border-merit-gold focus:ring-1 focus:ring-merit-gold/20 transition-all"
-                                        />
-                                    </div>
-
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <input
-                                            type="text"
-                                            value={zip}
-                                            onChange={(e) => setZip(e.target.value)}
-                                            placeholder="ZIP Code"
-                                            className="w-full px-4 py-3.5 bg-white border border-merit-charcoal/20 rounded-xl text-merit-charcoal placeholder:text-merit-charcoal/40 focus:outline-none focus:border-merit-gold focus:ring-1 focus:ring-merit-gold/20 transition-all"
-                                        />
-                                        <select
-                                            value={country}
-                                            onChange={(e) => setCountry(e.target.value)}
-                                            className="w-full px-4 py-3.5 bg-white border border-merit-charcoal/20 rounded-xl text-merit-charcoal focus:outline-none focus:border-merit-gold focus:ring-1 focus:ring-merit-gold/20 transition-all"
-                                        >
-                                            <option value="United States">United States</option>
-                                            <option value="Canada">Canada</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </motion.div>
-
-                            {/* Payment Section (Inline) - Step 5 */}
-                            <AnimatePresence>
-                                {step === 'payment' && clientSecret && (
-                                    <motion.div
-                                        initial={{ opacity: 0, y: 20, height: 0 }}
-                                        animate={{ opacity: 1, y: 0, height: 'auto' }}
-                                        exit={{ opacity: 0, y: -20, height: 0 }}
-                                        className="bg-white/60 rounded-2xl p-6 border border-merit-charcoal/10 shadow-sm overflow-hidden"
-                                    >
-                                        <div className="flex items-center gap-3 mb-6">
-                                            <div className="w-8 h-8 rounded-full bg-merit-gold text-white flex items-center justify-center font-serif font-bold text-sm">5</div>
-                                            <h2 className="font-serif text-xl text-merit-charcoal">Payment</h2>
-                                        </div>
-
-                                        <StripeProvider clientSecret={clientSecret}>
-                                            <PaymentForm amount={total} onSuccess={() => setPaymentSuccess(true)} />
-                                        </StripeProvider>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
                         </div>
 
                         {/* Right Column: Order Summary (Sticky) */}
@@ -452,10 +268,6 @@ export function PurchasePage() {
                                                 <span className="text-merit-charcoal/60 font-sans">Shipping</span>
                                                 <span className="text-emerald-600 font-medium">FREE</span>
                                             </div>
-                                            <div className="flex justify-between text-sm">
-                                                <span className="text-merit-charcoal/60 font-sans">Estimated Tax</span>
-                                                <span className="text-merit-charcoal/60 font-sans">Calculated at checkout</span>
-                                            </div>
                                         </div>
 
                                         <div className="border-t border-merit-charcoal/10 pt-3 flex justify-between">
@@ -468,39 +280,45 @@ export function PurchasePage() {
                                             <p className="text-sm text-merit-charcoal/70 font-sans">
                                                 <span className="font-medium text-merit-charcoal">Estimated Delivery:</span> 5-7 business days
                                             </p>
-                                            <p className="text-xs text-merit-charcoal/50 mt-1">
-                                                Handcrafted with care, shipped with tracking
-                                            </p>
                                         </div>
                                     </div>
                                 )}
 
-                                {/* Proceed Button */}
-                                {step === 'form' && (
-                                    <button
-                                        onClick={handleProceedToPayment}
-                                        disabled={!canProceed || isLoadingPayment}
-                                        className={`
-                                            w-full py-4 px-6 rounded-xl font-bold flex items-center justify-center gap-2 transition-all duration-300 font-serif tracking-wide
-                                            ${canProceed && !isLoadingPayment
-                                                ? 'bg-merit-gold text-white hover:bg-merit-gold/90 transform hover:scale-[1.02] shadow-md'
-                                                : 'bg-merit-charcoal/10 text-merit-charcoal/40 cursor-not-allowed'
-                                            }
-                                        `}
-                                    >
-                                        {isLoadingPayment ? (
-                                            <>
-                                                <Loader2 className="w-5 h-5 animate-spin" />
-                                                <span>Loading...</span>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <span>Continue to Payment</span>
-                                                <ArrowRight className="w-5 h-5" />
-                                            </>
-                                        )}
-                                    </button>
+                                {/* Error Message */}
+                                {error && (
+                                    <div className="text-red-600 text-sm bg-red-50 p-3 rounded-lg border border-red-200">
+                                        {error}
+                                    </div>
                                 )}
+
+                                {/* Checkout Button */}
+                                <button
+                                    onClick={handleCheckout}
+                                    disabled={!canCheckout || isLoading}
+                                    className={`
+                                        w-full py-4 px-6 rounded-xl font-bold flex items-center justify-center gap-2 transition-all duration-300 font-serif tracking-wide
+                                        ${canCheckout && !isLoading
+                                            ? 'bg-merit-gold text-white hover:bg-merit-gold/90 transform hover:scale-[1.02] shadow-md'
+                                            : 'bg-merit-charcoal/10 text-merit-charcoal/40 cursor-not-allowed'
+                                        }
+                                    `}
+                                >
+                                    {isLoading ? (
+                                        <>
+                                            <Loader2 className="w-5 h-5 animate-spin" />
+                                            <span>Redirecting to Checkout...</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <span>Secure Checkout</span>
+                                            <ExternalLink className="w-4 h-4" />
+                                        </>
+                                    )}
+                                </button>
+
+                                <p className="text-xs text-merit-charcoal/40 text-center">
+                                    Powered by Stripe • Enter shipping address on the next page
+                                </p>
 
                                 {/* Trust Badges */}
                                 <div className="grid grid-cols-3 gap-2 pt-4 border-t border-merit-charcoal/10">
