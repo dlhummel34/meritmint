@@ -46,7 +46,7 @@ function SizeCard({ tier, isSelected, onClick, priceGapMessage, delay }: SizeCar
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay, duration: 0.4 }}
             className={`
-        relative p-6 rounded-2xl border transition-all duration-300 text-left
+        relative p-6 pt-8 rounded-2xl border transition-all duration-300 text-left overflow-visible
         ${isSelected
                     ? 'border-merit-gold bg-merit-gold/5 shadow-md'
                     : 'border-merit-charcoal/10 bg-white/40 hover:border-merit-gold/40'
@@ -56,8 +56,8 @@ function SizeCard({ tier, isSelected, onClick, priceGapMessage, delay }: SizeCar
         >
             {/* Badge */}
             {tier.badge && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className="px-3 py-1 bg-merit-gold text-white text-xs font-bold rounded-full uppercase tracking-wide shadow-sm font-sans">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
+                    <span className="px-3 py-1.5 bg-merit-gold text-white text-xs font-bold rounded-full uppercase tracking-wide shadow-md font-sans whitespace-nowrap">
                         {tier.badge}
                     </span>
                 </div>
