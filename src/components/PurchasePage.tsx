@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Shield, Truck, Award } from 'lucide-react';
 import { ProductToggle } from './ProductToggle';
 import { SizeSelector } from './SizeSelector';
 import { ArticleInput } from './ArticleInput';
 import { AddOnModal } from './AddOnModal';
+import { LeadCaptureModal, getStoredLeadData } from './LeadCaptureModal';
 import {
     ProductLine,
     getProductLine,
@@ -22,6 +23,17 @@ export function PurchasePage() {
     const [articleFile, setArticleFile] = useState<File | null>(null);
     const [showAddOnModal, setShowAddOnModal] = useState(false);
     const [includeReplica, setIncludeReplica] = useState(false);
+    const [showLeadModal, setShowLeadModal] = useState(false);
+
+    // Check if we need to show lead capture on mount
+    useEffect(() => {
+        const existingData = getStoredLeadData();
+        if (!existingData) {
+            // Small delay for better UX
+            const timer = setTimeout(() => setShowLeadModal(true), 500);
+            return () => clearTimeout(timer);
+        }
+    }, []);
 
     const currentProductLine = getProductLine(productLine);
     const selectedTier = currentProductLine.tiers.find((t) => t.id === selectedTierId);
@@ -194,6 +206,14 @@ export function PurchasePage() {
                 onClose={() => setShowAddOnModal(false)}
                 onConfirm={handleAddOnConfirm}
             />
+
+            {/* Lead Capture Modal */}
+            {showLeadModal && (
+                <LeadCaptureModal
+                    onComplete={() => setShowLeadModal(false)}
+                    onSkip={() => setShowLeadModal(false)}
+                />
+            )}
         </div>
     );
 }

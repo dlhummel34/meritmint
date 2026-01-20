@@ -3,7 +3,7 @@
 import { PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import StripeProvider from '@/lib/StripeProvider';
 import { useSearchParams } from 'next/navigation';
-import { useState, Suspense } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import { CreditCard, Lock, ArrowLeft, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
@@ -13,6 +13,7 @@ import {
     CRYSTAL_MINT,
     HERITAGE_MINT,
 } from '@/lib/products';
+import { getStoredLeadData } from '@/components/LeadCaptureModal';
 
 function CheckoutForm({ amountInCents, customerEmail, customerName, productLine, product, onSuccess }: any) {
     const stripe = useStripe();
@@ -93,6 +94,15 @@ function CheckoutContent() {
     const [name, setName] = useState('');
     const [clientSecret, setClientSecret] = useState('');
     const [step, setStep] = useState<'details' | 'payment'>('details');
+
+    // Pre-fill from localStorage if available
+    useEffect(() => {
+        const storedData = getStoredLeadData();
+        if (storedData) {
+            if (storedData.name) setName(storedData.name);
+            if (storedData.email) setEmail(storedData.email);
+        }
+    }, []);
 
     // ... (product finding logic remains the same) ...
     const allProducts = [...CRYSTAL_MINT.tiers, ...HERITAGE_MINT.tiers];
