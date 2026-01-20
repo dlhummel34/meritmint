@@ -1,3 +1,5 @@
+'use client';
+
 import { PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import StripeProvider from '@/lib/StripeProvider';
 import { useSearchParams } from 'next/navigation';
