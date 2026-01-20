@@ -1,7 +1,16 @@
 import { PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import StripeProvider from '@/lib/StripeProvider';
-
-// ... other imports ...
+import { useSearchParams } from 'next/navigation';
+import { useState, Suspense } from 'react';
+import { motion } from 'framer-motion';
+import { CreditCard, Lock, ArrowLeft, CheckCircle } from 'lucide-react';
+import Link from 'next/link';
+import {
+    formatPrice,
+    DESKTOP_REPLICA,
+    CRYSTAL_MINT,
+    HERITAGE_MINT,
+} from '@/lib/products';
 
 function CheckoutForm({ amountInCents, customerEmail, customerName, productLine, product, onSuccess }: any) {
     const stripe = useStripe();
@@ -147,7 +156,7 @@ function CheckoutContent() {
                     </div>
                     <h1 className="font-serif text-3xl text-stone-100">Order Confirmed!</h1>
                     <p className="text-stone-400">
-                        Thank you for your order. We'll send you a confirmation email shortly.
+                        Thank you for your order. We&apos;ll send you a confirmation email shortly.
                     </p>
                     <Link
                         href="/"
