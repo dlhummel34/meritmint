@@ -53,6 +53,22 @@ export default function IngredientsGrid() {
     const tiltX2 = useSpring(useTransform(mouseY, [-1, 1], [-5, 5]), { stiffness: 100, damping: 30 });
     const tiltY2 = useSpring(useTransform(mouseX, [-1, 1], [5, -5]), { stiffness: 100, damping: 30 });
 
+    // Background Glow Parallax
+    const glow1X = useTransform(mouseX, [-1, 1], [-50, 50]);
+    const glow1Y = useTransform(mouseY, [-1, 1], [-50, 50]);
+    const glow2X = useTransform(mouseX, [-1, 1], [30, -30]);
+    const glow2Y = useTransform(mouseY, [-1, 1], [30, -30]);
+
+    // Item 1 Parallax
+    const item1X = useTransform(scrollYProgress, [0, 0.5], [-100, 0]);
+    const item1Opacity = useTransform(scrollYProgress, [0, 0.2], [0, 1]);
+    const item1ShimmerX = useTransform(mouseX, [-1, 1], [20, -20]);
+
+    // Item 2 Parallax
+    const item2X = useTransform(scrollYProgress, [0.3, 0.8], [200, 0]);
+    const item2Opacity = useTransform(scrollYProgress, [0.4, 0.6], [0, 1]);
+    const item2ShimmerX = useTransform(mouseX, [-1, 1], [-30, 30]);
+
     return (
         <section
             ref={containerRef}
@@ -65,11 +81,11 @@ export default function IngredientsGrid() {
                 <div className="absolute inset-0 pointer-events-none opacity-30 select-none overflow-hidden">
                     <motion.div
                         className="absolute top-[10%] left-[5%] w-[40vw] h-[40vw] rounded-full bg-merit-gold/5 blur-[120px]"
-                        style={{ x: useTransform(mouseX, [-1, 1], [-50, 50]), y: useTransform(mouseY, [-1, 1], [-50, 50]) }}
+                        style={{ x: glow1X, y: glow1Y }}
                     />
                     <motion.div
                         className="absolute bottom-[20%] right-[10%] w-[30vw] h-[30vw] rounded-full bg-merit-gold/10 blur-[100px]"
-                        style={{ x: useTransform(mouseX, [-1, 1], [30, -30]), y: useTransform(mouseY, [-1, 1], [30, -30]) }}
+                        style={{ x: glow2X, y: glow2Y }}
                     />
                 </div>
             )}
@@ -109,10 +125,10 @@ export default function IngredientsGrid() {
                             <motion.div
                                 className="md:absolute md:left-[-15%] md:top-1/2 md:-translate-y-1/2 w-[600px] h-[800px] z-20"
                                 style={{
-                                    x: useTransform(scrollYProgress, [0, 0.5], [-100, 0]),
+                                    x: item1X,
                                     rotateX: tiltX,
                                     rotateY: tiltY,
-                                    opacity: useTransform(scrollYProgress, [0, 0.2], [0, 1])
+                                    opacity: item1Opacity
                                 }}
                             >
                                 <div className="relative w-full h-full transform-style-3d transition-transform duration-500 hover:scale-[1.02]">
@@ -126,7 +142,7 @@ export default function IngredientsGrid() {
                                     />
                                     <motion.div
                                         className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/10 to-white/0 pointer-events-none"
-                                        style={{ x: useTransform(mouseX, [-1, 1], [20, -20]), opacity: 0.5 }}
+                                        style={{ x: item1ShimmerX, opacity: 0.5 }}
                                     />
                                 </div>
                             </motion.div>
@@ -194,10 +210,10 @@ export default function IngredientsGrid() {
                             <motion.div
                                 className="md:absolute md:right-[-10%] md:top-1/2 md:-translate-y-1/2 w-[600px] h-[800px] z-20 order-1 md:order-2"
                                 style={{
-                                    x: useTransform(scrollYProgress, [0.3, 0.8], [200, 0]),
+                                    x: item2X,
                                     rotateX: tiltX2,
                                     rotateY: tiltY2,
-                                    opacity: useTransform(scrollYProgress, [0.4, 0.6], [0, 1])
+                                    opacity: item2Opacity
                                 }}
                             >
                                 <div className="relative w-full h-full transform-style-3d transition-transform duration-500 hover:scale-[1.02]">
@@ -212,7 +228,7 @@ export default function IngredientsGrid() {
                                     <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-30 mix-blend-overlay border border-white/30 rounded-lg pointer-events-none" />
                                     <motion.div
                                         className="absolute inset-0 bg-gradient-to-tr from-cyan-50/0 via-cyan-100/20 to-cyan-50/0 pointer-events-none mix-blend-overlay"
-                                        style={{ x: useTransform(mouseX, [-1, 1], [-30, 30]), opacity: 0.6 }}
+                                        style={{ x: item2ShimmerX, opacity: 0.6 }}
                                     />
                                 </div>
                             </motion.div>
