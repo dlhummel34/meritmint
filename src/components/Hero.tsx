@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Diamond } from "lucide-react";
 import gsap from "gsap";
@@ -15,13 +15,14 @@ if (typeof window !== "undefined") {
 
 export default function Hero() {
     const { isLoaded } = usePerformance();
-    const shouldAnimate = isLoaded;
+    const [mounted, setMounted] = useState(false);
 
-    // GSAP removed for smoother Framer Motion entrance
     useEffect(() => {
-        // Only keep other non-entrance effects if any (none currently).
-        // Entrance now handled by Framer Motion in JSX.
+        setMounted(true);
     }, []);
+
+    // Ensure we only animate after mounting and loading to prevent hydration mismatch
+    const shouldAnimate = mounted && isLoaded;
 
     return (
         <section
