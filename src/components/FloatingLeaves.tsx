@@ -90,8 +90,8 @@ export default function FloatingLeaves() {
     const [isClient, setIsClient] = useState(false);
     const { isMobile, isLowPower, prefersReducedMotion } = usePerformance();
 
-    // Reduce leaf count on mobile/low-power devices
-    const leafCount = isMobile || isLowPower ? 6 : 18;
+    // Reduce leaf count on mobile/low-power devices for smoother performance
+    const leafCount = isMobile || isLowPower ? 4 : 10;
     const leaves = useMemo(() => generateLeaves(leafCount), [leafCount]);
 
     // Mouse tracking (disabled on mobile)
@@ -179,8 +179,10 @@ function Leaf({ id, x, y, rotation, layer, mouseX, mouseY, scrollY, isMobile, is
 
     return (
         <motion.div
-            className="absolute will-change-transform"
+            className="absolute"
             style={{
+                willChange: 'transform',
+                transform: 'translate3d(0, 0, 0)', // Force GPU layer
                 left: `${x}%`,
                 top: `${y}%`,
                 x: isMobile ? 0 : driftX,

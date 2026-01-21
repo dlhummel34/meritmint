@@ -143,14 +143,14 @@ export function PurchasePage() {
                                                     opacity: 1,
                                                     scale: 1,
                                                     rotateY: 0,
-                                                    y: [0, -10, 0],
+                                                    y: [0, -6, 0],
                                                 }}
                                                 exit={{ opacity: 0, scale: 0.8, rotateY: 15 }}
                                                 transition={{
-                                                    duration: 0.5,
+                                                    duration: 0.6,
                                                     y: {
                                                         repeat: Infinity,
-                                                        duration: 3,
+                                                        duration: 4,
                                                         ease: "easeInOut"
                                                     }
                                                 }}
@@ -164,14 +164,15 @@ export function PurchasePage() {
                                             >
                                                 {/* Shadow */}
                                                 <motion.div
-                                                    className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-[180px] h-[20px] bg-black/20 rounded-[50%] blur-lg"
+                                                    className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-[180px] h-[20px] bg-black/20 rounded-[50%]"
+                                                    style={{ filter: 'blur(8px)', willChange: 'transform, opacity' }}
                                                     animate={{
-                                                        scale: [1, 0.9, 1],
-                                                        opacity: [0.3, 0.2, 0.3],
+                                                        scale: [1, 0.95, 1],
+                                                        opacity: [0.3, 0.25, 0.3],
                                                     }}
                                                     transition={{
                                                         repeat: Infinity,
-                                                        duration: 3,
+                                                        duration: 4,
                                                         ease: "easeInOut"
                                                     }}
                                                 />

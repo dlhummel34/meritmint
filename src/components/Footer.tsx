@@ -26,18 +26,16 @@ export default function Footer() {
                             <li><Link href="#about" className="hover:text-white transition-colors">About</Link></li>
                             <li><Link href="#products" className="hover:text-white transition-colors">Products</Link></li>
                             <li><Link href="#process" className="hover:text-white transition-colors">Our Process</Link></li>
-                            <li><Link href="#faq" className="hover:text-white transition-colors">FAQs</Link></li>
                         </ul>
                     </div>
 
                     <div>
                         <h4 className="font-serif text-lg mb-6 text-merit-gold">Contact</h4>
                         <ul className="space-y-4 text-sm text-merit-silver/60">
-                            <li>hello@meritmint.com</li>
-                            <li>+1 (555) 012-3456</li>
+                            <li>nicole@meritmint.news</li>
                             <li className="pt-4">
-                                <Link href="#intake" className="inline-flex items-center gap-2 text-merit-green hover:text-white transition-colors">
-                                    <TicketCheck size={16} /> Check Order Status
+                                <Link href="/purchase" className="inline-flex items-center gap-2 text-merit-green hover:text-white transition-colors">
+                                    <TicketCheck size={16} /> Start Commission
                                 </Link>
                             </li>
                         </ul>

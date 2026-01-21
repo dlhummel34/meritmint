@@ -4,7 +4,6 @@ import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import ProcessSection from "@/components/ProcessSection";
 import IngredientsGrid from "@/components/IngredientsGrid";
-import IntakeForm from "@/components/IntakeForm";
 import Footer from "@/components/Footer";
 import FloatingLeaves from "@/components/FloatingLeaves";
 import ParallaxPlaque from "@/components/ParallaxPlaque";
@@ -14,7 +13,7 @@ import LoadingScreen from "@/components/LoadingScreen";
 import { PerformanceProvider, usePerformance } from "@/lib/PerformanceContext";
 
 function HomeContent() {
-  const { isLoaded, isMobile } = usePerformance();
+  const { isLoaded } = usePerformance();
 
   return (
     <main className="min-h-screen relative selection:bg-merit-sage selection:text-white">
@@ -41,7 +40,6 @@ function HomeContent() {
             <IngredientsGrid />
             <PlaquesCarousel />
             <ProcessSection />
-            <IntakeForm />
             <Footer />
           </div>
         </div>

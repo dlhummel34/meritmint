@@ -85,6 +85,7 @@ export default function ParallaxPlaque() {
                 ref={plaqueRef}
                 className="relative will-change-transform"
                 style={{
+                    willChange: "transform",
                     rotateX: prefersReducedMotion ? 0 : rotateX,
                     rotateY: prefersReducedMotion ? 0 : rotateY,
                     transformStyle: "preserve-3d",

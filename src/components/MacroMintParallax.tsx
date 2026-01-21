@@ -10,8 +10,8 @@ export default function MacroMintParallax() {
     const { scrollYProgress } = useScroll();
     const { isMobile, isLowPower, prefersReducedMotion } = usePerformance();
 
-    // Disable entirely on reduced motion preference
-    if (prefersReducedMotion) return null;
+    // Disable entirely on reduced motion preference or low power
+    if (prefersReducedMotion || isLowPower) return null;
 
     // Reduced parallax multiplier for mobile/low-power
     const parallaxMultiplier = isMobile || isLowPower ? 0.3 : 1;
