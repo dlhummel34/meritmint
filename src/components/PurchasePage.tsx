@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 import { ArrowRight, Shield, Truck, Award, User, Mail, Link as LinkIcon, Upload, Check, Loader2, ExternalLink } from 'lucide-react';
 import { ProductToggle } from './ProductToggle';
 import { SizeSelector } from './SizeSelector';
@@ -131,6 +132,29 @@ export function PurchasePage() {
 
                                 <div className="space-y-6">
                                     <ProductToggle selected={productLine} onChange={handleProductLineChange} />
+
+                                    {/* Product Preview Image */}
+                                    <div className="relative aspect-[3/4] max-w-[280px] mx-auto rounded-xl overflow-hidden shadow-lg">
+                                        <AnimatePresence mode="wait">
+                                            <motion.div
+                                                key={productLine}
+                                                initial={{ opacity: 0, scale: 0.95 }}
+                                                animate={{ opacity: 1, scale: 1 }}
+                                                exit={{ opacity: 0, scale: 0.95 }}
+                                                transition={{ duration: 0.3 }}
+                                                className="absolute inset-0"
+                                            >
+                                                <Image
+                                                    src={productLine === 'crystal' ? '/crystal-mint-preview.png' : '/heritage-mint-preview.jpg'}
+                                                    alt={productLine === 'crystal' ? 'Crystal Mint Plaque' : 'Heritage Mint Plaque'}
+                                                    fill
+                                                    className="object-cover"
+                                                    priority
+                                                />
+                                            </motion.div>
+                                        </AnimatePresence>
+                                    </div>
+
                                     <p className="text-merit-charcoal/50 text-sm text-center">
                                         Perfect for: {currentProductLine.vibe}
                                     </p>

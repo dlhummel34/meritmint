@@ -5,6 +5,7 @@ export type ProductLine = 'crystal' | 'heritage';
 
 export interface ProductTier {
     id: string;
+    stripeProductId: string;
     name: string;
     size: string;
     dimensions: { width: number; height: number };
@@ -30,6 +31,7 @@ export const CRYSTAL_MINT: ProductLineConfig = {
     tiers: [
         {
             id: 'crystal-starter',
+            stripeProductId: 'prod_TpTHd2jXQC5KHb',
             name: 'The Starter',
             size: '7" × 9"',
             dimensions: { width: 7, height: 9 },
@@ -38,6 +40,7 @@ export const CRYSTAL_MINT: ProductLineConfig = {
         },
         {
             id: 'crystal-standard',
+            stripeProductId: 'prod_TpTJbBhUCjo48y',
             name: 'The Standard',
             size: '8" × 10"',
             dimensions: { width: 8, height: 10 },
@@ -46,6 +49,7 @@ export const CRYSTAL_MINT: ProductLineConfig = {
         },
         {
             id: 'crystal-executive',
+            stripeProductId: 'prod_TpTKZhvguhw6P6',
             name: 'The Executive',
             size: '9" × 12"',
             dimensions: { width: 9, height: 12 },
@@ -65,6 +69,7 @@ export const HERITAGE_MINT: ProductLineConfig = {
     tiers: [
         {
             id: 'heritage-standard',
+            stripeProductId: 'prod_TpTEcnYEYuO8eB',
             name: 'The Standard',
             size: '9" × 12"',
             dimensions: { width: 9, height: 12 },
@@ -73,6 +78,7 @@ export const HERITAGE_MINT: ProductLineConfig = {
         },
         {
             id: 'heritage-executive',
+            stripeProductId: 'prod_TpTFis1kvTqqNI',
             name: 'The Executive',
             size: '10" × 13"',
             dimensions: { width: 10, height: 13 },
@@ -81,6 +87,7 @@ export const HERITAGE_MINT: ProductLineConfig = {
         },
         {
             id: 'heritage-presidential',
+            stripeProductId: 'prod_TpTGblDbF7M5w8',
             name: 'The Presidential',
             size: '12" × 15"',
             dimensions: { width: 12, height: 15 },
