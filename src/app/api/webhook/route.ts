@@ -6,7 +6,8 @@ import { Resend } from 'resend';
 export const dynamic = 'force-dynamic';
 
 function getStripe() {
-    return new Stripe(process.env.STRIPE_SECRET_KEY || '');
+    const key = (process.env.STRIPE_SECRET_KEY || '').trim();
+    return new Stripe(key);
 }
 
 function getResend() {

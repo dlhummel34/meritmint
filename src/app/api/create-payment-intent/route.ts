@@ -5,7 +5,8 @@ import Stripe from 'stripe';
 export const dynamic = 'force-dynamic';
 
 function getStripe() {
-    return new Stripe(process.env.STRIPE_SECRET_KEY || '');
+    const key = (process.env.STRIPE_SECRET_KEY || '').trim();
+    return new Stripe(key);
 }
 
 export async function POST(request: NextRequest) {
