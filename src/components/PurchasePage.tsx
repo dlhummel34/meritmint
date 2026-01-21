@@ -133,22 +133,54 @@ export function PurchasePage() {
                                 <div className="space-y-6">
                                     <ProductToggle selected={productLine} onChange={handleProductLineChange} />
 
-                                    {/* Product Preview Image */}
-                                    <div className="relative aspect-[3/4] max-w-[280px] mx-auto rounded-xl overflow-hidden shadow-lg">
+                                    {/* Product Preview Image - Floating 3D */}
+                                    <div className="relative h-[320px] flex items-center justify-center" style={{ perspective: '1000px' }}>
                                         <AnimatePresence mode="wait">
                                             <motion.div
                                                 key={productLine}
-                                                initial={{ opacity: 0, scale: 0.95 }}
-                                                animate={{ opacity: 1, scale: 1 }}
-                                                exit={{ opacity: 0, scale: 0.95 }}
-                                                transition={{ duration: 0.3 }}
-                                                className="absolute inset-0"
+                                                initial={{ opacity: 0, scale: 0.8, rotateY: -15 }}
+                                                animate={{
+                                                    opacity: 1,
+                                                    scale: 1,
+                                                    rotateY: 0,
+                                                    y: [0, -10, 0],
+                                                }}
+                                                exit={{ opacity: 0, scale: 0.8, rotateY: 15 }}
+                                                transition={{
+                                                    duration: 0.5,
+                                                    y: {
+                                                        repeat: Infinity,
+                                                        duration: 3,
+                                                        ease: "easeInOut"
+                                                    }
+                                                }}
+                                                whileHover={{
+                                                    scale: 1.05,
+                                                    rotateY: 5,
+                                                    rotateX: -5,
+                                                }}
+                                                className="relative w-[240px] cursor-pointer"
+                                                style={{ transformStyle: 'preserve-3d' }}
                                             >
+                                                {/* Shadow */}
+                                                <motion.div
+                                                    className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-[180px] h-[20px] bg-black/20 rounded-[50%] blur-lg"
+                                                    animate={{
+                                                        scale: [1, 0.9, 1],
+                                                        opacity: [0.3, 0.2, 0.3],
+                                                    }}
+                                                    transition={{
+                                                        repeat: Infinity,
+                                                        duration: 3,
+                                                        ease: "easeInOut"
+                                                    }}
+                                                />
                                                 <Image
-                                                    src={productLine === 'crystal' ? '/crystal-mint-preview.png' : '/heritage-mint-preview.jpg'}
+                                                    src={productLine === 'crystal' ? '/crystal-mint-preview.png' : '/heritage-mint-preview.png'}
                                                     alt={productLine === 'crystal' ? 'Crystal Mint Plaque' : 'Heritage Mint Plaque'}
-                                                    fill
-                                                    className="object-cover"
+                                                    width={240}
+                                                    height={320}
+                                                    className="object-contain drop-shadow-2xl"
                                                     priority
                                                 />
                                             </motion.div>
