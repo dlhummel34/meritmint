@@ -28,54 +28,8 @@ export default function MacroMintParallax() {
     // Background leaves: slowest parallax
     const backgroundY1 = useTransform(scrollYProgress, [0, 1], [0, -100 * parallaxMultiplier]);
 
-    // On mobile, render fewer leaves with no blur
-    if (isMobile) {
-        return (
-            <div ref={containerRef} className="fixed inset-0 pointer-events-none z-[5] overflow-hidden">
-                {/* Single background leaf - bottom left */}
-                <motion.div
-                    style={{ y: backgroundY1 }}
-                    className="absolute -bottom-20 -left-20 w-[300px] h-[300px] will-change-transform"
-                >
-                    <Image
-                        src="/images/mint_leaf_transparent.png"
-                        alt=""
-                        fill
-                        className="object-contain opacity-15 rotate-[30deg]"
-                        sizes="300px"
-                    />
-                </motion.div>
-
-                {/* Single background leaf - top right */}
-                <motion.div
-                    style={{ y: backgroundY1 }}
-                    className="absolute -top-20 -right-20 w-[250px] h-[250px] will-change-transform"
-                >
-                    <Image
-                        src="/images/mint_leaf_transparent.png"
-                        alt=""
-                        fill
-                        className="object-contain opacity-12 -rotate-[45deg] scale-x-[-1]"
-                        sizes="250px"
-                    />
-                </motion.div>
-
-                {/* Midground accent */}
-                <motion.div
-                    style={{ y: midgroundY1 }}
-                    className="absolute top-[50%] -left-16 w-[150px] h-[150px] will-change-transform"
-                >
-                    <Image
-                        src="/images/mint_leaf_transparent.png"
-                        alt=""
-                        fill
-                        className="object-contain opacity-20 rotate-[15deg]"
-                        sizes="150px"
-                    />
-                </motion.div>
-            </div>
-        );
-    }
+    // On mobile, render nothing to avoid lag
+    if (isMobile) return null;
 
     // Desktop: full experience with blur effects
     return (
