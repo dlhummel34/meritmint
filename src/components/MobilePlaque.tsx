@@ -53,6 +53,7 @@ export default function MobilePlaque() {
                         fill
                         className="object-contain drop-shadow-2xl"
                         priority
+                        sizes="(max-width: 768px) 280px, 100vw"
                     />
                 </motion.div>
             </motion.div>

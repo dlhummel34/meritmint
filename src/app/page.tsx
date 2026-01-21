@@ -13,37 +13,37 @@ import LoadingScreen from "@/components/LoadingScreen";
 import { PerformanceProvider, usePerformance } from "@/lib/PerformanceContext";
 
 function HomeContent() {
-  const { isLoaded } = usePerformance();
+  // We use usePerformance mostly for the context, but we don't block rendering on isLoaded anymore
+  // to improve LCP. The LoadingScreen covers the initial paint.
+  usePerformance();
 
   return (
     <main className="min-h-screen relative selection:bg-merit-sage selection:text-white">
-      {/* Loading Screen */}
+      {/* Loading Screen Overlay */}
       <LoadingScreen />
 
-      {/* Main Site Content - shown after loading */}
-      {isLoaded && (
-        <div className="animate-in fade-in duration-1000">
-          <Navbar />
+      {/* Main Site Content - Rendered immediately behind loader for LCP */}
+      <div className="relative">
+        <Navbar />
 
-          {/* Floating Elements Layer (desktop only for MacroMintParallax) */}
-          <MacroMintParallax />
-          <FloatingLeaves />
-          <ParallaxPlaque />
+        {/* Floating Elements Layer */}
+        <MacroMintParallax />
+        <FloatingLeaves />
+        <ParallaxPlaque />
 
-          {/* Hero Section - Base layer (z-index: 1) */}
-          <div className="relative" style={{ zIndex: 1 }}>
-            <Hero />
-          </div>
-
-          {/* Content Sections - Slide OVER Hero (z-index: 10+) */}
-          <div className="relative bg-merit-paper" style={{ zIndex: 10 }}>
-            <IngredientsGrid />
-            <PlaquesCarousel />
-            <ProcessSection />
-            <Footer />
-          </div>
+        {/* Hero Section - Base layer (z-index: 1) */}
+        <div className="relative" style={{ zIndex: 1 }}>
+          <Hero />
         </div>
-      )}
+
+        {/* Content Sections - Slide OVER Hero (z-index: 10+) */}
+        <div className="relative bg-merit-paper" style={{ zIndex: 10 }}>
+          <IngredientsGrid />
+          <PlaquesCarousel />
+          <ProcessSection />
+          <Footer />
+        </div>
+      </div>
     </main>
   );
 }

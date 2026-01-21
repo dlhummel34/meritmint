@@ -6,6 +6,7 @@ import { ArrowRight, Diamond } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import MobilePlaque from "./MobilePlaque";
+import { usePerformance } from "@/lib/PerformanceContext";
 
 // Register GSAP plugins
 if (typeof window !== "undefined") {
@@ -13,6 +14,9 @@ if (typeof window !== "undefined") {
 }
 
 export default function Hero() {
+    const { isLoaded } = usePerformance();
+    const shouldAnimate = isLoaded;
+
     // GSAP removed for smoother Framer Motion entrance
     useEffect(() => {
         // Only keep other non-entrance effects if any (none currently).
@@ -67,7 +71,7 @@ export default function Hero() {
                             {/* Eyebrow */}
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
+                                animate={shouldAnimate ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                                 transition={{ duration: 0.8, delay: 0.3 }}
                                 className="flex items-center space-x-3 text-merit-sage/80"
                             >
@@ -78,7 +82,7 @@ export default function Hero() {
                             {/* Main Headline - Framer Motion Animated */}
                             <motion.h1
                                 initial={{ opacity: 0, y: 30 }}
-                                animate={{ opacity: 1, y: 0 }}
+                                animate={shouldAnimate ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
                                 transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
                                 className="leading-[0.9] -ml-1 relative z-50"
                             >
@@ -93,7 +97,7 @@ export default function Hero() {
                             {/* Tagline */}
                             <motion.p
                                 initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
+                                animate={shouldAnimate ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                                 transition={{ duration: 0.8, delay: 0.6 }}
                                 className="text-lg md:text-xl text-merit-charcoal/60 font-sans leading-[1.8] tracking-wide max-w-md ml-4"
                             >
@@ -103,7 +107,7 @@ export default function Hero() {
                             {/* CTA - Moved up on mobile to be immediately visible */}
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
+                                animate={shouldAnimate ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                                 transition={{ duration: 0.8, delay: 0.8 }}
                                 className="ml-4 flex justify-center lg:justify-start"
                             >
@@ -128,7 +132,7 @@ export default function Hero() {
                         {/* Golden Ratio Wireframe Backdrop */}
                         <motion.svg
                             initial={{ pathLength: 0, opacity: 0 }}
-                            animate={{ pathLength: 1, opacity: 1 }}
+                            animate={shouldAnimate ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 }}
                             transition={{ duration: 2, delay: 0.5, ease: "easeOut" }}
                             className="absolute inset-0 w-full h-full"
                             viewBox="0 0 400 400"
@@ -139,21 +143,21 @@ export default function Hero() {
                                 x="50" y="50" width="300" height="185"
                                 fill="none" stroke="#D4AF37" strokeWidth="0.5" opacity="0.3"
                                 initial={{ pathLength: 0 }}
-                                animate={{ pathLength: 1 }}
+                                animate={shouldAnimate ? { pathLength: 1 } : { pathLength: 0 }}
                                 transition={{ duration: 1.5, delay: 0.5 }}
                             />
                             <motion.rect
                                 x="50" y="235" width="185" height="115"
                                 fill="none" stroke="#D4AF37" strokeWidth="0.5" opacity="0.25"
                                 initial={{ pathLength: 0 }}
-                                animate={{ pathLength: 1 }}
+                                animate={shouldAnimate ? { pathLength: 1 } : { pathLength: 0 }}
                                 transition={{ duration: 1.2, delay: 0.8 }}
                             />
                             <motion.rect
                                 x="235" y="235" width="115" height="115"
                                 fill="none" stroke="#D4AF37" strokeWidth="0.5" opacity="0.2"
                                 initial={{ pathLength: 0 }}
-                                animate={{ pathLength: 1 }}
+                                animate={shouldAnimate ? { pathLength: 1 } : { pathLength: 0 }}
                                 transition={{ duration: 1, delay: 1 }}
                             />
                             {/* Spiral Path */}
@@ -161,7 +165,7 @@ export default function Hero() {
                                 d="M350,50 Q350,235 235,235 Q50,235 50,350"
                                 fill="none" stroke="#D4AF37" strokeWidth="0.5" opacity="0.15"
                                 initial={{ pathLength: 0 }}
-                                animate={{ pathLength: 1 }}
+                                animate={shouldAnimate ? { pathLength: 1 } : { pathLength: 0 }}
                                 transition={{ duration: 2, delay: 1.2 }}
                             />
                             {/* Construction Lines */}
@@ -169,7 +173,7 @@ export default function Hero() {
                                 x1="50" y1="50" x2="350" y2="350"
                                 stroke="#D4AF37" strokeWidth="0.3" opacity="0.1"
                                 initial={{ pathLength: 0 }}
-                                animate={{ pathLength: 1 }}
+                                animate={shouldAnimate ? { pathLength: 1 } : { pathLength: 0 }}
                                 transition={{ duration: 1.5, delay: 1.5 }}
                             />
                         </motion.svg>
