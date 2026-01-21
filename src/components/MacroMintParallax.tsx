@@ -10,9 +10,6 @@ export default function MacroMintParallax() {
     const { scrollYProgress } = useScroll();
     const { isMobile, isLowPower, prefersReducedMotion } = usePerformance();
 
-    // Disable entirely on reduced motion preference or low power
-    if (prefersReducedMotion || isLowPower) return null;
-
     // Reduced parallax multiplier for mobile/low-power
     const parallaxMultiplier = isMobile || isLowPower ? 0.3 : 1;
 
@@ -28,7 +25,10 @@ export default function MacroMintParallax() {
     // Background leaves: slowest parallax
     const backgroundY1 = useTransform(scrollYProgress, [0, 1], [0, -100 * parallaxMultiplier]);
 
-    // On mobile, render nothing to avoid lag
+    // Disable entirely on reduced motion preference or low power (AFTER hooks)
+    if (prefersReducedMotion || isLowPower) return null;
+
+    // On mobile, render nothing to avoid lag (AFTER hooks)
     if (isMobile) return null;
 
     // Desktop: full experience with blur effects
