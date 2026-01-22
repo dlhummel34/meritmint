@@ -59,21 +59,28 @@ export default function IngredientsGrid() {
     const glow2X = useTransform(mouseX, [-1, 1], [30, -30]);
     const glow2Y = useTransform(mouseY, [-1, 1], [30, -30]);
 
-    // Item 1 Parallax
-    const item1X = useTransform(scrollYProgress, [0, 0.5], [-100, 0]);
-    const item1Opacity = useTransform(scrollYProgress, [0, 0.2], [0, 1]);
+    // Smooth spring config for parallax
+    const smoothSpring = { stiffness: 50, damping: 20, mass: 1 };
+
+    // Item 1 Parallax with spring smoothing
+    const item1XRaw = useTransform(scrollYProgress, [0, 0.5], [-100, 0]);
+    const item1X = useSpring(item1XRaw, smoothSpring);
+    const item1OpacityRaw = useTransform(scrollYProgress, [0, 0.2], [0, 1]);
+    const item1Opacity = useSpring(item1OpacityRaw, smoothSpring);
     const item1ShimmerX = useTransform(mouseX, [-1, 1], [20, -20]);
 
-    // Item 2 Parallax
-    const item2X = useTransform(scrollYProgress, [0.3, 0.8], [200, 0]);
-    const item2Opacity = useTransform(scrollYProgress, [0.4, 0.6], [0, 1]);
+    // Item 2 Parallax with spring smoothing
+    const item2XRaw = useTransform(scrollYProgress, [0.3, 0.8], [200, 0]);
+    const item2X = useSpring(item2XRaw, smoothSpring);
+    const item2OpacityRaw = useTransform(scrollYProgress, [0.4, 0.6], [0, 1]);
+    const item2Opacity = useSpring(item2OpacityRaw, smoothSpring);
     const item2ShimmerX = useTransform(mouseX, [-1, 1], [-30, 30]);
 
     return (
         <section
             ref={containerRef}
             id="craft-section"
-            className="relative min-h-[100vh] md:min-h-[120vh] w-full bg-merit-paper overflow-hidden py-24 md:py-48"
+            className="relative min-h-[100vh] md:min-h-[120vh] w-full overflow-hidden py-24 md:py-48"
             onMouseMove={handleMouseMove}
         >
             {/* Background elements - Desktop Only */}

@@ -10,6 +10,7 @@ import ParallaxPlaque from "@/components/ParallaxPlaque";
 import MacroMintParallax from "@/components/MacroMintParallax";
 import PlaquesCarousel from "@/components/PlaquesCarousel";
 import LoadingScreen from "@/components/LoadingScreen";
+import SakariWaveTransition from "@/components/SakariWaveTransition";
 import { PerformanceProvider, usePerformance } from "@/lib/PerformanceContext";
 
 function HomeContent() {
@@ -36,11 +37,26 @@ function HomeContent() {
           <Hero />
         </div>
 
-        {/* Content Sections - Slide OVER Hero (z-index: 10+) */}
-        <div className="relative bg-merit-paper" style={{ zIndex: 10 }}>
+        {/* Crafted to Endure Section - with wave top */}
+        <div className="relative" style={{ zIndex: 10, backgroundColor: "#F5F3EE" }}>
+          <SakariWaveTransition fillColor="#F5F3EE" height={80} />
           <IngredientsGrid />
+        </div>
+
+        {/* Plaques Carousel Section - with wave top */}
+        <div className="relative" style={{ zIndex: 11, backgroundColor: "#EBE7DF" }}>
+          <SakariWaveTransition fillColor="#EBE7DF" height={80} />
           <PlaquesCarousel />
+        </div>
+
+        {/* Process Section - with wave top */}
+        <div className="relative" style={{ zIndex: 12, backgroundColor: "#F5F3EE" }}>
+          <SakariWaveTransition fillColor="#F5F3EE" height={80} />
           <ProcessSection />
+        </div>
+
+        {/* Footer - wave is now built into the component */}
+        <div className="relative" style={{ zIndex: 13, backgroundColor: "#F5F3EE" }}>
           <Footer />
         </div>
       </div>

@@ -66,7 +66,7 @@ export default function PlaquesCarousel() {
     }, [isHovered]);
 
     return (
-        <section className="relative pt-12 md:pt-24 pb-32 md:pb-48 bg-merit-paper overflow-hidden">
+        <section className="relative pt-12 md:pt-24 pb-32 md:pb-48 overflow-hidden">
             {/* Section Header */}
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -116,9 +116,9 @@ export default function PlaquesCarousel() {
                 ))}
             </div>
 
-            {/* Gradient fades on edges - matching the paper background - Reduced width on mobile */}
-            <div className="absolute left-0 top-0 bottom-0 w-8 md:w-32 bg-gradient-to-r from-merit-paper to-transparent pointer-events-none z-10" />
-            <div className="absolute right-0 top-0 bottom-0 w-8 md:w-32 bg-gradient-to-l from-merit-paper to-transparent pointer-events-none z-10" />
+            {/* Gradient fades on edges - using inherited background color */}
+            <div className="absolute left-0 top-0 bottom-0 w-8 md:w-32 bg-gradient-to-r from-[#EBE7DF] to-transparent pointer-events-none z-10" />
+            <div className="absolute right-0 top-0 bottom-0 w-8 md:w-32 bg-gradient-to-l from-[#EBE7DF] to-transparent pointer-events-none z-10" />
         </section>
     );
 }

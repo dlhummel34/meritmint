@@ -182,13 +182,7 @@ export default function Hero() {
                 </div>
             </div>
 
-            {/* Double Wave Divider */}
-            <div className="absolute bottom-0 left-0 w-full leading-none z-20 translate-y-1">
-                <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-20 lg:h-32 block">
-                    <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" fill="#F9F7F2" opacity=".4"></path>
-                    <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05c99.41,75.32,251.87,52.48,380.77,9.89C535.15,44.75,632,28.69,743.24,54.76c125.17,29.33,264-16.1,365.16-92.41,31.75-23.95,65-57,91.6-91.8V0Z" fill="#F9F7F2"></path>
-                </svg>
-            </div>
+
         </section>
     );
 }
