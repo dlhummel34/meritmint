@@ -5,10 +5,24 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { usePerformance } from "@/lib/PerformanceContext";
 
-// Assets to preload
+// Critical assets to preload for smooth initial render
 const PRELOAD_IMAGES = [
     "/images/meritmint_plaque.png",
     "/images/mint_leaf_transparent.png",
+    "/images/hero_plaque.png",
+    // Carousel plaques (first few visible on load)
+    "/images/plaque_01.jpg",
+    "/images/plaque_02.jpg",
+    "/images/plaque_03.jpg",
+    "/images/plaque_04.jpg",
+    // Textures for materials section
+    "/images/texture_walnut.png",
+    "/images/texture_brass.png",
+    // Large assets for smooth transitions (Purchase Page & Ingredients)
+    "/crystal-mint-preview.png",
+    "/heritage-mint-preview.png",
+    "/images/walnut_hd.png",
+    "/images/acrylic_hd.png",
 ];
 
 export default function LoadingScreen() {
@@ -20,7 +34,7 @@ export default function LoadingScreen() {
         let loadedCount = 0;
         const totalAssets = PRELOAD_IMAGES.length;
 
-        // Preload images
+        // Preload images using native Image constructor
         PRELOAD_IMAGES.forEach((src) => {
             const img = new window.Image();
             img.onload = () => {
@@ -31,6 +45,8 @@ export default function LoadingScreen() {
                 loadedCount++;
                 setProgress((loadedCount / totalAssets) * 100);
             };
+            // Set decoding to async for parallel loading
+            img.decoding = "async";
             img.src = src;
         });
 
@@ -66,6 +82,31 @@ export default function LoadingScreen() {
                     {/* Subtle background texture */}
                     <div className="absolute inset-0 bg-texture-paper opacity-50" />
 
+                    {/* Hidden pre-rendered leaves for GPU layer warmup */}
+                    <div className="absolute opacity-0 pointer-events-none" aria-hidden="true">
+                        {[0, 1, 2, 3].map((i) => (
+                            <Image
+                                key={i}
+                                src="/images/mint_leaf_transparent.png"
+                                alt=""
+                                width={60}
+                                height={60}
+                                priority
+                                style={{
+                                    transform: `translate3d(${i * 10}px, ${i * 10}px, 0) rotate(${i * 45}deg)`,
+                                    willChange: 'transform'
+                                }}
+                            />
+                        ))}
+                        {/* Hidden render of heavy assets to force GPU texture upload */}
+                        <div className="absolute top-0 left-0 w-1 h-1 overflow-hidden opacity-0">
+                            <Image src="/crystal-mint-preview.png" alt="" width={100} height={100} priority />
+                            <Image src="/heritage-mint-preview.png" alt="" width={100} height={100} priority />
+                            <Image src="/images/walnut_hd.png" alt="" width={100} height={100} priority />
+                            <Image src="/images/acrylic_hd.png" alt="" width={100} height={100} priority />
+                        </div>
+                    </div>
+
                     {/* Logo / Wordmark */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -85,6 +126,7 @@ export default function LoadingScreen() {
                                 alt=""
                                 fill
                                 className="object-contain"
+                                priority
                             />
                         </motion.div>
 

@@ -79,7 +79,7 @@ export default function PlaquesCarousel() {
                     Distinguished Creations
                 </h2>
                 <p className="text-merit-charcoal/60 mt-4 md:mt-6 max-w-2xl mx-auto px-6">
-                    Each plaque tells a unique story of achievement. Explore our collection of custom-crafted recognition pieces.
+                    Each plaque tells a unique story of achievement. Explore a collection of custom-crafted recognition pieces.
                 </p>
             </motion.div>
 

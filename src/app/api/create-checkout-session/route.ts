@@ -5,6 +5,8 @@ export const dynamic = 'force-dynamic';
 
 function getStripe() {
     const key = (process.env.STRIPE_SECRET_KEY || '').trim();
+    if (!key) console.error('Stripe Secret Key is missing or empty!');
+    else console.log('Stripe Secret Key loaded (prefix):', key.substring(0, 8));
     return new Stripe(key);
 }
 
@@ -69,11 +71,11 @@ export async function POST(request: NextRequest) {
                         delivery_estimate: {
                             minimum: {
                                 unit: 'business_day',
-                                value: 5,
+                                value: 7,
                             },
                             maximum: {
                                 unit: 'business_day',
-                                value: 7,
+                                value: 10,
                             },
                         },
                     },
@@ -86,7 +88,12 @@ export async function POST(request: NextRequest) {
             sessionId: session.id,
         });
     } catch (error) {
-        console.error('Error creating checkout session:', error);
+        console.error('Error creating checkout session details:', {
+            message: error instanceof Error ? error.message : 'Unknown error',
+            name: error instanceof Error ? error.name : 'Unknown name',
+            stack: error instanceof Error ? error.stack : undefined,
+            raw: error
+        });
         return NextResponse.json(
             { error: 'Failed to create checkout session' },
             { status: 500 }

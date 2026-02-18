@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { ArrowRight, Shield, Truck, Award, User, Mail, Link as LinkIcon, Upload, Check, Loader2, ExternalLink } from 'lucide-react';
 import { ProductToggle } from './ProductToggle';
 import { SizeSelector } from './SizeSelector';
@@ -13,13 +14,13 @@ import {
 } from '@/lib/products';
 
 export function PurchasePage() {
+    const router = useRouter();
     // Product Selection
     const [productLine, setProductLine] = useState<ProductLine>('crystal');
     const [selectedTierId, setSelectedTierId] = useState<string>('');
 
     // Award Details
     const [articleUrl, setArticleUrl] = useState('');
-    const [articleFile, setArticleFile] = useState<File | null>(null);
 
     // Customer Info (basic - Stripe collects the rest)
     const [name, setName] = useState('');
@@ -49,7 +50,7 @@ export function PurchasePage() {
     const total = selectedTier ? selectedTier.price : 0;
 
     // Validation
-    const hasValidAward = articleUrl.trim() !== '' || articleFile !== null;
+    const hasValidAward = articleUrl.trim() !== '';
     const hasValidCustomer = name.trim() !== '' && email.trim() !== '' && email.includes('@');
     const canCheckout = selectedTier && hasValidAward && hasValidCustomer;
 
@@ -70,7 +71,7 @@ export function PurchasePage() {
                     price: total,
                     customerEmail: email,
                     customerName: name,
-                    articleUrl: articleUrl || (articleFile ? `File: ${articleFile.name}` : ''),
+                    articleUrl: articleUrl,
                 }),
             });
 
@@ -78,7 +79,7 @@ export function PurchasePage() {
 
             if (data.url) {
                 // Redirect to Stripe Checkout
-                window.location.href = data.url;
+                router.push(data.url);
             } else {
                 setError('Failed to create checkout session');
                 setIsLoading(false);
@@ -224,35 +225,8 @@ export function PurchasePage() {
                                             onChange={(e) => setArticleUrl(e.target.value)}
                                             placeholder="Paste your article or award link..."
                                             className="w-full pl-12 pr-4 py-3.5 bg-white border border-merit-charcoal/20 rounded-xl text-merit-charcoal placeholder:text-merit-charcoal/40 focus:outline-none focus:border-merit-gold focus:ring-1 focus:ring-merit-gold/20 transition-all"
-                                            disabled={articleFile !== null}
                                         />
                                     </div>
-
-                                    <div className="flex items-center gap-4">
-                                        <div className="flex-1 h-px bg-merit-charcoal/10" />
-                                        <span className="text-merit-charcoal/40 text-sm font-sans">or</span>
-                                        <div className="flex-1 h-px bg-merit-charcoal/10" />
-                                    </div>
-
-                                    {/* File Upload */}
-                                    <label className={`
-                                        flex items-center justify-center gap-3 p-4 border-2 border-dashed rounded-xl cursor-pointer transition-all
-                                        ${articleFile ? 'border-emerald-400 bg-emerald-50' : 'border-merit-charcoal/20 hover:border-merit-gold/50 hover:bg-merit-gold/5'}
-                                    `}>
-                                        <Upload className={`w-5 h-5 ${articleFile ? 'text-emerald-600' : 'text-merit-charcoal/40'}`} />
-                                        <span className={`font-sans text-sm ${articleFile ? 'text-emerald-700' : 'text-merit-charcoal/60'}`}>
-                                            {articleFile ? articleFile.name : 'Upload screenshot or PDF'}
-                                        </span>
-                                        <input
-                                            type="file"
-                                            accept="image/*,.pdf"
-                                            onChange={(e) => {
-                                                setArticleFile(e.target.files?.[0] || null);
-                                                if (e.target.files?.[0]) setArticleUrl('');
-                                            }}
-                                            className="sr-only"
-                                        />
-                                    </label>
                                 </div>
                             </motion.div>
 
@@ -314,7 +288,16 @@ export function PurchasePage() {
                                     <div className="space-y-3">
                                         <div className="flex justify-between">
                                             <span className="text-merit-charcoal/60 font-sans">{currentProductLine.name}</span>
-                                            <span className="text-merit-charcoal font-medium">{formatPrice(selectedTier.price)}</span>
+                                            <div className="flex flex-col items-end">
+                                                <span className={`font-bold font-serif text-lg ${selectedTier.tier === 3 ? 'text-emerald-600' : 'text-merit-charcoal'}`}>
+                                                    {formatPrice(selectedTier.price)}
+                                                </span>
+                                                {selectedTier.originalPrice && (
+                                                    <span className="text-sm text-merit-charcoal/60 line-through decoration-merit-charcoal/60">
+                                                        {formatPrice(selectedTier.originalPrice)}
+                                                    </span>
+                                                )}
+                                            </div>
                                         </div>
                                         <div className="text-merit-charcoal/50 text-sm font-sans">
                                             {selectedTier.name} • {selectedTier.size}
@@ -322,20 +305,30 @@ export function PurchasePage() {
 
                                         <div className="border-t border-merit-charcoal/10 pt-3 space-y-2">
                                             <div className="flex justify-between text-sm">
-                                                <span className="text-merit-charcoal/60 font-sans">Shipping</span>
-                                                <span className="text-emerald-600 font-medium">FREE</span>
+                                                <div className="flex flex-col">
+                                                    <span className="text-merit-charcoal/60 font-sans">Shipping</span>
+                                                    <span className="text-xs text-merit-charcoal/40 font-sans">7-10 business days</span>
+                                                </div>
+                                                <div className="flex flex-col items-end">
+                                                    <span className="text-emerald-600 font-bold font-serif">FREE</span>
+                                                    <span className="text-xs text-merit-charcoal/60 line-through decoration-merit-charcoal/60">
+                                                        {formatPrice(Math.round(selectedTier.price * 0.2))}
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
 
-                                        <div className="border-t border-merit-charcoal/10 pt-3 flex justify-between">
+                                        <div className="border-t border-merit-charcoal/10 pt-3 flex justify-between items-baseline">
                                             <span className="font-serif text-lg text-merit-charcoal">Total</span>
-                                            <span className="font-serif text-2xl text-merit-gold">{formatPrice(total)}</span>
+                                            <span className={`font-serif text-2xl font-bold ${selectedTier.tier === 3 ? 'text-emerald-600' : 'text-merit-gold'}`}>
+                                                {formatPrice(total)}
+                                            </span>
                                         </div>
 
                                         {/* Delivery Estimate */}
                                         <div className="bg-merit-gold/5 rounded-lg p-3 border border-merit-gold/20">
                                             <p className="text-sm text-merit-charcoal/70 font-sans">
-                                                <span className="font-medium text-merit-charcoal">Estimated Delivery:</span> 5-7 business days
+                                                <span className="font-medium text-merit-charcoal">Estimated Production Time:</span> 3-5 business days
                                             </p>
                                         </div>
                                     </div>
@@ -386,9 +379,9 @@ export function PurchasePage() {
                             </motion.div>
                         </div>
                     </div>
-                </div>
-            </section>
-        </div>
+                </div >
+            </section >
+        </div >
     );
 }
 

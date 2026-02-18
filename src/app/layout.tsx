@@ -8,6 +8,10 @@ const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfa
 export const metadata: Metadata = {
   title: "MeritMint | The Gold Standard of Achievement",
   description: "Distilling your newsworthy moments into permanent, tangible merit.",
+  icons: {
+    icon: "/images/mint_leaf_transparent.png",
+    apple: "/images/mint_leaf_transparent.png",
+  },
 };
 
 export default function RootLayout({

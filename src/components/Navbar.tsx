@@ -57,9 +57,9 @@ export default function Navbar() {
                                     whileHover={{ rotate: 360 }}
                                     transition={{ duration: 0.8, ease: "easeInOut" }}
                                 >
-                                    {/* Gold ring */}
-                                    <div className="w-10 h-10 rounded-full border-2 border-merit-gold/60 flex items-center justify-center">
-                                        <span className="text-merit-gold font-serif text-lg font-bold">M</span>
+                                    {/* Gold ring with Image */}
+                                    <div className="w-10 h-10 rounded-full border-2 border-merit-gold/60 flex items-center justify-center bg-white/10 backdrop-blur-sm">
+                                        <img src="/images/mint_leaf_transparent.png" alt="MeritMint" className="w-6 h-6 object-contain" />
                                     </div>
                                 </motion.div>
                             </Link>
@@ -127,7 +127,7 @@ export default function Navbar() {
                             {/* Mini Logo */}
                             <Link href="/" className="flex items-center gap-2">
                                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-merit-gold to-merit-sage flex items-center justify-center">
-                                    <span className="text-white font-serif text-sm font-bold">M</span>
+                                    <img src="/images/mint_leaf_transparent.png" alt="M" className="w-5 h-5 object-contain brightness-0 invert" />
                                 </div>
                                 <span className="font-serif text-base font-semibold text-merit-charcoal hidden lg:block">
                                     MeritMint

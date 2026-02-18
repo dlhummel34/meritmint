@@ -118,7 +118,7 @@ export default function IngredientsGrid() {
                     <div className="flex flex-col md:flex-row items-center md:justify-between w-full relative group perspective-1000">
                         {/* Image Side */}
                         {isMobile ? (
-                            <BlurFade className="w-full h-[400px] relative z-20 mb-8">
+                            <BlurFade className="w-full h-[400px] relative z-20 mb-8" blur="0px">
                                 <Image
                                     src={materials[0].image}
                                     alt={materials[0].title}
@@ -135,7 +135,8 @@ export default function IngredientsGrid() {
                                     x: item1X,
                                     rotateX: tiltX,
                                     rotateY: tiltY,
-                                    opacity: item1Opacity
+                                    opacity: item1Opacity,
+                                    willChange: "transform, opacity"
                                 }}
                             >
                                 <div className="relative w-full h-full transform-style-3d transition-transform duration-500 hover:scale-[1.02]">
@@ -203,7 +204,7 @@ export default function IngredientsGrid() {
 
                         {/* Image Side */}
                         {isMobile ? (
-                            <BlurFade className="w-full h-[400px] relative z-20 mb-8 order-1 md:order-2">
+                            <BlurFade className="w-full h-[400px] relative z-20 mb-8 order-1 md:order-2" blur="0px">
                                 <Image
                                     src={materials[1].image}
                                     alt={materials[1].title}
@@ -220,7 +221,8 @@ export default function IngredientsGrid() {
                                     x: item2X,
                                     rotateX: tiltX2,
                                     rotateY: tiltY2,
-                                    opacity: item2Opacity
+                                    opacity: item2Opacity,
+                                    willChange: "transform, opacity"
                                 }}
                             >
                                 <div className="relative w-full h-full transform-style-3d transition-transform duration-500 hover:scale-[1.02]">

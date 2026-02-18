@@ -18,7 +18,8 @@ interface LeafConfig {
     zIndex: number;
 }
 
-const layerConfigs: Record<LeafLayer, Omit<LeafConfig, "layer">> = {
+// Desktop layer configs - leaves can be in foreground
+const desktopLayerConfigs: Record<LeafLayer, Omit<LeafConfig, "layer">> = {
     foreground: {
         scale: 1.5,
         blur: 0,
@@ -44,6 +45,37 @@ const layerConfigs: Record<LeafLayer, Omit<LeafConfig, "layer">> = {
         zIndex: 10,
     },
 };
+
+// Mobile layer configs - ALL leaves pushed to background so they don't block content
+const mobileLayerConfigs: Record<LeafLayer, Omit<LeafConfig, "layer">> = {
+    foreground: {
+        scale: 1.2,
+        blur: 0,
+        opacity: 0.2,  // Much lower opacity
+        scrollSpeed: 0.8,
+        mouseSensitivity: 0,
+        zIndex: 3,     // Behind all content
+    },
+    midground: {
+        scale: 0.9,
+        blur: 0,
+        opacity: 0.15,
+        scrollSpeed: 0.6,
+        mouseSensitivity: 0,
+        zIndex: 2,
+    },
+    background: {
+        scale: 0.5,
+        blur: 0,
+        opacity: 0.1,
+        scrollSpeed: 0.4,
+        mouseSensitivity: 0,
+        zIndex: 1,
+    },
+};
+
+// Function to get layer config based on device
+const getLayerConfigs = (isMobile: boolean) => isMobile ? mobileLayerConfigs : desktopLayerConfigs;
 
 // Generate leaf data with collision avoidance for the logo area
 function generateLeaves(count: number): Array<{ id: number; x: number; y: number; rotation: number; layer: LeafLayer }> {
@@ -152,6 +184,7 @@ interface LeafProps {
 }
 
 function Leaf({ id, x, y, rotation, layer, mouseX, mouseY, scrollY, isMobile, isLowPower }: LeafProps) {
+    const layerConfigs = getLayerConfigs(isMobile);
     const config = layerConfigs[layer];
 
     // Mouse drift (disabled on mobile)

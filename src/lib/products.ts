@@ -10,6 +10,7 @@ export interface ProductTier {
     size: string;
     dimensions: { width: number; height: number };
     price: number;
+    originalPrice?: number;
     tier: 1 | 2 | 3;
     badge?: string;
 }
@@ -54,6 +55,7 @@ export const CRYSTAL_MINT: ProductLineConfig = {
             size: '9" × 12"',
             dimensions: { width: 9, height: 12 },
             price: 229,
+            originalPrice: 275,
             tier: 3,
             badge: 'Best Value',
         },
@@ -83,6 +85,7 @@ export const HERITAGE_MINT: ProductLineConfig = {
             size: '10" × 13"',
             dimensions: { width: 10, height: 13 },
             price: 239,
+            originalPrice: 289,
             tier: 2,
         },
         {
@@ -92,6 +95,7 @@ export const HERITAGE_MINT: ProductLineConfig = {
             size: '12" × 15"',
             dimensions: { width: 12, height: 15 },
             price: 269,
+            originalPrice: 325,
             tier: 3,
             badge: 'Most Popular',
         },

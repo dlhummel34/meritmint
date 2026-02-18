@@ -79,8 +79,15 @@ function SizeCard({ tier, isSelected, onClick, priceGapMessage, delay }: SizeCar
                     <p className="text-merit-charcoal/60 text-sm font-sans">{tier.size}</p>
                 </div>
 
-                <div className="flex items-baseline gap-1">
-                    <span className="font-serif text-3xl text-merit-gold">{formatPrice(tier.price)}</span>
+                <div className="flex items-baseline gap-2">
+                    <span className={`font-serif text-3xl font-medium ${tier.tier === 3 ? 'text-emerald-600' : 'text-merit-gold'}`}>
+                        {formatPrice(tier.price)}
+                    </span>
+                    {tier.originalPrice && (
+                        <span className="font-serif text-lg text-merit-charcoal/60 line-through decoration-merit-charcoal/60 decoration-1">
+                            {formatPrice(tier.originalPrice)}
+                        </span>
+                    )}
                 </div>
 
                 {/* Upsell message for non-top tiers */}

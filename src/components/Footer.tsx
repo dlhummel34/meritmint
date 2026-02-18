@@ -37,7 +37,7 @@ export default function Footer() {
                         <div className="md:col-span-2 space-y-6">
                             <Link href="/" className="flex items-center gap-2">
                                 <div className="bg-white/10 p-2 rounded-lg">
-                                    <Gem size={24} className="text-merit-green" />
+                                    <img src="/images/mint_leaf_transparent.png" alt="MeritMint Logo" className="w-6 h-6 object-contain" />
                                 </div>
                                 <span className="font-serif text-2xl font-bold tracking-tight">MeritMint</span>
                             </Link>
@@ -58,7 +58,7 @@ export default function Footer() {
                         <div>
                             <h4 className="font-serif text-lg mb-6 text-merit-gold">Contact</h4>
                             <ul className="space-y-4 text-sm text-merit-silver/60">
-                                <li>nicole@meritmint.news</li>
+                                <li>david@meritmint.news</li>
                                 <li className="pt-4">
                                     <Link href="/purchase" className="inline-flex items-center gap-2 text-merit-green hover:text-white transition-colors">
                                         <TicketCheck size={16} /> Start Commission
@@ -69,10 +69,19 @@ export default function Footer() {
                     </div>
 
                     <div className="border-t border-white/5 pt-12 flex flex-col md:flex-row justify-between items-center text-xs text-merit-silver/40">
-                        <p>&copy; {new Date().getFullYear()} MeritMint. All rights reserved.</p>
+                        <div className="flex flex-col gap-2">
+                            <p>&copy; {new Date().getFullYear()} MeritMint. All rights reserved.</p>
+                            <p className="text-[10px] text-merit-silver/30 max-w-md">
+                                This site is protected by reCAPTCHA and the Google{' '}
+                                <a href="https://policies.google.com/privacy" target="_blank" rel="noreferrer" className="hover:text-merit-silver/50 underline transition-colors">Privacy Policy</a>{' '}
+                                and{' '}
+                                <a href="https://policies.google.com/terms" target="_blank" rel="noreferrer" className="hover:text-merit-silver/50 underline transition-colors">Terms of Service</a>{' '}
+                                apply.
+                            </p>
+                        </div>
                         <div className="flex gap-8 mt-4 md:mt-0">
-                            <Link href="#" className="hover:text-white transition-colors">Privacy Policy</Link>
-                            <Link href="#" className="hover:text-white transition-colors">Terms of Service</Link>
+                            <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
+                            <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
                         </div>
                     </div>
                 </div>
