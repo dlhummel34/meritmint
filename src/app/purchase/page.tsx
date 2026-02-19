@@ -1,4 +1,6 @@
+import { Suspense } from 'react';
 import { PurchasePage } from '@/components/PurchasePage';
+import { Loader2 } from 'lucide-react';
 
 export const metadata = {
     title: 'Purchase | MeritMint',
@@ -6,5 +8,13 @@ export const metadata = {
 };
 
 export default function PurchaseRoute() {
-    return <PurchasePage />;
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-merit-paper flex items-center justify-center">
+                <div className="w-8 h-8 border-4 border-merit-gold border-t-transparent rounded-full animate-spin" />
+            </div>
+        }>
+            <PurchasePage />
+        </Suspense>
+    );
 }

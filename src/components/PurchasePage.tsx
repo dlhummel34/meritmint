@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -414,3 +414,5 @@ function TrustBadge({ icon: Icon, text }: { icon: typeof Shield; text: string })
         </div>
     );
 }
+
+
