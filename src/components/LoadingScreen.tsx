@@ -5,25 +5,35 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { usePerformance } from "@/lib/PerformanceContext";
 
-// Critical assets to preload for smooth initial render
-const PRELOAD_IMAGES = [
-    "/images/meritmint_plaque.png",
-    "/images/mint_leaf_transparent.png",
-    "/images/hero_plaque.png",
-    // Carousel plaques (first few visible on load)
+/**
+ * CRITICAL ASSETS — These are the heavy assets that must be fully downloaded
+ * before the site is revealed. Ordered by visual impact / render priority.
+ *
+ * Each asset here is verified to exist in /public.
+ */
+const CRITICAL_ASSETS = [
+    // Hero section — largest visible assets on first paint
+    "/woodmint.png",           // 3.5 MB — Heritage Mint plaque (Purchase Page + Hero)
+    "/crystalmint.jpg",        // 1.7 MB — Crystal Mint plaque
+    // Ingredients section — HD textures for the 3D material cards
+    "/images/walnut_hd.png",   // 1.1 MB — Walnut texture
+    "/images/acrylic_hd.png",  // 0.5 MB — Acrylic texture
+    // Hero plaque preview
+    "/images/hero_plaque.png", // 0.8 MB — Main hero plaque
+    // Carousel first few (above the fold on desktop)
     "/images/plaque_01.jpg",
     "/images/plaque_02.jpg",
     "/images/plaque_03.jpg",
     "/images/plaque_04.jpg",
-    // Textures for materials section
-    "/images/texture_walnut.png",
-    "/images/texture_brass.png",
-    // Large assets for smooth transitions (Purchase Page & Ingredients)
-    "/crystalmint.jpg",
-    "/woodmint.png",
-    "/images/walnut_hd.png",
-    "/images/acrylic_hd.png",
+    // Loading screen itself
+    "/images/mint_leaf_transparent.png",
 ];
+
+/**
+ * Minimum time (ms) to show the loading screen for UX smoothness.
+ * This prevents a jarring flash when assets are cached.
+ */
+const MIN_DISPLAY_MS = 1200;
 
 export default function LoadingScreen() {
     const { setLoaded } = usePerformance();
@@ -32,42 +42,62 @@ export default function LoadingScreen() {
 
     useEffect(() => {
         let loadedCount = 0;
-        const totalAssets = PRELOAD_IMAGES.length;
+        const totalAssets = CRITICAL_ASSETS.length;
+        const startTime = Date.now();
+        let assetsComplete = false;
+        let fontsComplete = false;
 
-        // Preload images using native Image constructor
-        PRELOAD_IMAGES.forEach((src) => {
+        const tryComplete = () => {
+            if (!assetsComplete || !fontsComplete) return;
+
+            const elapsed = Date.now() - startTime;
+            const remainingDelay = Math.max(0, MIN_DISPLAY_MS - elapsed);
+
+            setTimeout(() => {
+                setIsVisible(false);
+                // Wait for fade-out animation to finish before signalling app
+                setTimeout(setLoaded, 650);
+            }, remainingDelay);
+        };
+
+        // --- 1. ASSET LOADING ---
+        const onAssetSettled = () => {
+            loadedCount++;
+            const pct = (loadedCount / totalAssets) * 100;
+            setProgress(pct);
+
+            if (loadedCount >= totalAssets) {
+                assetsComplete = true;
+                tryComplete();
+            }
+        };
+
+        CRITICAL_ASSETS.forEach((src) => {
             const img = new window.Image();
-            img.onload = () => {
-                loadedCount++;
-                setProgress((loadedCount / totalAssets) * 100);
-            };
-            img.onerror = () => {
-                loadedCount++;
-                setProgress((loadedCount / totalAssets) * 100);
-            };
-            // Set decoding to async for parallel loading
+            img.onload = onAssetSettled;
+            img.onerror = onAssetSettled; // Count failures too — don't block forever
             img.decoding = "async";
             img.src = src;
         });
 
-        // Minimum display time for UX
-        const minDisplayTime = 1500;
-        const startTime = Date.now();
+        // --- 2. FONT LOADING ---
+        if (typeof document !== "undefined" && document.fonts) {
+            document.fonts.ready.then(() => {
+                fontsComplete = true;
+                tryComplete();
+            });
+        } else {
+            fontsComplete = true; // Fallback for environments without FontFaceSet
+        }
 
-        const checkCompletion = () => {
-            const elapsed = Date.now() - startTime;
-            if (loadedCount >= totalAssets) {
-                const remainingTime = Math.max(0, minDisplayTime - elapsed);
-                setTimeout(() => {
-                    setIsVisible(false);
-                    setTimeout(setLoaded, 600); // Wait for exit animation
-                }, remainingTime);
-            } else {
-                requestAnimationFrame(checkCompletion);
-            }
-        };
+        // --- 3. SAFETY TIMEOUT (8s max) ---
+        const safetyTimeout = setTimeout(() => {
+            assetsComplete = true;
+            fontsComplete = true;
+            tryComplete();
+        }, 8000);
 
-        checkCompletion();
+        return () => clearTimeout(safetyTimeout);
     }, [setLoaded]);
 
     return (
@@ -76,35 +106,23 @@ export default function LoadingScreen() {
                 <motion.div
                     initial={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.6, ease: "easeInOut" }}
-                    className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-merit-paper"
+                    transition={{ duration: 0.65, ease: "easeInOut" }}
+                    className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-merit-paper"
                 >
                     {/* Subtle background texture */}
                     <div className="absolute inset-0 bg-texture-paper opacity-50" />
 
-                    {/* Hidden pre-rendered leaves for GPU layer warmup */}
-                    <div className="absolute opacity-0 pointer-events-none" aria-hidden="true">
-                        {[0, 1, 2, 3].map((i) => (
-                            <Image
-                                key={i}
-                                src="/images/mint_leaf_transparent.png"
-                                alt=""
-                                width={60}
-                                height={60}
-                                priority
-                                style={{
-                                    transform: `translate3d(${i * 10}px, ${i * 10}px, 0) rotate(${i * 45}deg)`,
-                                    willChange: 'transform'
-                                }}
-                            />
-                        ))}
-                        {/* Hidden render of heavy assets to force GPU texture upload */}
-                        <div className="absolute top-0 left-0 w-1 h-1 overflow-hidden opacity-0">
-                            <Image src="/crystalmint.jpg" alt="" width={100} height={100} priority />
-                            <Image src="/woodmint.png" alt="" width={100} height={100} priority />
-                            <Image src="/images/walnut_hd.png" alt="" width={100} height={100} priority />
-                            <Image src="/images/acrylic_hd.png" alt="" width={100} height={100} priority />
-                        </div>
+                    {/* Hidden pre-render of heavy assets forces GPU texture upload
+                        so transitions are smooth when they appear on screen */}
+                    <div
+                        className="absolute opacity-0 pointer-events-none overflow-hidden"
+                        style={{ width: 1, height: 1, top: 0, left: 0 }}
+                        aria-hidden="true"
+                    >
+                        <Image src="/crystalmint.jpg" alt="" width={4} height={4} priority />
+                        <Image src="/woodmint.png" alt="" width={4} height={4} priority />
+                        <Image src="/images/walnut_hd.png" alt="" width={4} height={4} priority />
+                        <Image src="/images/acrylic_hd.png" alt="" width={4} height={4} priority />
                     </div>
 
                     {/* Logo / Wordmark */}
@@ -154,14 +172,22 @@ export default function LoadingScreen() {
                         transition={{ duration: 0.6, delay: 0.4 }}
                         className="relative z-10 mt-12"
                     >
-                        <div className="h-0.5 bg-merit-charcoal/10 overflow-hidden">
+                        <div className="h-0.5 bg-merit-charcoal/10 overflow-hidden rounded-full">
                             <motion.div
-                                className="h-full bg-merit-gold"
+                                className="h-full bg-merit-gold rounded-full"
                                 initial={{ width: "0%" }}
-                                animate={{ width: `${Math.max(progress, 5)}%` }}
-                                transition={{ type: "spring", stiffness: 50, damping: 20 }}
+                                animate={{ width: `${Math.max(progress, 4)}%` }}
+                                transition={{ type: "spring", stiffness: 40, damping: 18 }}
                             />
                         </div>
+                        <motion.p
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 0.4 }}
+                            transition={{ delay: 0.8 }}
+                            className="text-center text-xs text-merit-charcoal/40 mt-3 font-sans tabular-nums"
+                        >
+                            {Math.round(progress)}%
+                        </motion.p>
                     </motion.div>
                 </motion.div>
             )}

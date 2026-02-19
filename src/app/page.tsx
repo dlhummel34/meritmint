@@ -14,17 +14,25 @@ import SakariWaveTransition from "@/components/SakariWaveTransition";
 import { PerformanceProvider, usePerformance } from "@/lib/PerformanceContext";
 
 function HomeContent() {
-  // We use usePerformance mostly for the context, but we don't block rendering on isLoaded anymore
-  // to improve LCP. The LoadingScreen covers the initial paint.
-  usePerformance();
+  const { isLoaded } = usePerformance();
 
   return (
     <main className="min-h-screen relative selection:bg-merit-sage selection:text-white">
-      {/* Loading Screen Overlay */}
+      {/* Loading Screen Overlay — blocks user from seeing unloaded content */}
       <LoadingScreen />
 
-      {/* Main Site Content - Rendered immediately behind loader for LCP */}
-      <div className="relative">
+      {/* Main Site Content — hidden until all assets are loaded.
+          Uses CSS transition for a smooth fade-in, not framer-motion,
+          to avoid triggering animation libraries before they're ready. */}
+      <div
+        className="relative"
+        style={{
+          opacity: isLoaded ? 1 : 0,
+          transition: isLoaded ? "opacity 0.4s ease-in" : "none",
+          // Prevent interaction while invisible
+          pointerEvents: isLoaded ? "auto" : "none",
+        }}
+      >
         <Navbar />
 
         {/* Floating Elements Layer */}
