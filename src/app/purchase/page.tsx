@@ -2,6 +2,8 @@ import { Suspense } from 'react';
 import { PurchasePage } from '@/components/PurchasePage';
 import { Loader2 } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
     title: 'Purchase | MeritMint',
     description: 'Mint your achievement with a premium custom plaque.',
