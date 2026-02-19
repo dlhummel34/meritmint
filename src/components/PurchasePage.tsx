@@ -3,8 +3,9 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowRight, Shield, Truck, Award, User, Mail, Link as LinkIcon, Upload, Check, Loader2, ExternalLink } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Shield, Truck, Award, User, Mail, Link as LinkIcon, Upload, Check, Loader2, ExternalLink } from 'lucide-react';
 import { ProductToggle } from './ProductToggle';
 import { SizeSelector } from './SizeSelector';
 import {
@@ -109,6 +110,15 @@ export function PurchasePage() {
 
     return (
         <div className="min-h-screen bg-merit-paper bg-texture-paper">
+            {/* Back to Home */}
+            {/* Back to Home */}
+            <div className="max-w-7xl mx-auto px-6 pt-8 relative z-50">
+                <Link href="/" className="inline-flex items-center gap-2 text-merit-charcoal/70 hover:text-merit-charcoal transition-colors font-medium">
+                    <ArrowLeft className="w-5 h-5" />
+                    <span className="font-serif text-base">Back to Home</span>
+                </Link>
+            </div>
+
             {/* Hero */}
             <section className="py-12 px-4">
                 <div className="max-w-4xl mx-auto text-center space-y-4">
