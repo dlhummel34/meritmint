@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { ArrowRight, Shield, Truck, Award, User, Mail, Link as LinkIcon, Upload, Check, Loader2, ExternalLink } from 'lucide-react';
 import { ProductToggle } from './ProductToggle';
 import { SizeSelector } from './SizeSelector';
@@ -15,7 +15,6 @@ import {
 
 export function PurchasePage() {
     const router = useRouter();
-    const searchParams = useSearchParams();
     // Product Selection
     const [productLine, setProductLine] = useState<ProductLine>('heritage');
     const [selectedTierId, setSelectedTierId] = useState<string>('');
@@ -34,19 +33,18 @@ export function PurchasePage() {
     const currentProductLine = getProductLine(productLine);
     const selectedTier = currentProductLine.tiers.find((t) => t.id === selectedTierId);
 
-    // Auto-select top tier
+    // Auto-select top tier when switching product lines manually
     const handleProductLineChange = (line: ProductLine) => {
         setProductLine(line);
         const newLine = getProductLine(line);
         setSelectedTierId(newLine.tiers[2].id);
     };
 
-    // Initialize with top tier
-    // Initialize from URL or default to top tier
-    // Effect 1: Initialize from URL (Run only when searchParams change, not when local state changes)
+    // Effect 1: Initialize from URL params (pure client-side - no SSR)
     useEffect(() => {
-        const productParam = searchParams.get('product');
-        const tierParam = searchParams.get('tier');
+        const params = new URLSearchParams(window.location.search);
+        const productParam = params.get('product');
+        const tierParam = params.get('tier');
 
         if (productParam && (productParam === 'crystal' || productParam === 'heritage')) {
             setProductLine(productParam as ProductLine);
@@ -55,15 +53,12 @@ export function PurchasePage() {
         if (tierParam) {
             setSelectedTierId(tierParam);
         }
-    }, [searchParams]);
+    }, []);
 
-    // Effect 2: Ensure valid tier selection when product line changes (Maintains state consistency)
+    // Effect 2: Ensure valid tier selection when product line changes
     useEffect(() => {
-        // Check if selectedTierId is valid for current product line
         const isValidTier = currentProductLine.tiers.some(t => t.id === selectedTierId);
-
         if (!isValidTier && currentProductLine.tiers.length > 0) {
-            // Default to top tier if selected tier is invalid for current line
             setSelectedTierId(currentProductLine.tiers[2].id);
         }
     }, [currentProductLine, selectedTierId]);
