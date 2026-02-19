@@ -181,7 +181,7 @@ export default function IngredientsGrid() {
                     {/* Item 2: Acrylic */}
                     <div className="flex flex-col md:flex-row items-center md:mt-64 md:justify-between w-full relative group perspective-1000">
                         {/* Text Side - Left Aligned */}
-                        <div className="w-full md:w-1/2 md:mr-auto md:pr-20 md:pl-10 order-2 md:order-1 mt-12 md:mt-0">
+                        <div className="w-full md:w-1/2 md:mr-auto md:pr-20 md:pl-10 order-2 md:order-1 mt-12 md:mt-0 pb-12 md:pb-0">
                             <div className="md:text-right flex flex-col items-center md:items-end">
                                 <BlurFade delay={isMobile ? 0.3 : 0.2}>
                                     <h3 className="text-4xl md:text-6xl font-serif text-merit-charcoal mb-4">

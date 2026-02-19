@@ -113,7 +113,7 @@ export default function Hero() {
                                 className="ml-4 flex justify-center lg:justify-start"
                             >
                                 <a
-                                    href="/purchase"
+                                    href="/purchase?product=heritage&tier=heritage-presidential"
                                     className="group relative px-8 py-4 bg-merit-charcoal/5 border border-merit-charcoal/30 hover:border-merit-gold/60 hover:bg-merit-charcoal/10 transition-all duration-500 rounded-full overflow-hidden backdrop-blur-sm shadow-xl shadow-merit-sage/5"
                                 >
                                     <span className="relative z-10 flex items-center space-x-3 text-merit-charcoal group-hover:text-merit-gold transition-colors duration-500 font-serif tracking-[0.2em] uppercase text-xs font-semibold">

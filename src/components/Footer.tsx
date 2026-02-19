@@ -60,7 +60,7 @@ export default function Footer() {
                             <ul className="space-y-4 text-sm text-merit-silver/60">
                                 <li>david@meritmint.news</li>
                                 <li className="pt-4">
-                                    <Link href="/purchase" className="inline-flex items-center gap-2 text-merit-green hover:text-white transition-colors">
+                                    <Link href="/purchase?product=heritage&tier=heritage-presidential" className="inline-flex items-center gap-2 text-merit-green hover:text-white transition-colors">
                                         <TicketCheck size={16} /> Start Commission
                                     </Link>
                                 </li>

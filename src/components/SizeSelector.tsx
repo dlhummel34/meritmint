@@ -13,7 +13,7 @@ interface SizeSelectorProps {
 
 export function SizeSelector({ tiers, selectedId, productLine, onChange }: SizeSelectorProps) {
     return (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="flex flex-col-reverse md:grid md:grid-cols-3 gap-4">
             {tiers.map((tier, index) => (
                 <SizeCard
                     key={tier.id}

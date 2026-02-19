@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { ArrowRight, Shield, Truck, Award, User, Mail, Link as LinkIcon, Upload, Check, Loader2, ExternalLink } from 'lucide-react';
 import { ProductToggle } from './ProductToggle';
 import { SizeSelector } from './SizeSelector';
@@ -15,8 +15,9 @@ import {
 
 export function PurchasePage() {
     const router = useRouter();
+    const searchParams = useSearchParams();
     // Product Selection
-    const [productLine, setProductLine] = useState<ProductLine>('crystal');
+    const [productLine, setProductLine] = useState<ProductLine>('heritage');
     const [selectedTierId, setSelectedTierId] = useState<string>('');
 
     // Award Details
@@ -41,8 +42,28 @@ export function PurchasePage() {
     };
 
     // Initialize with top tier
+    // Initialize from URL or default to top tier
+    // Effect 1: Initialize from URL (Run only when searchParams change, not when local state changes)
     useEffect(() => {
-        if (!selectedTierId && currentProductLine.tiers.length > 0) {
+        const productParam = searchParams.get('product');
+        const tierParam = searchParams.get('tier');
+
+        if (productParam && (productParam === 'crystal' || productParam === 'heritage')) {
+            setProductLine(productParam as ProductLine);
+        }
+
+        if (tierParam) {
+            setSelectedTierId(tierParam);
+        }
+    }, [searchParams]);
+
+    // Effect 2: Ensure valid tier selection when product line changes (Maintains state consistency)
+    useEffect(() => {
+        // Check if selectedTierId is valid for current product line
+        const isValidTier = currentProductLine.tiers.some(t => t.id === selectedTierId);
+
+        if (!isValidTier && currentProductLine.tiers.length > 0) {
+            // Default to top tier if selected tier is invalid for current line
             setSelectedTierId(currentProductLine.tiers[2].id);
         }
     }, [currentProductLine, selectedTierId]);
@@ -178,7 +199,7 @@ export function PurchasePage() {
                                                     }}
                                                 />
                                                 <Image
-                                                    src={productLine === 'crystal' ? '/crystal-mint-preview.png' : '/heritage-mint-preview.png'}
+                                                    src={productLine === 'crystal' ? '/crystalmint.jpg' : '/woodmint.png'}
                                                     alt={productLine === 'crystal' ? 'Crystal Mint Plaque' : 'Heritage Mint Plaque'}
                                                     width={240}
                                                     height={320}

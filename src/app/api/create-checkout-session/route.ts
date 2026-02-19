@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
+import { Resend } from 'resend';
 
 export const dynamic = 'force-dynamic';
 
@@ -9,6 +10,8 @@ function getStripe() {
     else console.log('Stripe Secret Key loaded (prefix):', key.substring(0, 8));
     return new Stripe(key);
 }
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: NextRequest) {
     try {
@@ -82,6 +85,28 @@ export async function POST(request: NextRequest) {
                 },
             ],
         });
+
+        // Send E-mail Notification to Admin
+        try {
+            await resend.emails.send({
+                from: 'MeritMint Orders <orders@meritmint.news>',
+                to: 'david@meritmint.news',
+                subject: `New Checkout Initiated: ${customerName || 'Guest'}`,
+                html: `
+                    <h1>New Checkout Session Started</h1>
+                    <p><strong>Customer:</strong> ${customerName} (${customerEmail})</p>
+                    <p><strong>Product:</strong> ${productName}</p>
+                    <p><strong>Price:</strong> $${price}</p>
+                    <p><strong>Article URL:</strong> <a href="${articleUrl}">${articleUrl}</a></p>
+                    <br/>
+                    <p>Is this live? ${session.livemode ? 'YES (Live Payment)' : 'NO (Test Mode)'}</p>
+                `
+            });
+            console.log('Admin notification email sent successfully.');
+        } catch (emailError) {
+            console.error('Failed to send admin notification email:', emailError);
+            // Don't block the checkout flow if email fails
+        }
 
         return NextResponse.json({
             url: session.url,

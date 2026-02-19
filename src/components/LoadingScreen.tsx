@@ -19,8 +19,8 @@ const PRELOAD_IMAGES = [
     "/images/texture_walnut.png",
     "/images/texture_brass.png",
     // Large assets for smooth transitions (Purchase Page & Ingredients)
-    "/crystal-mint-preview.png",
-    "/heritage-mint-preview.png",
+    "/crystalmint.jpg",
+    "/woodmint.png",
     "/images/walnut_hd.png",
     "/images/acrylic_hd.png",
 ];
@@ -100,8 +100,8 @@ export default function LoadingScreen() {
                         ))}
                         {/* Hidden render of heavy assets to force GPU texture upload */}
                         <div className="absolute top-0 left-0 w-1 h-1 overflow-hidden opacity-0">
-                            <Image src="/crystal-mint-preview.png" alt="" width={100} height={100} priority />
-                            <Image src="/heritage-mint-preview.png" alt="" width={100} height={100} priority />
+                            <Image src="/crystalmint.jpg" alt="" width={100} height={100} priority />
+                            <Image src="/woodmint.png" alt="" width={100} height={100} priority />
                             <Image src="/images/walnut_hd.png" alt="" width={100} height={100} priority />
                             <Image src="/images/acrylic_hd.png" alt="" width={100} height={100} priority />
                         </div>
