@@ -1,32 +1,10 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import { useRef } from "react";
-import { usePerformance } from "@/lib/PerformanceContext";
 
 export default function MacroMintParallax() {
     const containerRef = useRef(null);
-    const { scrollYProgress } = useScroll();
-    const { isMobile, isLowPower, prefersReducedMotion } = usePerformance();
-
-    // Reduced parallax multiplier for mobile/low-power
-    const parallaxMultiplier = isMobile || isLowPower ? 0.3 : 1;
-
-    // Foreground leaves: faster parallax
-    const foregroundY1 = useTransform(scrollYProgress, [0, 1], [0, -400 * parallaxMultiplier]);
-    const foregroundY2 = useTransform(scrollYProgress, [0, 1], [0, -350 * parallaxMultiplier]);
-
-    // Midground leaves: medium parallax
-    const midgroundY1 = useTransform(scrollYProgress, [0, 1], [0, -200 * parallaxMultiplier]);
-    const midgroundY2 = useTransform(scrollYProgress, [0, 1], [0, -250 * parallaxMultiplier]);
-    const midgroundRotate1 = useTransform(scrollYProgress, [0, 1], [0, isLowPower ? 0 : 25]);
-
-    // Background leaves: slowest parallax
-    const backgroundY1 = useTransform(scrollYProgress, [0, 1], [0, -100 * parallaxMultiplier]);
-
-    // Disable entirely on reduced motion preference or low power
-    if (prefersReducedMotion || isLowPower) return null;
 
     // Desktop: full experience with static CSS animations
     return (
