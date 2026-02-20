@@ -30,7 +30,7 @@ export default function MacroMintParallax() {
 
     // Desktop: full experience with static CSS animations
     return (
-        <div ref={containerRef} className="fixed inset-0 pointer-events-none z-[5] overflow-hidden">
+        <div ref={containerRef} className="fixed inset-0 pointer-events-none z-[-1] overflow-hidden">
             {/* Washi Paper Grain Overlay */}
             <div
                 className="absolute inset-0 bg-repeat opacity-[0.03]"
@@ -41,25 +41,25 @@ export default function MacroMintParallax() {
 
             {/* ===== MINT BACKGROUND LEAVES ===== */}
             {/* Left Leaf */}
-            <div className={`absolute -bottom-40 -left-40 w-[700px] h-[700px] opacity-[0.60] rotate-[20deg] pointer-events-none ${isMobile ? 'scale-75 -bottom-20 -left-20' : ''}`}>
+            <div className={`absolute -bottom-20 -left-20 w-[300px] h-[300px] md:-bottom-20 md:-left-10 md:w-[500px] md:h-[500px] lg:-bottom-40 lg:-left-20 lg:w-[700px] lg:h-[700px] opacity-[0.60] rotate-[20deg] pointer-events-none`}>
                 <Image
                     src="/images/mint_leaf_transparent.png"
                     alt=""
                     fill
                     className="object-contain"
-                    sizes="700px"
+                    sizes="(max-width: 768px) 300px, (max-width: 1024px) 500px, 700px"
                     priority
                 />
             </div>
 
             {/* Right Leaf */}
-            <div className={`absolute -top-60 -right-40 w-[600px] h-[600px] opacity-[0.55] -rotate-[45deg] scale-x-[-1] pointer-events-none ${isMobile ? 'scale-75 -top-30 -right-20' : ''}`}>
+            <div className={`absolute -top-10 -right-20 w-[250px] h-[250px] md:-top-30 md:-right-10 md:w-[450px] md:h-[450px] lg:-top-60 lg:-right-30 lg:w-[600px] lg:h-[600px] opacity-[0.55] -rotate-[45deg] scale-x-[-1] pointer-events-none`}>
                 <Image
                     src="/images/mint_leaf_transparent.png"
                     alt=""
                     fill
                     className="object-contain"
-                    sizes="600px"
+                    sizes="(max-width: 768px) 250px, (max-width: 1024px) 450px, 600px"
                     priority
                 />
             </div>
