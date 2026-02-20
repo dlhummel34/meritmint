@@ -20,7 +20,7 @@ export default function Hero() {
     return (
         <section
             id="hero-section"
-            className="relative min-h-[100vh] flex flex-col justify-center overflow-hidden bg-merit-paper bg-texture-paper"
+            className="relative min-h-[100vh] flex flex-col justify-center overflow-hidden"
         >
             {/* Optimized static radial gradient background instead of heavy blur divs */}
             <div

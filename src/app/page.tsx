@@ -16,7 +16,7 @@ function HomeContent() {
   const { isLoaded } = usePerformance();
 
   return (
-    <main className="min-h-screen relative selection:bg-merit-sage selection:text-white">
+    <main className="min-h-screen relative selection:bg-merit-sage selection:text-white bg-merit-paper bg-texture-paper">
       {/* Loading Screen Overlay — blocks user from seeing unloaded content */}
       <LoadingScreen />
 
