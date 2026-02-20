@@ -204,7 +204,7 @@ export function PurchasePage() {
                                                     }}
                                                 />
                                                 <Image
-                                                    src={productLine === 'crystal' ? '/crystalmint.jpg' : '/woodmint.png'}
+                                                    src={productLine === 'crystal' ? '/crystalmint.jpg' : '/heritage-preview.jpg'}
                                                     alt={productLine === 'crystal' ? 'Crystal Mint Plaque' : 'Heritage Mint Plaque'}
                                                     width={240}
                                                     height={320}
