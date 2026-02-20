@@ -25,13 +25,10 @@ export default function MacroMintParallax() {
     // Background leaves: slowest parallax
     const backgroundY1 = useTransform(scrollYProgress, [0, 1], [0, -100 * parallaxMultiplier]);
 
-    // Disable entirely on reduced motion preference or low power (AFTER hooks)
+    // Disable entirely on reduced motion preference or low power
     if (prefersReducedMotion || isLowPower) return null;
 
-    // On mobile, render nothing to avoid lag (AFTER hooks)
-    if (isMobile) return null;
-
-    // Desktop: full experience with blur effects
+    // Desktop: full experience with static CSS animations
     return (
         <div ref={containerRef} className="fixed inset-0 pointer-events-none z-[5] overflow-hidden">
             {/* Washi Paper Grain Overlay */}
@@ -42,36 +39,30 @@ export default function MacroMintParallax() {
                 }}
             />
 
-            {/* ===== LARGE BACKGROUND LEAVES ===== */}
-            <motion.div
-                style={{ y: backgroundY1 }}
-                className="absolute -bottom-40 -left-40 w-[700px] h-[700px] will-change-transform"
-            >
+            {/* ===== MINT BACKGROUND LEAVES ===== */}
+            {/* Left Leaf */}
+            <div className={`absolute -bottom-40 -left-40 w-[700px] h-[700px] opacity-[0.60] rotate-[20deg] pointer-events-none ${isMobile ? 'scale-75 -bottom-20 -left-20' : ''}`}>
                 <Image
                     src="/images/mint_leaf_transparent.png"
                     alt=""
                     fill
-                    className={`object-contain opacity-20 rotate-[30deg]`}
+                    className="object-contain"
                     sizes="700px"
+                    priority
                 />
-            </motion.div>
+            </div>
 
-            <motion.div
-                style={{ y: backgroundY1 }}
-                className="absolute -top-60 -right-40 w-[600px] h-[600px] will-change-transform"
-            >
+            {/* Right Leaf */}
+            <div className={`absolute -top-60 -right-40 w-[600px] h-[600px] opacity-[0.55] -rotate-[45deg] scale-x-[-1] pointer-events-none ${isMobile ? 'scale-75 -top-30 -right-20' : ''}`}>
                 <Image
                     src="/images/mint_leaf_transparent.png"
                     alt=""
                     fill
-                    className={`object-contain opacity-15 -rotate-[45deg] scale-x-[-1]`}
+                    className="object-contain"
                     sizes="600px"
+                    priority
                 />
-            </motion.div>
-
-            {/* ===== FOREGROUND LEAVES - REMOVED ===== */}
-
-            {/* ===== MIDGROUND LEAVES - REMOVED ===== */}
+            </div>
         </div>
     );
 }

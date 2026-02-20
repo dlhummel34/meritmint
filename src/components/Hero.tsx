@@ -1,17 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Diamond } from "lucide-react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import MobilePlaque from "./MobilePlaque";
 import { usePerformance } from "@/lib/PerformanceContext";
-
-// Register GSAP plugins
-if (typeof window !== "undefined") {
-    gsap.registerPlugin(ScrollTrigger);
-}
 
 export default function Hero() {
     const { isLoaded } = usePerformance();
@@ -29,12 +22,13 @@ export default function Hero() {
             id="hero-section"
             className="relative min-h-[100vh] flex flex-col justify-center overflow-hidden bg-merit-paper bg-texture-paper"
         >
-            {/* Vignette Overlay */}
-            <div className="fixed inset-0 pointer-events-none z-40 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(45,52,54,0.06)_100%)]" />
-
-            {/* Mesh Gradient Background Spots */}
-            <div className="absolute top-1/4 right-0 w-[600px] h-[600px] bg-merit-sage/15 rounded-full blur-[120px] mix-blend-multiply opacity-70 pointer-events-none" />
-            <div className="absolute top-1/2 right-1/3 w-[500px] h-[500px] bg-merit-gold/8 rounded-full blur-[100px] mix-blend-multiply opacity-60 pointer-events-none" />
+            {/* Optimized static radial gradient background instead of heavy blur divs */}
+            <div
+                className="fixed inset-0 pointer-events-none z-0"
+                style={{
+                    background: 'radial-gradient(ellipse at center, transparent 40%, rgba(45,52,54,0.06) 100%), radial-gradient(circle at 80% 25%, rgba(138, 154, 146, 0.15) 0%, transparent 40%), radial-gradient(circle at 60% 50%, rgba(212, 175, 55, 0.08) 0%, transparent 40%)'
+                }}
+            />
 
             {/* Sticky Vertical Decorative Text */}
             <div className="hidden lg:flex fixed left-12 top-1/3 flex-col items-center z-30 space-y-4">
@@ -130,54 +124,28 @@ export default function Hero() {
 
                     {/* Plaque Space with Golden Ratio Wireframe */}
                     <div className="hidden lg:block lg:col-span-6 relative min-h-[50vh] lg:min-h-[70vh]">
-                        {/* Golden Ratio Wireframe Backdrop */}
-                        <motion.svg
-                            initial={{ pathLength: 0, opacity: 0 }}
-                            animate={shouldAnimate ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 }}
-                            transition={{ duration: 2, delay: 0.5, ease: "easeOut" }}
-                            className="absolute inset-0 w-full h-full"
-                            viewBox="0 0 400 400"
-                            preserveAspectRatio="xMidYMid meet"
+                        {/* Golden Ratio Wireframe Backdrop - Optimized to a single static SVG fade */}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={shouldAnimate ? { opacity: 1 } : { opacity: 0 }}
+                            transition={{ duration: 1.5, delay: 0.5, ease: "easeOut" }}
+                            className="absolute inset-0 w-full h-full pointer-events-none"
                         >
-                            {/* Golden Ratio Rectangles */}
-                            <motion.rect
-                                x="50" y="50" width="300" height="185"
-                                fill="none" stroke="#D4AF37" strokeWidth="0.5" opacity="0.3"
-                                initial={{ pathLength: 0 }}
-                                animate={shouldAnimate ? { pathLength: 1 } : { pathLength: 0 }}
-                                transition={{ duration: 1.5, delay: 0.5 }}
-                            />
-                            <motion.rect
-                                x="50" y="235" width="185" height="115"
-                                fill="none" stroke="#D4AF37" strokeWidth="0.5" opacity="0.25"
-                                initial={{ pathLength: 0 }}
-                                animate={shouldAnimate ? { pathLength: 1 } : { pathLength: 0 }}
-                                transition={{ duration: 1.2, delay: 0.8 }}
-                            />
-                            <motion.rect
-                                x="235" y="235" width="115" height="115"
-                                fill="none" stroke="#D4AF37" strokeWidth="0.5" opacity="0.2"
-                                initial={{ pathLength: 0 }}
-                                animate={shouldAnimate ? { pathLength: 1 } : { pathLength: 0 }}
-                                transition={{ duration: 1, delay: 1 }}
-                            />
-                            {/* Spiral Path */}
-                            <motion.path
-                                d="M350,50 Q350,235 235,235 Q50,235 50,350"
-                                fill="none" stroke="#D4AF37" strokeWidth="0.5" opacity="0.15"
-                                initial={{ pathLength: 0 }}
-                                animate={shouldAnimate ? { pathLength: 1 } : { pathLength: 0 }}
-                                transition={{ duration: 2, delay: 1.2 }}
-                            />
-                            {/* Construction Lines */}
-                            <motion.line
-                                x1="50" y1="50" x2="350" y2="350"
-                                stroke="#D4AF37" strokeWidth="0.3" opacity="0.1"
-                                initial={{ pathLength: 0 }}
-                                animate={shouldAnimate ? { pathLength: 1 } : { pathLength: 0 }}
-                                transition={{ duration: 1.5, delay: 1.5 }}
-                            />
-                        </motion.svg>
+                            <svg
+                                className="w-full h-full"
+                                viewBox="0 0 400 400"
+                                preserveAspectRatio="xMidYMid meet"
+                            >
+                                {/* Golden Ratio Rectangles */}
+                                <rect x="50" y="50" width="300" height="185" fill="none" stroke="#D4AF37" strokeWidth="0.5" opacity="0.3" />
+                                <rect x="50" y="235" width="185" height="115" fill="none" stroke="#D4AF37" strokeWidth="0.5" opacity="0.25" />
+                                <rect x="235" y="235" width="115" height="115" fill="none" stroke="#D4AF37" strokeWidth="0.5" opacity="0.2" />
+                                {/* Spiral Path */}
+                                <path d="M350,50 Q350,235 235,235 Q50,235 50,350" fill="none" stroke="#D4AF37" strokeWidth="0.5" opacity="0.15" />
+                                {/* Construction Lines */}
+                                <line x1="50" y1="50" x2="350" y2="350" stroke="#D4AF37" strokeWidth="0.3" opacity="0.1" />
+                            </svg>
+                        </motion.div>
                     </div>
                 </div>
             </div>

@@ -1,6 +1,6 @@
 "use client";
 
-interface SakariWaveTransitionProps {
+interface SectionWaveTransitionProps {
     /** The color this wave reveals (the section below/after) */
     fillColor: string;
     /** Height of the wave area */
@@ -15,12 +15,12 @@ interface SakariWaveTransitionProps {
  * drawing the color of the CURRENT section curving up.
  * Place this INSIDE the section wrapper, at the top of the content.
  */
-export default function SakariWaveTransition({
+export default function SectionWaveTransition({
     fillColor,
     height = 80,
     withTexture = false,
     className = "",
-}: SakariWaveTransitionProps) {
+}: SectionWaveTransitionProps) {
     // SVG path for the wave - matches viewBox 0 0 1440 80
     const wavePath = `M0,30 C180,50 360,10 540,35 C720,60 900,20 1080,45 C1260,70 1380,25 1440,40 L1440,80 L0,80 Z`;
 
