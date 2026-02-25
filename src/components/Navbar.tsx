@@ -64,25 +64,6 @@ export default function Navbar() {
                                 </motion.div>
                             </Link>
 
-                            {/* Floating Pills Navigation */}
-                            <nav className="hidden md:flex items-center gap-2">
-                                {navItems.slice(0, 3).map((item, index) => (
-                                    <motion.div
-                                        key={item.name}
-                                        initial={{ opacity: 0, y: -10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: 0.1 * index }}
-                                    >
-                                        <Link
-                                            href={item.href}
-                                            className="px-4 py-2 text-xs font-medium tracking-[0.2em] uppercase text-merit-charcoal/70 hover:text-merit-charcoal transition-colors relative group"
-                                        >
-                                            {item.name}
-                                            <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-merit-gold scale-0 group-hover:scale-100 transition-transform" />
-                                        </Link>
-                                    </motion.div>
-                                ))}
-                            </nav>
 
                             {/* Elegant CTA */}
                             <motion.div
@@ -125,7 +106,7 @@ export default function Navbar() {
                             }}
                         >
                             {/* Mini Logo */}
-                            <Link href="/" className="flex items-center gap-2">
+                            <Link href="/" className="flex items-center gap-2" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
                                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-merit-gold to-merit-sage flex items-center justify-center">
                                     <img src="/images/mint_leaf_transparent.png" alt="M" className="w-5 h-5 object-contain brightness-0 invert" />
                                 </div>
@@ -134,21 +115,6 @@ export default function Navbar() {
                                 </span>
                             </Link>
 
-                            {/* Divider */}
-                            <div className="w-px h-6 bg-merit-charcoal/10" />
-
-                            {/* Nav Links */}
-                            <nav className="hidden md:flex items-center gap-6">
-                                {navItems.map((item) => (
-                                    <Link
-                                        key={item.name}
-                                        href={item.href}
-                                        className="text-xs font-medium tracking-wider uppercase text-merit-charcoal/70 hover:text-merit-gold transition-colors"
-                                    >
-                                        {item.name}
-                                    </Link>
-                                ))}
-                            </nav>
 
                             {/* CTA Button */}
                             <Link

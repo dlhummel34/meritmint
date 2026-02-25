@@ -30,31 +30,6 @@ export default function Hero() {
                 }}
             />
 
-            {/* Sticky Vertical Decorative Text */}
-            <div className="hidden lg:flex fixed left-12 top-1/3 flex-col items-center z-30 space-y-4">
-                <Diamond className="w-3 h-3 text-merit-gold/60 fill-current" />
-                <div className="w-px h-12 bg-merit-sage/30" />
-                <span className="text-merit-sage/50 font-serif tracking-[0.3em] text-[10px] uppercase text-vertical">
-                    Preserving Excellence
-                </span>
-                <div className="w-px h-8 bg-merit-sage/20" />
-                <span className="text-merit-gold/40 font-serif tracking-widest text-[9px] text-vertical">
-                    Est. 2024
-                </span>
-            </div>
-
-            {/* Right Vertical Anchor */}
-            <div className="hidden lg:flex fixed right-12 top-1/3 flex-col items-center z-30 space-y-4">
-                <span className="text-merit-gold/40 font-serif tracking-widest text-[9px] text-vertical">
-                    Heirloom Grade
-                </span>
-                <div className="w-px h-8 bg-merit-gold/20" />
-                <Diamond className="w-3 h-3 text-merit-gold/60 fill-current" />
-                <div className="w-px h-12 bg-merit-sage/30" />
-                <span className="text-merit-sage/50 font-serif tracking-[0.3em] text-[10px] uppercase text-vertical">
-                    Museum Quality
-                </span>
-            </div>
 
             <div className="container mx-auto px-6 lg:px-20 relative z-30 pt-16 lg:pt-24 pb-12 lg:pb-0">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -96,7 +71,7 @@ export default function Hero() {
                                 transition={{ duration: 0.8, delay: 0.6 }}
                                 className="text-lg md:text-xl text-merit-charcoal/60 font-sans leading-[1.8] tracking-wide max-w-md ml-4"
                             >
-                                Transforming fleeting accolades into heirloom artifacts.
+                                Freshly Earned. Perfectly Minted.
                             </motion.p>
 
                             {/* CTA - Moved up on mobile to be immediately visible */}
