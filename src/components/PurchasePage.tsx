@@ -16,9 +16,9 @@ import {
 
 export function PurchasePage() {
     const router = useRouter();
-    // Product Selection
     const [productLine, setProductLine] = useState<ProductLine>('heritage');
     const [selectedTierId, setSelectedTierId] = useState<string>('');
+    const [campaign, setCampaign] = useState<string | null>(null);
 
     // Award Details
     const [articleUrl, setArticleUrl] = useState('');
@@ -46,6 +46,7 @@ export function PurchasePage() {
         const params = new URLSearchParams(window.location.search);
         const productParam = params.get('product');
         const tierParam = params.get('tier');
+        const campaignParam = params.get('campaign');
 
         if (productParam && (productParam === 'crystal' || productParam === 'heritage')) {
             setProductLine(productParam as ProductLine);
@@ -53,6 +54,10 @@ export function PurchasePage() {
 
         if (tierParam) {
             setSelectedTierId(tierParam);
+        }
+
+        if (campaignParam) {
+            setCampaign(campaignParam);
         }
     }, []);
 
@@ -204,7 +209,15 @@ export function PurchasePage() {
                                                     }}
                                                 />
                                                 <Image
-                                                    src={productLine === 'crystal' ? '/crystalmint.jpg' : '/heritage-preview.jpg'}
+                                                    src={
+                                                        productLine === 'crystal'
+                                                            ? '/crystalmint.jpg'
+                                                            : campaign === 'forbes'
+                                                                ? '/forbesheritage-preview.jpg'
+                                                                : campaign === 'topfinancial'
+                                                                    ? '/images/previewtopfinancialadvisory.png'
+                                                                    : '/heritage-mint-preview.png'
+                                                    }
                                                     alt={productLine === 'crystal' ? 'Crystal Mint Plaque' : 'Heritage Mint Plaque'}
                                                     width={240}
                                                     height={320}
