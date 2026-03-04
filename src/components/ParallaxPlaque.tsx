@@ -5,6 +5,7 @@ import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useSearchParams } from "next/navigation";
 import { usePerformance } from "@/lib/PerformanceContext";
 
 // Register ScrollTrigger
@@ -13,6 +14,16 @@ if (typeof window !== "undefined") {
 }
 
 export default function ParallaxPlaque() {
+    const searchParams = useSearchParams();
+    const campaign = searchParams.get("campaign");
+
+    let plaqueSrc = "/images/meritmint_plaque.png";
+    if (campaign === "forbes") {
+        plaqueSrc = "/crystalmint.jpg";
+    } else if (campaign === "heritage") {
+        plaqueSrc = "/heritage-preview.jpg";
+    }
+
     const plaqueRef = useRef<HTMLDivElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const { isMobile, isLowPower, prefersReducedMotion } = usePerformance();
@@ -136,10 +147,10 @@ export default function ParallaxPlaque() {
                         className="relative w-[50vw] max-w-[600px] aspect-[360/450]"
                     >
                         <Image
-                            src="/images/meritmint_plaque.png"
+                            src={plaqueSrc}
                             alt="MeritMint Achievement Plaque"
                             fill
-                            className="object-contain drop-shadow-lg"
+                            className="object-contain drop-shadow-lg rounded-md"
                             priority
                         />
 

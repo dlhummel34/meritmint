@@ -16,7 +16,7 @@ const steps = [
     {
         title: "The Minting",
         subtitle: "Creation",
-        description: "Once verified, we craft your achievement into a museum-quality plaque. Precision milled hardwoods and laser-etched metals.",
+        description: "Once verified, we craft your achievement into a museum-quality plaque. Precision milled hardwoods and vibrant sublimation.",
         image: "/images/plaque_2.png",
         stamp: "/images/stamp_certified.png",
         stampLabel: "Certified",

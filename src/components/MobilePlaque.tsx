@@ -2,9 +2,20 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 import { useRef } from "react";
 
 export default function MobilePlaque() {
+    const searchParams = useSearchParams();
+    const campaign = searchParams.get("campaign");
+
+    let plaqueSrc = "/images/meritmint_plaque.png";
+    if (campaign === "forbes") {
+        plaqueSrc = "/crystalmint.jpg";
+    } else if (campaign === "heritage") {
+        plaqueSrc = "/heritage-preview.jpg";
+    }
+
     const containerRef = useRef(null);
     const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start end", "end start"] });
 
@@ -48,10 +59,10 @@ export default function MobilePlaque() {
                     <div className="absolute top-full left-1/2 -translate-x-1/2 w-[80%] h-8 bg-black/20 blur-xl rounded-[100%] z-[-1]" />
 
                     <Image
-                        src="/images/meritmint_plaque.png"
+                        src={plaqueSrc}
                         alt="MeritMint Achievement Plaque"
                         fill
-                        className="object-contain drop-shadow-2xl"
+                        className="object-contain drop-shadow-2xl rounded-md"
                         priority
                         sizes="(max-width: 768px) 280px, 100vw"
                     />

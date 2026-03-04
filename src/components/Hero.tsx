@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Diamond } from "lucide-react";
 import MobilePlaque from "./MobilePlaque";
@@ -93,7 +93,9 @@ export default function Hero() {
                             </motion.div>
 
                             {/* Mobile Plaque - Integrated for perfect positioning */}
-                            <MobilePlaque />
+                            <Suspense fallback={null}>
+                                <MobilePlaque />
+                            </Suspense>
                         </div>
                     </div>
 

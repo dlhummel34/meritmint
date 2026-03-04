@@ -62,11 +62,11 @@ export const CRYSTAL_MINT: ProductLineConfig = {
     ],
 };
 
-// Heritage Mint - Classic Wood + Metal Line
+// Heritage Mint - Sublimated Wood Line
 export const HERITAGE_MINT: ProductLineConfig = {
     id: 'heritage',
     name: 'Heritage Mint',
-    tagline: 'Classic Wood + Metal',
+    tagline: 'Sublimated Wood',
     vibe: 'Law, Finance, Legacy, "Best of" Lists',
     tiers: [
         {

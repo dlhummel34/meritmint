@@ -21,7 +21,7 @@ export function ProductToggle({ selected, onChange }: ProductToggleProps) {
                 active={selected === 'heritage'}
                 onClick={() => onChange('heritage')}
                 label="Heritage Mint"
-                sublabel="Wood + Metal"
+                sublabel="Sublimated Wood"
             />
         </div>
     );
